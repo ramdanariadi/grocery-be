@@ -7,11 +7,11 @@ services:
       POSTGRES_PASSWORD: secret
       POSTGRES_USER: postgres
       POSTGRES_DB: DBTunasKasir
-      PGDATA: /var/lib/postgresql/data/grocery
+      PGDATA: /var/lib/postgresql/data/ecomerce
     ports:
       - 5432:5432
     volumes:
-      - tunas_pgdb_data:/var/lib/postgresql/data/grocery
+      - tunas_pgdb_data:/var/lib/postgresql/data/ecomerce
     networks:
       - tunas-network
 

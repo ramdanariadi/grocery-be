@@ -8,11 +8,11 @@
 		<version>2.5.2</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>tunas.grocery</groupId>
-	<artifactId>grocery</artifactId>
+	<groupId>tunas.ecommerce</groupId>
+	<artifactId>ecommerce</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>grocery</name>
-	<description>grocery dari tunas</description>
+	<name>ecommerce</name>
+	<description>ecommerce dari tunas</description>
 	<properties>
 		<java.version>11</java.version>
 	</properties>
