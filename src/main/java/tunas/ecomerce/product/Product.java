@@ -2,24 +2,48 @@ package tunas.ecomerce.product;
 
 import tunas.ecomerce.category.Category;
 import tunas.ecomerce.images.Photos;
+import tunas.ecomerce.product.topproduct.TopProduct;
 
 import javax.persistence.*;
 import java.util.List;
 import java.util.UUID;
 
 @Entity
+@Table(name = "products")
 public class Product {
     @Id
     UUID id;
     String name;
-    Long price;
+    Long price; // per unit
+    Integer perUnit; // gram
     String description;
+    Integer weight; // on gram
 
     @OneToMany(targetEntity = Photos.class)
     List<Photos> photos;
 
     @ManyToOne
     Category category;
+
+    @OneToOne(mappedBy = "product",cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    TopProduct topProduct;
+
+    public Integer getPerUnit() {
+        return perUnit;
+    }
+
+    public void setPerUnit(Integer perUnit) {
+        this.perUnit = perUnit;
+    }
+
+    public Integer getWeight() {
+        return weight;
+    }
+
+    public void setWeight(Integer weight) {
+        this.weight = weight;
+    }
 
     public UUID getId() {
         return id;

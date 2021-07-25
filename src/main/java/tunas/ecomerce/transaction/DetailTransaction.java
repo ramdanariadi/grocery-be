@@ -14,7 +14,25 @@ public class DetailTransaction {
     Product product;
     String name;
     Long price;
+    Integer perUnit;
+    Integer weight;
     Integer total;
+
+    public Integer getPerUnit() {
+        return perUnit;
+    }
+
+    public void setPerUnit(Integer perUnit) {
+        this.perUnit = perUnit;
+    }
+
+    public Integer getWeight() {
+        return weight;
+    }
+
+    public void setWeight(Integer weight) {
+        this.weight = weight;
+    }
 
     public UUID getId() {
         return id;

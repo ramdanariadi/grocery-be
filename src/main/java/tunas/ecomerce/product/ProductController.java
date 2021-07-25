@@ -51,7 +51,9 @@ public class ProductController {
         product.setId(Generators.timeBasedGenerator().generate());
         product.setName(jsonObject.get("name").toString());
         product.setDescription(jsonObject.get("description").toString());
-        product.setPrice(Long.parseLong(jsonObject.get("price").toString()));
+        product.setPrice(jsonObject.getLong("price"));
+        product.setPerUnit(jsonObject.getInt("perUnit"));
+        product.setWeight(jsonObject.getInt("weight"));
         Category category = categoryService.findById(UUID.fromString(jsonObject.get("category").toString()));
 
         if(category != null){

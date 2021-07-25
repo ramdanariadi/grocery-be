@@ -44,7 +44,7 @@ public class TransactionService {
         List<DetailTransaction> detailTransactions = gson.fromJson(reqBody.getJSONArray("products").toString(),datasetListType);
         Long totalPrice = 0L;
         for (DetailTransaction d: detailTransactions){
-            totalPrice += d.getPrice() * d.getTotal();
+            totalPrice += ((d.getWeight() * d.getTotal()) / d.getPerUnit()) * d.getPrice();
             Product product = productRepository.findProductById(d.getId());
             d.setProduct(product);
             d.setId(Generators.timeBasedGenerator().generate());

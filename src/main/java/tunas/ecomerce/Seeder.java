@@ -32,7 +32,7 @@ public class Seeder implements CommandLineRunner {
 
     private void loadDataCategory(){
         Category category = new Category();
-        category.setCategory("Komputer");
+        category.setCategory("Vegetables");
         category.setId(Generators.timeBasedGenerator().generate());
         categoryRepository.save(category);
     }
@@ -40,10 +40,12 @@ public class Seeder implements CommandLineRunner {
     private void loadDataProduct(){
         Product product = new Product();
         product.setId(Generators.timeBasedGenerator().generate());
-        product.setName("Mouse logitect MX1250");
-        product.setDescription("Lightweith gaming mouse");
-        product.setPrice(110000L);
-        Category category = categoryRepository.findCategoryByCategory("Komputer");
+        product.setName("Broccoli");
+        product.setDescription("Green vegetable, good for eyes");
+        product.setPrice(1100L);
+        product.setWeight(1500);
+        product.setPerUnit(100);
+        Category category = categoryRepository.findCategoryByCategory("Vegetables");
         product.setCategory(category);
         productRepository.save(product);
     }
