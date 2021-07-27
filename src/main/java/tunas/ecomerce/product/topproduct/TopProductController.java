@@ -1,9 +1,7 @@
 package tunas.ecomerce.product.topproduct;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import tunas.ecomerce.cutomresponse.CustomResponse;
 import tunas.ecomerce.cutomresponse.ListResponse;
 import tunas.ecomerce.cutomresponse.ObjectResponse;
@@ -25,5 +23,12 @@ public class TopProductController {
     ListResponse<TopProduct> getAllProduct(){
          CustomResponse customResponse = new CustomResponse();
          return customResponse.sendResponse(topProductService.getAll(),200);
+    }
+
+    @PostMapping("/")
+    ObjectResponse<String> addTopProduct(@RequestBody TopProduct product){
+         topProductService.addTopProduct(product);
+         CustomResponse customResponse = new CustomResponse();
+         return  customResponse.sendResponse("",200);
     }
 }
