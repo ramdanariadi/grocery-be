@@ -1,7 +1,10 @@
 package tunas.ecomerce.product;
 
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 import tunas.ecomerce.category.Category;
 import tunas.ecomerce.images.Photos;
+import tunas.ecomerce.product.projections.ProductCustomSelect;
 import tunas.ecomerce.product.topproduct.TopProduct;
 
 import javax.persistence.*;

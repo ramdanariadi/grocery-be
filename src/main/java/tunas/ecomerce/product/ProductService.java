@@ -2,6 +2,7 @@ package tunas.ecomerce.product;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tunas.ecomerce.product.projections.ProductCustomSelect;
 
 import java.util.List;
 import java.util.UUID;
@@ -12,7 +13,7 @@ public class ProductService {
     private ProductRepository productRepository;
 
     public List<ProductRepository.CustomSelect> getAll(){
-        return productRepository.findTableColumn();
+        return productRepository.findCustomColumn();
     }
 
     public Product findProductById(UUID id){

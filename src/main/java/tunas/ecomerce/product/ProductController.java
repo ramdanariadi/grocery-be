@@ -9,6 +9,7 @@ import tunas.ecomerce.category.CategoryService;
 import tunas.ecomerce.cutomresponse.CustomResponse;
 import tunas.ecomerce.cutomresponse.ListResponse;
 import tunas.ecomerce.cutomresponse.ObjectResponse;
+import tunas.ecomerce.product.projections.ProductCustomSelect;
 
 import java.util.List;
 import java.util.UUID;
