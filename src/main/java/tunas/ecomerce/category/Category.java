@@ -1,5 +1,8 @@
 package tunas.ecomerce.category;
 
+import com.sun.istack.NotNull;
+
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import java.util.UUID;
@@ -7,8 +10,9 @@ import java.util.UUID;
 @Entity
 public class Category {
     @Id
-    UUID id;
-    String category;
+    private UUID id;
+    @NotNull
+    private String category;
 
     public UUID getId() {
         return id;

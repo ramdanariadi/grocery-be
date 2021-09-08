@@ -3,6 +3,7 @@ package tunas.ecomerce.product;
 import com.fasterxml.uuid.Generators;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import tunas.ecomerce.category.Category;
 import tunas.ecomerce.category.CategoryService;
@@ -35,14 +36,14 @@ public class ProductController {
         List<ProductRepository.CustomSelect> products = productService.getAll();
         System.out.println(products);
         CustomResponse<ProductRepository.CustomSelect> customResponse = new CustomResponse<>();
-        return customResponse.sendResponse(products,200);
+        return customResponse.sendResponse(products, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     @ResponseBody
     public ObjectResponse<Product> getProduct(@PathVariable UUID id){
         Product product = productService.findProductById(id);
-        return customResponse.sendResponse(product,200);
+        return customResponse.sendResponse(product,HttpStatus.OK);
     }
 
     @PostMapping
@@ -62,6 +63,6 @@ public class ProductController {
         }
         productService.saveProduct(product);
         CustomResponse<String> customResponse = new CustomResponse<>();
-        return customResponse.sendResponse("",201);
+        return customResponse.sendResponse("",HttpStatus.CREATED);
     }
 }

@@ -1,6 +1,7 @@
 package tunas.ecomerce.customer;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import tunas.ecomerce.cutomresponse.CustomResponse;
 import tunas.ecomerce.cutomresponse.ListResponse;
@@ -19,14 +20,14 @@ public class CustomerController {
     public ObjectResponse<Customer> getCustomer(@PathVariable UUID id){
         Customer customer = customerService.getCustomer(id);
         CustomResponse<Customer> customResponse = new CustomResponse<>();
-        return customResponse.sendResponse(customer,200);
+        return customResponse.sendResponse(customer, HttpStatus.OK);
     }
 
     @GetMapping("/all")
     public ListResponse<List<Customer>> getAllCustomers(){
         List<Customer> customers = customerService.getCustomers();
         CustomResponse<Customer> customResponse = new CustomResponse<>();
-        return customResponse.sendResponse(customers,200);
+        return customResponse.sendResponse(customers,HttpStatus.OK);
     }
 
     @PostMapping
@@ -34,6 +35,6 @@ public class CustomerController {
         System.out.println(customer);
         customerService.saveCustomer(customer);
         CustomResponse<String> customResponse = new CustomResponse<>();
-        return customResponse.sendResponse("",201);
+        return customResponse.sendResponse("",HttpStatus.CREATED);
     }
 }

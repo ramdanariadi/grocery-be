@@ -1,6 +1,7 @@
 package tunas.ecomerce.transaction;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +18,6 @@ public class TransactionController {
     @PostMapping
     public ListResponse addTransaction(@RequestBody String jsonBody){
         CustomResponse<DetailTransaction> customResponse = new CustomResponse<>();
-        return customResponse.sendResponse(transactionService.makeTransaction(jsonBody),200);
+        return customResponse.sendResponse(transactionService.makeTransaction(jsonBody), HttpStatus.OK);
     }
 }
