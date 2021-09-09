@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import tunas.ecomerce.cutomresponse.ApiRequestException;
 
 import java.util.UUID;
 
@@ -52,6 +53,7 @@ class ProductServiceTest {
         // given
         Product product = new Product();
         product.setId(UUID.fromString("0b589615-f910-11eb-936c-41a335bdee2c"));
+        product.setPrice(1000L);
         product.setName("tes");
 
         // when
@@ -71,18 +73,22 @@ class ProductServiceTest {
         product.setPrice(0L);
         product.setId(UUID.fromString("0b589615-f910-11eb-936c-41a335bdee2c"));
 
-        Product product1 = new Product();
-        product1.setPrice(0L);
-        product1.setId(UUID.fromString("0b589615-f910-11eb-936c-41a335bdee2c"));
-
-        given(productRepository.
-                findProductById(product.getId()))
-                .willReturn(product1);
-
         // when
         // then
         assertThatThrownBy(() -> productService.saveProduct(product))
-                .isInstanceOf(IllegalStateException.class)
-                .hasMessage("price must be greater than 0");
+                .isInstanceOf(ApiRequestException.class)
+                .hasMessage("Price cannot lower than 1");
+    }
+
+    @Test
+    void testGetAll() {
+    }
+
+    @Test
+    void testFindProductById() {
+    }
+
+    @Test
+    void testSaveProduct() {
     }
 }

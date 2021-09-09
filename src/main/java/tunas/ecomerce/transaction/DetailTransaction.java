@@ -8,15 +8,15 @@ import java.util.UUID;
 @Entity
 public class DetailTransaction {
     @Id
-    UUID id;
+    private UUID id;
 
     @ManyToOne
-    Product product;
-    String name;
-    Long price;
-    Integer perUnit;
-    Integer weight;
-    Integer total;
+    private Product product;
+    private String name;
+    private Long price;
+    private Integer perUnit;
+    private Integer weight;
+    private Integer total;
 
     public Integer getPerUnit() {
         return perUnit;

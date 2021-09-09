@@ -19,7 +19,7 @@ public class RecommendationProductController {
     @GetMapping("{id}")
     ObjectResponse<RecommendationProduct> getRecommendationProductById(@RequestParam UUID id){
         CustomResponse customResponse = new CustomResponse();
-        return customResponse.sendResponse(recommendationProductService.getById(id),HttpStatus.OK);
+        return customResponse.sendResponse(recommendationProductService.getById(id).get(),HttpStatus.OK);
     }
 
     @GetMapping("/all")

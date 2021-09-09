@@ -9,8 +9,13 @@ import java.util.UUID;
 
 @Service
 public class TopProductService {
+
+    private final TopProductRepository topProductRepository;
+
     @Autowired
-    TopProductRepository topProductRepository;
+    public TopProductService(TopProductRepository topProductRepository){
+        this.topProductRepository = topProductRepository;
+    }
 
     Boolean addTopProduct(TopProduct topProduct){
         topProductRepository.save(topProduct);

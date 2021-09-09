@@ -7,10 +7,10 @@ import java.util.UUID;
 @Entity
 public class Customer {
     @Id
-    UUID id;
-    String name;
-    String mobile;
-    String email;
+    private UUID id;
+    private String name;
+    private String mobile;
+    private String email;
 
     public Customer() {
     }

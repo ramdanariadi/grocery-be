@@ -13,6 +13,7 @@ public class Category {
     private UUID id;
     @NotNull
     private String category;
+    private String imageUrl;
 
     public UUID getId() {
         return id;

@@ -15,12 +15,13 @@ import java.util.UUID;
 @Table(name = "products")
 public class Product {
     @Id
-    UUID id;
-    String name;
-    Long price; // per unit
-    Integer perUnit; // gram
-    String description;
-    Integer weight; // on gram
+    private UUID id;
+    private String name;
+    private Long price; // per unit
+    private Integer perUnit; // gram
+    private String description;
+    private Integer weight; // on gram
+    private String imageUrl;
 
     @OneToMany(targetEntity = Photos.class)
     List<Photos> photos;
@@ -31,6 +32,22 @@ public class Product {
     @OneToOne(mappedBy = "product",cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
     TopProduct topProduct;
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public TopProduct getTopProduct() {
+        return topProduct;
+    }
+
+    public void setTopProduct(TopProduct topProduct) {
+        this.topProduct = topProduct;
+    }
 
     public Integer getPerUnit() {
         return perUnit;

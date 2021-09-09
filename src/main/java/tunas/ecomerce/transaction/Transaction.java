@@ -9,16 +9,16 @@ import java.util.UUID;
 @Entity
 public class Transaction {
     @Id
-    UUID id;
+    private UUID id;
 
-    Long totalPrice;
-    Date transactionDate;
+    private Long totalPrice;
+    private Date transactionDate;
 
     @ManyToOne
-    Customer customer;
-    String customerName;
-    String customerMobile;
-    String CustomerEmail;
+    private Customer customer;
+    private String customerName;
+    private String customerMobile;
+    private String CustomerEmail;
 
     public UUID getId() {
         return id;
