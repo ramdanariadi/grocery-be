@@ -15,6 +15,14 @@ public class Category {
     private String category;
     private String imageUrl;
 
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
     public UUID getId() {
         return id;
     }
