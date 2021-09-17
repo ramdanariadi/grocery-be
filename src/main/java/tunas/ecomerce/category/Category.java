@@ -14,6 +14,15 @@ public class Category {
     @NotNull
     private String category;
     private String imageUrl;
+    private Boolean deleted = false;
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
 
     public String getImageUrl() {
         return imageUrl;

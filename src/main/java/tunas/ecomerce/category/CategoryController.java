@@ -38,6 +38,26 @@ public class CategoryController {
         return customResponse.sendResponse(category, HttpStatus.OK);
     }
 
+    @DeleteMapping(path = "/{id}")
+    public ObjectResponse<String> destroyCategory(@PathVariable UUID id){
+        int nModified = categoryService.destroyCategory(id);
+        CustomResponse<String> customResponse = new CustomResponse<>();
+        if(nModified > 0){
+            return customResponse.sendResponse("",HttpStatus.OK);
+        }
+        return customResponse.sendResponse("", HttpStatus.NOT_MODIFIED);
+    }
+
+    @PutMapping
+    public ObjectResponse<String> updateCategory(@RequestBody Category category){
+        int nModified = categoryService.updateCategory(category);
+        CustomResponse<String> customResponse = new CustomResponse<>();
+        if(nModified > 0){
+            return customResponse.sendResponse("",HttpStatus.OK);
+        }
+        return customResponse.sendResponse("Not Modified",HttpStatus.NOT_MODIFIED);
+    }
+
     @PostMapping
     public ObjectResponse<String> addCategory(@RequestBody Category category){
         categoryService.addCategory(category);

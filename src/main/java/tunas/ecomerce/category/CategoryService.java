@@ -25,7 +25,7 @@ public class CategoryService {
     }
 
     public List<Category> findAllCategory(){
-        return (List<Category>) categoryRepository.findAll();
+        return (List<Category>) categoryRepository.findAllCategories();
     }
 
     public void addCategory(Category category){
@@ -35,5 +35,16 @@ public class CategoryService {
         }
         category.setId(Generators.timeBasedGenerator().generate());
         categoryRepository.save(category);
+    }
+
+    public int updateCategory(Category category){
+        if(category.getId() == null){
+            throw new ApiRequestException("category id is empty", HttpStatus.PRECONDITION_FAILED);
+        }
+        return categoryRepository.updateCategory(category.getId(), category.getCategory(), category.getImageUrl());
+    }
+
+    public int destroyCategory(UUID id){
+        return categoryRepository.destroyCategoryById(id);
     }
 }
