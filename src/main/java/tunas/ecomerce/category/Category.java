@@ -14,7 +14,9 @@ public class Category {
     @NotNull
     private String category;
     private String imageUrl;
-    private Boolean deleted = false;
+
+    @Column(columnDefinition = "boolean default false")
+    private Boolean deleted;
 
     public Boolean getDeleted() {
         return deleted;

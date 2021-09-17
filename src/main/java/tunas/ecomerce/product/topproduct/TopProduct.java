@@ -25,6 +25,15 @@ public class TopProduct {
     public TopProduct() {
     }
 
+    public TopProduct(Product product){
+        this.setName(product.getName());
+        this.setPrice(product.getPrice());
+        this.setWeight(product.getWeight());
+        this.setDescription(product.getDescription());
+        this.setPerUnit(product.getPerUnit());
+        this.setProduct(product);
+    }
+
     public UUID getId() {
         return id;
     }

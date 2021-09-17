@@ -19,11 +19,14 @@ import java.util.UUID;
 @RequestMapping(path = "api/v1/product")
 public class ProductController {
 
-    @Autowired
-    private ProductService productService;
+    private final ProductService productService;
+    private final CategoryService categoryService;
 
     @Autowired
-    private CategoryService categoryService;
+    ProductController(ProductService productService, CategoryService categoryService){
+        this.productService = productService;
+        this.categoryService = categoryService;
+    }
 
     private static CustomResponse<Product> customResponse;
     static {
@@ -34,7 +37,6 @@ public class ProductController {
     @ResponseBody
     public ListResponse getProducts(){
         List<ProductRepository.CustomSelect> products = productService.getAll();
-        System.out.println(products);
         CustomResponse<ProductRepository.CustomSelect> customResponse = new CustomResponse<>();
         return customResponse.sendResponse(products, HttpStatus.OK);
     }
@@ -64,5 +66,25 @@ public class ProductController {
         productService.saveProduct(product);
         CustomResponse<String> customResponse = new CustomResponse<>();
         return customResponse.sendResponse("",HttpStatus.CREATED);
+    }
+
+    @PutMapping
+    public ObjectResponse<String> updateProduct(@RequestBody Product product){
+        int nModified = productService.updateProduct(product);
+        CustomResponse<String> customResponse = new CustomResponse<>();
+        if(nModified > 0){
+            return customResponse.sendResponse("",HttpStatus.OK);
+        }
+        return customResponse.sendResponse("",HttpStatus.NOT_MODIFIED);
+    }
+
+    @DeleteMapping("/{id}")
+    public ObjectResponse<String> destroyProduct(@PathVariable UUID id){
+        int nModified = productService.destroyProduct(id);
+        CustomResponse<String> customResponse = new CustomResponse<>();
+        if(nModified > 0){
+            return customResponse.sendResponse("",HttpStatus.OK);
+        }
+        return customResponse.sendResponse("",HttpStatus.NOT_MODIFIED);
     }
 }

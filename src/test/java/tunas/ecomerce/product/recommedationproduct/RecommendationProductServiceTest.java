@@ -6,6 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import tunas.ecomerce.product.ProductRepository;
 
 import java.util.UUID;
 
@@ -17,9 +18,11 @@ class RecommendationProductServiceTest {
     RecommendationProductService recommendationProductService;
     @Mock
     RecommendationProductRepository recommendationProductRepository;
+    @Mock
+    ProductRepository productRepository;
     @BeforeEach
     void setUp() {
-        recommendationProductService = new RecommendationProductService(recommendationProductRepository);
+        recommendationProductService = new RecommendationProductService(recommendationProductRepository,productRepository);
     }
 
     @Test

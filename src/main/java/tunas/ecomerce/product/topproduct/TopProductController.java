@@ -9,27 +9,28 @@ import tunas.ecomerce.cutomresponse.ObjectResponse;
 
 import java.util.UUID;
 
-@RequestMapping("/top/product")
+@RestController
+@RequestMapping("/api/v1/product/top")
 public class TopProductController {
     @Autowired
     TopProductService topProductService;
 
-     @GetMapping("/{id}")
-    ObjectResponse<TopProduct> getProductById(@RequestParam UUID id){
+    @GetMapping("/{id}")
+    ObjectResponse<TopProduct> getProductById(@PathVariable UUID id){
         CustomResponse customResponse = new CustomResponse();
         return customResponse.sendResponse(topProductService.getById(id).get(), HttpStatus.OK);
     }
 
-    @GetMapping("/")
+    @GetMapping
     ListResponse<TopProduct> getAllProduct(){
          CustomResponse customResponse = new CustomResponse();
          return customResponse.sendResponse(topProductService.getAll(),HttpStatus.OK);
     }
 
-    @PostMapping("/")
-    ObjectResponse<String> addTopProduct(@RequestBody TopProduct product){
-         topProductService.addTopProduct(product);
-         CustomResponse customResponse = new CustomResponse();
-         return  customResponse.sendResponse("",HttpStatus.OK);
+    @PostMapping("/{id}")
+    ObjectResponse<String> addTopProduct(@PathVariable UUID id){
+         topProductService.addTopProduct(id);
+        CustomResponse<String> customResponse = new CustomResponse<>();
+        return customResponse.sendResponse("",HttpStatus.CREATED);
     }
 }

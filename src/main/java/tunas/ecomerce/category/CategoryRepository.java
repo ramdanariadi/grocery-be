@@ -26,6 +26,6 @@ public interface CategoryRepository extends CrudRepository<Category, UUID> {
 
     @Modifying
     @Transactional
-    @Query("delete from Category c where c.id = :id")
+    @Query("update Category c set c.deleted = true where c.id = :id")
     int destroyCategoryById(@Param("id") UUID id);
 }

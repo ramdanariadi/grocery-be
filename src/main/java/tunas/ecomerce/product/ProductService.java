@@ -30,4 +30,15 @@ public class ProductService {
             throw new ApiRequestException("Price cannot lower than 1", HttpStatus.PRECONDITION_FAILED);
         productRepository.save(product);
     }
+
+    public int updateProduct(Product product){
+        if(product.getName() == null || product.getName().trim().equals("")){
+            throw new ApiRequestException("Product name cannot empty",HttpStatus.PRECONDITION_FAILED);
+        }
+        return productRepository.updateProduct(product.getId(),product.getName(),product.getPrice());
+    }
+
+    public int destroyProduct(UUID id){
+        return productRepository.destroyProduct(id);
+    }
 }

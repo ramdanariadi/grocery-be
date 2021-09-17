@@ -2,16 +2,15 @@ package tunas.ecomerce.product.recommedationproduct;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import tunas.ecomerce.cutomresponse.CustomResponse;
 import tunas.ecomerce.cutomresponse.ListResponse;
 import tunas.ecomerce.cutomresponse.ObjectResponse;
 
 import java.util.UUID;
 
-@RequestMapping("/product/recommendation")
+@RestController
+@RequestMapping("/api/v1/product/recommendation")
 public class RecommendationProductController {
     @Autowired
     RecommendationProductService recommendationProductService;
@@ -26,5 +25,12 @@ public class RecommendationProductController {
     ListResponse<RecommendationProduct> getAll(){
         CustomResponse customResponse = new CustomResponse();
         return customResponse.sendResponse(recommendationProductService.getAll(), HttpStatus.OK);
+    }
+
+    @PostMapping("/{id}")
+    ObjectResponse<String> addRecommendationProduct(@PathVariable UUID id){
+        recommendationProductService.addRecommendationProduct(id);
+        CustomResponse<String> customResponse = new CustomResponse();
+        return customResponse.sendResponse("", HttpStatus.OK);
     }
 }

@@ -25,6 +25,15 @@ public class RecommendationProduct {
     public RecommendationProduct() {
     }
 
+    public RecommendationProduct(Product product){
+        this.setName(product.getName());
+        this.setPrice(product.getPrice());
+        this.setDescription(product.getDescription());
+        this.setPerUnit(product.getPerUnit());
+        this.setWeight(product.getWeight());
+        this.setProduct(product);
+    }
+
     public UUID getId() {
         return id;
     }

@@ -23,6 +23,9 @@ public class Product {
     private Integer weight; // on gram
     private String imageUrl;
 
+    @Column(columnDefinition = "boolean default false")
+    private Boolean deleted;
+
     @OneToMany(targetEntity = Photos.class)
     List<Photos> photos;
 
@@ -32,6 +35,14 @@ public class Product {
     @OneToOne(mappedBy = "product",cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn
     TopProduct topProduct;
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
 
     public String getImageUrl() {
         return imageUrl;
