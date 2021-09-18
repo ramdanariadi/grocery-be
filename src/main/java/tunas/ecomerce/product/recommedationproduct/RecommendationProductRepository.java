@@ -34,7 +34,9 @@ public interface RecommendationProductRepository extends CrudRepository<Recommen
 
     @Modifying
     @Transactional
-    @Query("update RecommendationProduct p set p.name = :name, p.price = :price, p.imageUrl = :imageUrl where p.id = :id")
+    @Query("update RecommendationProduct p set p.name = :name, p.price = :price, " +
+            "p.imageUrl = :imageUrl, p.category = :category " +
+            "where p.id = :id")
     int update(@Param("id") UUID id,
                @Param("name") String name,
                @Param("price") Long price,
