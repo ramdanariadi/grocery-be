@@ -14,7 +14,7 @@ public interface TopProductRepository extends CrudRepository<TopProduct, UUID> {
     @Query("select tp.id as id, tp.name as name, " +
             "tp.weight as weight, tp.price as price," +
             " tp.perUnit as perUnit, tp.imageUrl as imageUrl," +
-            " tp.description as description" +
+            " tp.description as description, tp.category as category" +
             " from TopProduct tp where tp.deleted = false")
     List<iCustomSelect> getAll();
 
@@ -23,6 +23,7 @@ public interface TopProductRepository extends CrudRepository<TopProduct, UUID> {
         Integer getWeight();
         Integer getPerUnit();
         String getDescription();
+        String getCategory();
         String getName();
         Long getPrice();
         @Value("#{target.id}")

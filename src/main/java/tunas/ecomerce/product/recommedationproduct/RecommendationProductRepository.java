@@ -16,7 +16,7 @@ public interface RecommendationProductRepository extends CrudRepository<Recommen
     @Query("select rp.id as id, rp.name as name, " +
             "rp.weight as weight, rp.price as price," +
             " rp.perUnit as perUnit, rp.imageUrl as imageUrl," +
-            " rp.description as description" +
+            " rp.description as description, rp.category as category" +
             " from RecommendationProduct rp where rp.deleted = false")
     List<RecommendationProductRepository.iCustomSelect> getAll();
 
@@ -27,6 +27,7 @@ public interface RecommendationProductRepository extends CrudRepository<Recommen
         String getDescription();
         String getName();
         Long getPrice();
+        String getCategory();
         @Value("#{target.id}")
         UUID getId();
     }

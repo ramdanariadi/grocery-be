@@ -13,6 +13,7 @@ public class RecommendationProduct {
     UUID id;
     Long price;
     String name;
+    String category;
     Integer perUnit; // gram
     String description;
     Integer weight; // on gram
@@ -35,7 +36,16 @@ public class RecommendationProduct {
         this.setPerUnit(product.getPerUnit());
         this.setWeight(product.getWeight());
         this.setImageUrl(product.getImageUrl());
+        this.setCategory(product.getCategory().getCategory());
         this.setProduct(product);
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public String getImageUrl() {

@@ -1,5 +1,6 @@
 package tunas.ecomerce.product.topproduct;
 
+import tunas.ecomerce.category.Category;
 import tunas.ecomerce.product.Product;
 
 import javax.persistence.*;
@@ -13,6 +14,7 @@ public class TopProduct {
     UUID id;
     Long price;
     String name;
+    String category;
     Integer perUnit; // gram
     String description;
     Integer weight; // on gram
@@ -35,7 +37,16 @@ public class TopProduct {
         this.setDescription(product.getDescription());
         this.setPerUnit(product.getPerUnit());
         this.setImageUrl(product.getImageUrl());
+        this.setCategory(product.getCategory().getCategory());
         this.setProduct(product);
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public String getImageUrl() {

@@ -24,6 +24,8 @@ public interface ProductRepository extends CrudRepository<Product, UUID> {
         Integer getWeight();
         String getName();
         Long getPrice();
+        @Value("#{target.category.category}")
+        String getCategory();
         @Value("#{target.id}")
         UUID getId();
         @Value("#{target.category.id}")
