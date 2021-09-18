@@ -36,5 +36,6 @@ public interface TopProductRepository extends CrudRepository<TopProduct, UUID> {
     int update(@Param("id") UUID id,
                @Param("name") String name,
                @Param("price") Long price,
-               @Param("imageUrl") String imageUrl);
+               @Param("imageUrl") String imageUrl,
+               @Param("category") String category);
 }

@@ -38,7 +38,8 @@ public class TopProductService {
             int nModified = topProductRepository.update(product.getId(),
                     product.getName(),
                     product.getPrice(),
-                    product.getImageUrl());
+                    product.getImageUrl(),
+                    product.getCategory().getCategory());
             return nModified > 0;
         }
         TopProduct topProduct = new TopProduct(product);

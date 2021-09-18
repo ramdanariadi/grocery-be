@@ -42,7 +42,8 @@ public class RecommendationProductService {
                     product.getId(),
                     product.getName(),
                     product.getPrice(),
-                    product.getImageUrl()
+                    product.getImageUrl(),
+                    product.getCategory().getCategory()
             );
             return nModified > 0;
         }
