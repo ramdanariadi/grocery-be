@@ -12,8 +12,13 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/api/v1/product/top")
 public class TopProductController {
+
+    private final TopProductService topProductService;
+
     @Autowired
-    TopProductService topProductService;
+    TopProductController(TopProductService topProductService){
+        this.topProductService = topProductService;
+    }
 
     @GetMapping("/{id}")
     ObjectResponse<TopProduct> getProductById(@PathVariable UUID id){
@@ -22,15 +27,18 @@ public class TopProductController {
     }
 
     @GetMapping
-    ListResponse<TopProduct> getAllProduct(){
-         CustomResponse customResponse = new CustomResponse();
+    ListResponse<TopProductRepository.iCustomSelect> getAllProducts(){
+         CustomResponse<TopProductRepository.iCustomSelect> customResponse = new CustomResponse();
          return customResponse.sendResponse(topProductService.getAll(),HttpStatus.OK);
     }
 
     @PostMapping("/{id}")
     ObjectResponse<String> addTopProduct(@PathVariable UUID id){
-         topProductService.addTopProduct(id);
+        Boolean saved = topProductService.addTopProduct(id);
         CustomResponse<String> customResponse = new CustomResponse<>();
-        return customResponse.sendResponse("",HttpStatus.CREATED);
+        if(saved){
+            return customResponse.sendResponse("",HttpStatus.CREATED);
+        }
+        return customResponse.sendResponse("",HttpStatus.OK);
     }
 }

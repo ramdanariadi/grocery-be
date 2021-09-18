@@ -33,11 +33,11 @@ public class ProductController {
         customResponse = new CustomResponse<>();
     }
 
-    @GetMapping("/all")
+    @GetMapping
     @ResponseBody
     public ListResponse getProducts(){
-        List<ProductRepository.CustomSelect> products = productService.getAll();
-        CustomResponse<ProductRepository.CustomSelect> customResponse = new CustomResponse<>();
+        List<ProductRepository.iCustomSelect> products = productService.getAll();
+        CustomResponse<ProductRepository.iCustomSelect> customResponse = new CustomResponse<>();
         return customResponse.sendResponse(products, HttpStatus.OK);
     }
 

@@ -1,12 +1,39 @@
 package tunas.ecomerce.product.topproduct;
 
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.UUID;
 
 public interface TopProductRepository extends CrudRepository<TopProduct, UUID> {
-    @Query("select tp from TopProduct tp")
-    List<TopProduct> getAll();
+    @Query("select tp.id as id, tp.name as name, " +
+            "tp.weight as weight, tp.price as price," +
+            " tp.perUnit as perUnit, tp.imageUrl as imageUrl," +
+            " tp.description as description" +
+            " from TopProduct tp where tp.deleted = false")
+    List<iCustomSelect> getAll();
+
+    interface iCustomSelect{
+        String getImageUrl();
+        Integer getWeight();
+        Integer getPerUnit();
+        String getDescription();
+        String getName();
+        Long getPrice();
+        @Value("#{target.id}")
+        UUID getId();
+    }
+
+    @Modifying
+    @Transactional
+    @Query("update TopProduct p set p.name = :name, p.price = :price, p.imageUrl = :imageUrl where p.id = :id")
+    int update(@Param("id") UUID id,
+               @Param("name") String name,
+               @Param("price") Long price,
+               @Param("imageUrl") String imageUrl);
 }

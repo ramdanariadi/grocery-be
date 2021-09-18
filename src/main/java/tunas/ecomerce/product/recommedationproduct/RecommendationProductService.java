@@ -23,24 +23,30 @@ public class RecommendationProductService {
         this.productRepository = productRepository;
     }
 
-    List<RecommendationProduct> getAll(){
-        return recommendationProductRepository.getAllRecommendationProduct();
+    List<RecommendationProductRepository.iCustomSelect> getAll(){
+        return recommendationProductRepository.getAll();
     }
 
     Optional<RecommendationProduct> getById(UUID uuid){
         return recommendationProductRepository.findById(uuid);
     }
 
-    void addRecommendationProduct(UUID id){
+    Boolean addRecommendationProduct(UUID id){
         Product product = productRepository.findProductById(id);
         if(product == null){
             throw new ApiRequestException("Product not found", HttpStatus.PRECONDITION_FAILED);
         }
         Optional<RecommendationProduct> optionalRecommendationProduct = recommendationProductRepository.findById(id);
         if(optionalRecommendationProduct.isPresent()){
-            throw new ApiRequestException("Product was added into recommendation product list",HttpStatus.PRECONDITION_FAILED);
+            int nModified = recommendationProductRepository.update(
+                    product.getId(),
+                    product.getName(),
+                    product.getPrice(),
+                    product.getImageUrl()
+            );
+            return nModified > 0;
         }
         RecommendationProduct recommendationProduct = new RecommendationProduct(product);
-        recommendationProductRepository.save(recommendationProduct);
+        return recommendationProductRepository.save(recommendationProduct) != null;
     }
 }

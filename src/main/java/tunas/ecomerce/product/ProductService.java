@@ -17,7 +17,7 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public List<ProductRepository.CustomSelect> getAll(){
+    public List<ProductRepository.iCustomSelect> getAll(){
         return productRepository.findCustomColumn();
     }
 
@@ -35,7 +35,7 @@ public class ProductService {
         if(product.getName() == null || product.getName().trim().equals("")){
             throw new ApiRequestException("Product name cannot empty",HttpStatus.PRECONDITION_FAILED);
         }
-        return productRepository.updateProduct(product.getId(),product.getName(),product.getPrice());
+        return productRepository.updateProduct(product.getId(),product.getName(),product.getPrice(),product.getImageUrl());
     }
 
     public int destroyProduct(UUID id){

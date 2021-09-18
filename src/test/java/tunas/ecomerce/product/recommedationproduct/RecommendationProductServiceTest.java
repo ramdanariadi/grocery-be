@@ -32,7 +32,7 @@ class RecommendationProductServiceTest {
         recommendationProductService.getAll();
 
         //then
-        verify(recommendationProductRepository).getAllRecommendationProduct();
+        verify(recommendationProductRepository).getAll();
     }
 
     @Test

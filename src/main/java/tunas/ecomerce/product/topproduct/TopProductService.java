@@ -28,20 +28,24 @@ public class TopProductService {
     }
 
     @Transactional
-    void addTopProduct(UUID id){
+    Boolean addTopProduct(UUID id){
         Product product = productRepository.findProductById(id);
         if(product == null){
             throw new ApiRequestException("Product not found", HttpStatus.PRECONDITION_FAILED);
         }
         Optional<TopProduct> optionalTopProduct = topProductRepository.findById(product.getId());
         if(optionalTopProduct.isPresent()){
-            throw new ApiRequestException("Product was added into top product collection",HttpStatus.PRECONDITION_FAILED);
+            int nModified = topProductRepository.update(product.getId(),
+                    product.getName(),
+                    product.getPrice(),
+                    product.getImageUrl());
+            return nModified > 0;
         }
         TopProduct topProduct = new TopProduct(product);
-        topProductRepository.save(topProduct);
+        return topProductRepository.save(topProduct) != null;
     }
 
-    List<TopProduct> getAll(){
+    List<TopProductRepository.iCustomSelect> getAll(){
         return topProductRepository.getAll();
     }
 

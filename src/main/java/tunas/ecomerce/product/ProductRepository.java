@@ -16,11 +16,12 @@ import java.util.UUID;
 @Component
 public interface ProductRepository extends CrudRepository<Product, UUID> {
 
-    @Query("select p.id as id, p.name as name, p.price as price,p.imageUrl as imageUrl, p.category as category from Product p where p.deleted = false")
-    List<CustomSelect> findCustomColumn();
+    @Query("select p.id as id, p.name as name, p.price as price, p.weight as weight, p.imageUrl as imageUrl, p.category as category from Product p where p.deleted = false")
+    List<iCustomSelect> findCustomColumn();
 
-    interface CustomSelect{
+    interface iCustomSelect{
         String getImageUrl();
+        Integer getWeight();
         String getName();
         Long getPrice();
         @Value("#{target.id}")
@@ -33,8 +34,11 @@ public interface ProductRepository extends CrudRepository<Product, UUID> {
 
     @Modifying
     @Transactional
-    @Query("update Product p set p.name = :name, p.price = :price where p.id = :id")
-    int updateProduct(@Param("id") UUID id,@Param("name") String name, @Param("price") Long price);
+    @Query("update Product p set p.name = :name, p.price = :price, p.imageUrl = :imageUrl where p.id = :id")
+    int updateProduct(@Param("id") UUID id,
+                      @Param("name") String name,
+                      @Param("price") Long price,
+                      @Param("imageUrl") String imageUrl);
 
     @Modifying
     @Transactional

@@ -21,16 +21,19 @@ public class RecommendationProductController {
         return customResponse.sendResponse(recommendationProductService.getById(id).get(),HttpStatus.OK);
     }
 
-    @GetMapping("/all")
-    ListResponse<RecommendationProduct> getAll(){
-        CustomResponse customResponse = new CustomResponse();
+    @GetMapping("")
+    ListResponse<RecommendationProductRepository.iCustomSelect> getAll(){
+        CustomResponse<RecommendationProductRepository.iCustomSelect> customResponse = new CustomResponse();
         return customResponse.sendResponse(recommendationProductService.getAll(), HttpStatus.OK);
     }
 
     @PostMapping("/{id}")
     ObjectResponse<String> addRecommendationProduct(@PathVariable UUID id){
-        recommendationProductService.addRecommendationProduct(id);
+        Boolean saved = recommendationProductService.addRecommendationProduct(id);
         CustomResponse<String> customResponse = new CustomResponse();
+        if(saved){
+            return customResponse.sendResponse("", HttpStatus.CREATED);
+        }
         return customResponse.sendResponse("", HttpStatus.OK);
     }
 }

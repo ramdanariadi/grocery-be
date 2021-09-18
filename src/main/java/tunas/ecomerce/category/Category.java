@@ -16,7 +16,7 @@ public class Category {
     private String imageUrl;
 
     @Column(columnDefinition = "boolean default false")
-    private Boolean deleted;
+    private Boolean deleted = false;
 
     public Boolean getDeleted() {
         return deleted;

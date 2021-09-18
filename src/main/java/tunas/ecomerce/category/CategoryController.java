@@ -24,7 +24,7 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
-    @GetMapping(path = "/all")
+    @GetMapping
     public ListResponse<Category> allCategories(){
         List<Category> categories = categoryService.findAllCategory();
         CustomResponse<Category> categoryCustomResponse = new CustomResponse<>();

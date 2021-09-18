@@ -16,6 +16,9 @@ public class TopProduct {
     Integer perUnit; // gram
     String description;
     Integer weight; // on gram
+    String imageUrl;
+    @Column(columnDefinition = "boolean default false")
+    Boolean deleted = false;
 
     @OneToOne
     @MapsId
@@ -31,7 +34,24 @@ public class TopProduct {
         this.setWeight(product.getWeight());
         this.setDescription(product.getDescription());
         this.setPerUnit(product.getPerUnit());
+        this.setImageUrl(product.getImageUrl());
         this.setProduct(product);
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
+    }
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
     }
 
     public UUID getId() {

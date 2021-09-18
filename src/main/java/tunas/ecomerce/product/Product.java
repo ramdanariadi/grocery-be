@@ -24,7 +24,7 @@ public class Product {
     private String imageUrl;
 
     @Column(columnDefinition = "boolean default false")
-    private Boolean deleted;
+    private Boolean deleted = false;
 
     @OneToMany(targetEntity = Photos.class)
     List<Photos> photos;
