@@ -32,10 +32,6 @@ public class Product {
     @ManyToOne
     Category category;
 
-    @OneToOne(mappedBy = "product",cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn
-    TopProduct topProduct;
-
     public Boolean getDeleted() {
         return deleted;
     }
@@ -50,14 +46,6 @@ public class Product {
 
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
-    }
-
-    public TopProduct getTopProduct() {
-        return topProduct;
-    }
-
-    public void setTopProduct(TopProduct topProduct) {
-        this.topProduct = topProduct;
     }
 
     public Integer getPerUnit() {
