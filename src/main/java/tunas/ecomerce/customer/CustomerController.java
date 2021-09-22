@@ -23,7 +23,7 @@ public class CustomerController {
         return customResponse.sendResponse(customer, HttpStatus.OK);
     }
 
-    @GetMapping("/all")
+    @GetMapping
     public ListResponse<List<Customer>> getAllCustomers(){
         List<Customer> customers = customerService.getCustomers();
         CustomResponse<Customer> customResponse = new CustomResponse<>();

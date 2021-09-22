@@ -9,14 +9,19 @@ import java.util.UUID;
 public class DetailTransaction {
     @Id
     private UUID id;
-
     @ManyToOne
     private Product product;
     private String name;
+    private String imageUrl;
     private Long price;
     private Integer perUnit;
     private Integer weight;
     private Integer total;
+
+    @ManyToOne
+    Transaction transaction;
+
+    public DetailTransaction() {}
 
     public Integer getPerUnit() {
         return perUnit;
@@ -50,11 +55,9 @@ public class DetailTransaction {
         this.total = total;
     }
 
-    @ManyToOne
-    Transaction transaction;
+    public String getImageUrl() { return imageUrl; }
 
-    public DetailTransaction() {
-    }
+    public void setImageUrl(String imageUrl) { this.imageUrl = imageUrl; }
 
     public Product getProduct() {
         return product;

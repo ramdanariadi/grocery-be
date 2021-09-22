@@ -9,8 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tunas.ecomerce.customer.Customer;
 import tunas.ecomerce.customer.CustomerService;
+import tunas.ecomerce.cutomresponse.ObjectResponse;
 import tunas.ecomerce.product.Product;
 import tunas.ecomerce.product.ProductRepository;
+import tunas.ecomerce.transaction.TransactionRepository.ITransactionResponse;
 
 import java.lang.reflect.Type;
 import java.util.Collection;
@@ -19,16 +21,22 @@ import java.util.UUID;
 
 @Service
 public class TransactionService {
-    @Autowired
-    CustomerService customerService;
-    @Autowired
-    TransactionRepository transactionRepository;
-    @Autowired
-    ProductRepository productRepository;
-    @Autowired
-    DetailTransactionRepository detailTransactionRepository;
 
-    public List<DetailTransaction> makeTransaction(String jsonObject){
+    private final CustomerService customerService;
+    private final TransactionRepository transactionRepository;
+    private final ProductRepository productRepository;
+    private final DetailTransactionRepository detailTransactionRepository;
+
+    @Autowired
+    public TransactionService(CustomerService customerService, TransactionRepository transactionRepository,
+                              ProductRepository productRepository, DetailTransactionRepository detailTransactionRepository){
+        this.customerService = customerService;
+        this.transactionRepository = transactionRepository;
+        this.productRepository = productRepository;
+        this.detailTransactionRepository = detailTransactionRepository;
+    }
+
+    public TransactionResponse makeTransaction(String jsonObject){
         JSONObject reqBody = new JSONObject(jsonObject);
         Customer customer = customerService.getCustomer(UUID.fromString(reqBody.getString("userId")));
         Transaction transaction = new Transaction();
@@ -53,6 +61,10 @@ public class TransactionService {
         transaction.setTotalPrice(totalPrice);
         transactionRepository.save(transaction);
         detailTransactionRepository.saveAll(detailTransactions);
-        return detailTransactions;
+
+        ITransactionResponse savedTransaction = transactionRepository.getTransactionById(transaction.getId());
+        List<DetailTransactionRepository.IDetailTransactions> savedDetailTransaction = detailTransactionRepository.
+                getDetailTransactionsByTransactionId(transaction.getId());
+        return new TransactionResponse(savedTransaction,savedDetailTransaction);
     }
 }

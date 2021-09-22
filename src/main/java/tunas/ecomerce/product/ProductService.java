@@ -17,7 +17,7 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public List<ProductRepository.iCustomSelect> getAll(){
+    public List<ProductRepository.ICustomSelect> getAll(){
         return productRepository.findCustomColumn();
     }
 

@@ -7,7 +7,7 @@ import java.util.Date;
 import java.util.UUID;
 
 @Entity
-public class Transaction {
+public class Transaction{
     @Id
     private UUID id;
 
@@ -18,7 +18,7 @@ public class Transaction {
     private Customer customer;
     private String customerName;
     private String customerMobile;
-    private String CustomerEmail;
+    private String customerEmail;
 
     public UUID getId() {
         return id;
@@ -69,11 +69,11 @@ public class Transaction {
     }
 
     public String getCustomerEmail() {
-        return CustomerEmail;
+        return customerEmail;
     }
 
     public void setCustomerEmail(String customerEmail) {
-        CustomerEmail = customerEmail;
+        this.customerEmail = customerEmail;
     }
 
     public Transaction() {

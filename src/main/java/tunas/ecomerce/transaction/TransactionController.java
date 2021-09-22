@@ -8,16 +8,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import tunas.ecomerce.cutomresponse.CustomResponse;
 import tunas.ecomerce.cutomresponse.ListResponse;
+import tunas.ecomerce.cutomresponse.ObjectResponse;
 
 @RestController
 @RequestMapping("/transaction")
 public class TransactionController {
+
+    private final TransactionService transactionService;
+
     @Autowired
-    TransactionService transactionService;
+    public TransactionController(TransactionService transactionService) {
+        this.transactionService = transactionService;
+    }
 
     @PostMapping
-    public ListResponse addTransaction(@RequestBody String jsonBody){
-        CustomResponse<DetailTransaction> customResponse = new CustomResponse<>();
+    public ObjectResponse addTransaction(@RequestBody String jsonBody){
+        CustomResponse<TransactionResponse> customResponse = new CustomResponse<>();
         return customResponse.sendResponse(transactionService.makeTransaction(jsonBody), HttpStatus.OK);
     }
 }

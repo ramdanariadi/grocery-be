@@ -49,7 +49,7 @@ class CategoryServiceTest {
 
         // when
         // then
-        verify(categoryRepository).findAll();
+        verify(categoryRepository).findAllCategories();
     }
 
     @Test
@@ -77,5 +77,54 @@ class CategoryServiceTest {
         assertThatThrownBy(() -> categoryService.addCategory(category))
                 .isInstanceOf(ApiRequestException.class)
                 .hasMessage("category empty not allowed");
+    }
+
+    @Test
+    void updateCategory(){
+        // given
+        UUID id = UUID.randomUUID();
+        Category category = new Category();
+        category.setId(id);
+        category.setCategory("Fruits");
+        category.setImageUrl("notFound.png");
+
+        //when
+        categoryService.updateCategory(category);
+
+        //then
+        ArgumentCaptor<UUID> acId = ArgumentCaptor.forClass(UUID.class);
+        ArgumentCaptor<String> acCg = ArgumentCaptor.forClass(String.class);
+        ArgumentCaptor<String> acImUrl = ArgumentCaptor.forClass(String.class);
+        verify(categoryRepository).updateCategory(acId.capture(),acCg.capture(),acImUrl.capture());
+
+        assert(category.getId()).equals(acId.getValue());
+        assert(category.getCategory()).equals(acCg.getValue());
+        assert(category.getImageUrl()).equals(acImUrl.getValue());
+    }
+
+    @Test
+    void updateCategoryShouldThrownError(){
+        // given
+        UUID id = UUID.randomUUID();
+        Category category = new Category();
+
+        //when
+        //then
+        assertThatThrownBy(() -> categoryService.updateCategory(category))
+                .isInstanceOf(ApiRequestException.class)
+                .hasMessage("category id is empty");
+    }
+
+    @Test
+    void destroyCategory(){
+        // given
+        UUID id = UUID.randomUUID();
+
+        //when
+        categoryService.destroyCategory(id);
+
+        //then
+        ArgumentCaptor<UUID> argumentCaptor = ArgumentCaptor.forClass(UUID.class);
+        verify(categoryRepository).destroyCategoryById(argumentCaptor.capture());
     }
 }
