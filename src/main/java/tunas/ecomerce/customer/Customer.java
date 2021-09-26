@@ -1,7 +1,11 @@
 package tunas.ecomerce.customer;
 
+import tunas.ecomerce.transaction.Chart;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import java.util.List;
 import java.util.UUID;
 
 @Entity
@@ -12,7 +16,18 @@ public class Customer {
     private String mobile;
     private String email;
 
+    @OneToMany(mappedBy = "customer")
+    private List<Chart> chart;
+
     public Customer() {
+    }
+
+    public List<Chart> getChart() {
+        return chart;
+    }
+
+    public void setChart(List<Chart> chart) {
+        this.chart = chart;
     }
 
     public UUID getId() {

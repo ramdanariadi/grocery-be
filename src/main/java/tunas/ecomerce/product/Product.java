@@ -26,7 +26,7 @@ public class Product {
     @Column(columnDefinition = "boolean default false")
     private Boolean deleted = false;
 
-    @OneToMany(targetEntity = Photos.class)
+    @OneToMany(mappedBy = "product")
     List<Photos> photos;
 
     @ManyToOne

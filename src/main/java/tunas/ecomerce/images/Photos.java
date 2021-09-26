@@ -1,9 +1,8 @@
 package tunas.ecomerce.images;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import tunas.ecomerce.product.Product;
+
+import javax.persistence.*;
 
 @Entity
 public class Photos {
@@ -12,6 +11,11 @@ public class Photos {
     Integer id;
     String url;
     String location;
+
+    @ManyToOne
+    @JoinColumn(name = "product_id", nullable = false)
+    private Product product;
+
     public Photos() {
     }
 
