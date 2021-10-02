@@ -1,5 +1,6 @@
 package tunas.ecomerce.customer;
 
+import tunas.ecomerce.product.liked.Liked;
 import tunas.ecomerce.transaction.Chart;
 
 import javax.persistence.Entity;
@@ -19,6 +20,9 @@ public class Customer {
     @OneToMany(mappedBy = "customer")
     private List<Chart> chart;
 
+    @OneToMany(mappedBy = "customer")
+    private List<Liked> wishList;
+
     public Customer() {
     }
 
@@ -28,6 +32,14 @@ public class Customer {
 
     public void setChart(List<Chart> chart) {
         this.chart = chart;
+    }
+
+    public List<Liked> getWishList() {
+        return wishList;
+    }
+
+    public void setWishList(List<Liked> wishList) {
+        this.wishList = wishList;
     }
 
     public UUID getId() {
