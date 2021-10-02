@@ -11,10 +11,15 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping(path = "/customer")
+@RequestMapping(path = "/api/v1/customer")
 public class CustomerController {
+
+    private final CustomerService customerService;
+
     @Autowired
-    private CustomerService customerService;
+    public CustomerController(CustomerService customerService){
+        this.customerService = customerService;
+    }
 
     @GetMapping("/{id}")
     public ObjectResponse<Customer> getCustomer(@PathVariable UUID id){
