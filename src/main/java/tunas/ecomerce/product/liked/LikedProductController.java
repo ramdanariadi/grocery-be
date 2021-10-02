@@ -31,6 +31,16 @@ public class LikedProductController {
         return customResponse.sendResponse("", HttpStatus.OK);
     }
 
+    @DeleteMapping("/{customerId}/{productId}")
+    public ObjectResponse removeFromChart(@PathVariable UUID customerId,@PathVariable UUID productId){
+        int deleted = likedProductService.removeFromChart(customerId, productId);
+        CustomResponse<String> customResponse = new CustomResponse<>();
+        if(deleted > 0){
+            return customResponse.sendResponse("", HttpStatus.OK);
+        }
+        return customResponse.sendResponse("", HttpStatus.NOT_MODIFIED);
+    }
+
     @GetMapping("/{customerId}")
     public ListResponse customerChart(@PathVariable UUID customerId){
         List<LikedProductRepository.ICharts> likedProductList = likedProductService.chartList(customerId);

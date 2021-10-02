@@ -7,8 +7,6 @@ import tunas.ecomerce.customer.Customer;
 import tunas.ecomerce.customer.CustomerRepository;
 import tunas.ecomerce.product.Product;
 import tunas.ecomerce.product.ProductRepository;
-import tunas.ecomerce.transaction.Chart;
-import tunas.ecomerce.transaction.ChartRepository;
 
 import java.util.List;
 import java.util.UUID;
@@ -35,6 +33,10 @@ public class LikedProductService {
         liked.setProduct(product);
         liked.setCustomer(customer);
         return likedProductRepository.save(liked);
+    }
+
+    public int removeFromChart(UUID customerId, UUID productId){
+        return likedProductRepository.removeWishlist(customerId, productId);
     }
 
     public List<LikedProductRepository.ICharts> chartList(UUID customerId){

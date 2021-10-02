@@ -1,10 +1,12 @@
 package tunas.ecomerce.product.liked;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.UUID;
@@ -29,4 +31,9 @@ public interface LikedProductRepository extends CrudRepository<Liked, UUID> {
         @Value("#{target.id}")
         UUID getId();
     }
+
+    @Modifying
+    @Transactional
+    @Query("delete from Liked L where L.customer.id = :customerId and L.product.id = :productId")
+    int removeWishlist(@Param("customerId") UUID customerId, @Param("productId") UUID productId);
 }
