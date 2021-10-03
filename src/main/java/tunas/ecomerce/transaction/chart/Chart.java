@@ -1,4 +1,4 @@
-package tunas.ecomerce.transaction;
+package tunas.ecomerce.transaction.chart;
 
 import tunas.ecomerce.customer.Customer;
 import tunas.ecomerce.product.Product;

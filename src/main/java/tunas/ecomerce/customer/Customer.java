@@ -1,7 +1,7 @@
 package tunas.ecomerce.customer;
 
 import tunas.ecomerce.product.liked.Liked;
-import tunas.ecomerce.transaction.Chart;
+import tunas.ecomerce.transaction.chart.Chart;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;

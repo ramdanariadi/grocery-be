@@ -1,12 +1,15 @@
-package tunas.ecomerce.transaction;
+package tunas.ecomerce.transaction.chart;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Component;
 
+import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Component
@@ -29,4 +32,16 @@ public interface ChartRepository extends CrudRepository<Chart, UUID> {
         @Value("#{target.id}")
         UUID getId();
     }
+
+    Optional<Chart> findChartByCustomerIdAndProductId(@Param("customerId") UUID customerId, @Param("productId") UUID productId);
+
+    @Transactional
+    @Modifying
+    @Query("delete from Chart c where c.customer.id = :customerId and c.product.id = :productId")
+    int removeFromChart(@Param("customerId") UUID customerId, @Param("productId") UUID productId);
+
+    @Transactional
+    @Modifying
+    @Query("update Chart c set c.total = (c.total + 1) where c.customer.id = :customerId and c.product.id = :productId")
+    int incrementProductTotalInChart(@Param("customerId") UUID customerId, @Param("productId") UUID productId);
 }
