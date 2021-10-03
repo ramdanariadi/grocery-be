@@ -22,8 +22,8 @@ public class LikedProductController {
     }
 
     @PostMapping("/{customerId}/{productId}")
-    public ObjectResponse addToChart(@PathVariable UUID customerId,@PathVariable UUID productId){
-        Liked saved = likedProductService.storeToChart(customerId,productId);
+    public ObjectResponse addToWishList(@PathVariable UUID customerId,@PathVariable UUID productId){
+        Liked saved = likedProductService.storeToWishlist(customerId,productId);
         CustomResponse<String> customResponse = new CustomResponse<>();
         if(saved != null){
             return customResponse.sendResponse("", HttpStatus.CREATED);
@@ -31,9 +31,16 @@ public class LikedProductController {
         return customResponse.sendResponse("", HttpStatus.OK);
     }
 
+    @GetMapping("/{customerId}/{productId}")
+    public ObjectResponse findProductFromWishList(@PathVariable UUID customerId,@PathVariable UUID productId){
+        LikedProductRepository.IWishProductNative lovedProduct = likedProductService.findProductFromWishlist(customerId,productId);
+        CustomResponse<LikedProductRepository.IWishProductNative> customResponse = new CustomResponse<>();
+        return customResponse.sendResponse(lovedProduct, HttpStatus.OK);
+    }
+
     @DeleteMapping("/{customerId}/{productId}")
-    public ObjectResponse removeFromChart(@PathVariable UUID customerId,@PathVariable UUID productId){
-        int deleted = likedProductService.removeFromChart(customerId, productId);
+    public ObjectResponse removeFromWishList(@PathVariable UUID customerId,@PathVariable UUID productId){
+        int deleted = likedProductService.removeFromWishList(customerId, productId);
         CustomResponse<String> customResponse = new CustomResponse<>();
         if(deleted > 0){
             return customResponse.sendResponse("", HttpStatus.OK);
@@ -42,9 +49,9 @@ public class LikedProductController {
     }
 
     @GetMapping("/{customerId}")
-    public ListResponse customerChart(@PathVariable UUID customerId){
-        List<LikedProductRepository.ICharts> likedProductList = likedProductService.chartList(customerId);
-        CustomResponse<LikedProductRepository.ICharts> customResponse = new CustomResponse<>();
+    public ListResponse customerWishList(@PathVariable UUID customerId){
+        List<LikedProductRepository.IWishProduct> likedProductList = likedProductService.wishList(customerId);
+        CustomResponse<LikedProductRepository.IWishProduct> customResponse = new CustomResponse<>();
         return customResponse.sendResponse(likedProductList,HttpStatus.OK);
     }
 }

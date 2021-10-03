@@ -15,7 +15,6 @@ public class Liked {
     private Long price;
     private Integer perUnit;
     private Integer weight;
-    private Integer total;
 
     @ManyToOne
     @JoinColumn(name = "customer_id", nullable = false)
@@ -75,14 +74,6 @@ public class Liked {
         this.weight = weight;
     }
 
-    public Integer getTotal() {
-        return total;
-    }
-
-    public void setTotal(Integer total) {
-        this.total = total;
-    }
-
     public Customer getCustomer() {
         return customer;
     }
@@ -97,5 +88,10 @@ public class Liked {
 
     public void setProduct(Product product) {
         this.product = product;
+        this.setName(product.getName());
+        this.setPrice(product.getPrice());
+        this.setImageUrl(product.getImageUrl());
+        this.setWeight(product.getWeight());
+        this.setPerUnit(product.getPerUnit());
     }
 }

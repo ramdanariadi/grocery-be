@@ -15,22 +15,36 @@ import java.util.UUID;
 public interface LikedProductRepository extends CrudRepository<Liked, UUID> {
 
     @Query("select c.id as id, c.name as name, c.price as price, c.weight as weight, " +
-            "c.perUnit as perUnit, c.imageUrl as imageUrl, c.total as total, c.product as product " +
+            "c.perUnit as perUnit, c.imageUrl as imageUrl, c.product as product " +
             "from Liked c where c.customer.id = :id")
-    List<ICharts> findChartsByCustomerId(@Param("id") UUID id);
+    List<IWishProduct> findWishListByCustomerId(@Param("id") UUID id);
 
-    interface ICharts{
+    interface IWishProduct {
         String getImageUrl();
         Integer getWeight();
         String getName();
         Long getPrice();
         Integer getPerUnit();
-        Integer getTotal();
         @Value("#{target.product.id}")
         String getProduct();
         @Value("#{target.id}")
         UUID getId();
     }
+
+    interface IWishProductNative {
+        String getImageUrl();
+        Integer getWeight();
+        String getName();
+        Long getPrice();
+        Integer getPerUnit();
+        String getProductId();
+        UUID getId();
+    }
+
+    @Query(value = "select cast(c.id AS varchar) as id, c.name as name, c.price as price, c.weight as weight, " +
+            "c.per_unit as perUnit, c.image_url as imageUrl, cast(product_id AS varchar) as productId " +
+            "from liked c where customer_id = :customerId and product_id = :productId limit 1",nativeQuery = true)
+    IWishProductNative findProductFromWishLIst(@Param("customerId") UUID customerId, @Param("productId") UUID productId);
 
     @Modifying
     @Transactional
