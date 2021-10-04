@@ -16,6 +16,7 @@ public class Chart {
     private Integer perUnit;
     private Integer weight;
     private Integer total;
+    private String category;
 
     @ManyToOne
     @JoinColumn(name = "customer_id",nullable = false)
@@ -25,6 +26,14 @@ public class Chart {
     Product product;
 
     public Chart() {
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public UUID getId() {
@@ -102,5 +111,6 @@ public class Chart {
         this.setWeight(product.getWeight());
         this.setPerUnit(product.getPerUnit());
         this.setImageUrl(product.getImageUrl());
+        this.setCategory(product.getCategory().getCategory());
     }
 }

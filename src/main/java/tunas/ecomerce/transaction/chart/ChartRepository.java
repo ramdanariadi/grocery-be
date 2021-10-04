@@ -15,7 +15,7 @@ import java.util.UUID;
 @Component
 public interface ChartRepository extends CrudRepository<Chart, UUID> {
 
-    @Query("select c.id as id, c.name as name, c.price as price, c.weight as weight, " +
+    @Query("select c.id as id, c.name as name, c.price as price, c.weight as weight, c.category as category, " +
             "c.perUnit as perUnit, c.imageUrl as imageUrl, c.total as total, c.product as product " +
             "from Chart c where c.customer.id = :id")
     List<ICharts> findChartsByCustomerId(@Param("id") UUID id);
@@ -29,6 +29,7 @@ public interface ChartRepository extends CrudRepository<Chart, UUID> {
         Integer getTotal();
         @Value("#{target.product.id}")
         String getProduct();
+        String getCategory();
         @Value("#{target.id}")
         UUID getId();
     }
