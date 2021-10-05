@@ -11,7 +11,7 @@ import tunas.ecomerce.cutomresponse.ListResponse;
 import tunas.ecomerce.cutomresponse.ObjectResponse;
 
 @RestController
-@RequestMapping("/transaction")
+@RequestMapping("/api/v1/transaction")
 public class TransactionController {
 
     private final TransactionService transactionService;
