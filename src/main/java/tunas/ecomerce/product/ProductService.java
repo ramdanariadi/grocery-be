@@ -25,6 +25,10 @@ public class ProductService {
         return productRepository.findProductById(id);
     }
 
+    public List<ProductRepository.ICustomSelect> getAllBYCategory(UUID categoryId){
+        return productRepository.findProductsByCategory(categoryId);
+    }
+
     public void saveProduct(Product product){
         if(product.getPrice() == null || product.getPrice() < 1L)
             throw new ApiRequestException("Price cannot lower than 1", HttpStatus.PRECONDITION_FAILED);

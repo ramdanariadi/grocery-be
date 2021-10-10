@@ -30,6 +30,9 @@ public interface ProductRepository extends CrudRepository<Product, UUID> {
         UUID getCategoryId();
     }
 
+    @Query("select p.id as id, p.name as name, p.price as price, p.weight as weight, p.imageUrl as imageUrl, p.category as category from Product p where p.deleted = false and p.category.id = :category_id")
+    List<ICustomSelect> findProductsByCategory(@Param("category_id") UUID id);
+
     Product findProductById(UUID id);
 
     @Modifying

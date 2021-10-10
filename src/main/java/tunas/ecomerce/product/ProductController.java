@@ -27,11 +27,6 @@ public class ProductController {
         this.categoryService = categoryService;
     }
 
-    private static CustomResponse<Product> customResponse;
-    static {
-        customResponse = new CustomResponse<>();
-    }
-
     @GetMapping
     @ResponseBody
     public ListResponse getProducts(){
@@ -44,7 +39,16 @@ public class ProductController {
     @ResponseBody
     public ObjectResponse<Product> getProduct(@PathVariable UUID id){
         Product product = productService.findProductById(id);
+        CustomResponse<Product> customResponse = new CustomResponse<>();
         return customResponse.sendResponse(product,HttpStatus.OK);
+    }
+
+    @GetMapping("/category/{id}")
+    @ResponseBody
+    public ObjectResponse<List<ProductRepository.ICustomSelect>> getProductByCategory(@PathVariable UUID id){
+        List<ProductRepository.ICustomSelect> products = productService.getAllBYCategory(id);
+        CustomResponse<List<ProductRepository.ICustomSelect>> customResponse = new CustomResponse<>();
+        return customResponse.sendResponse(products,HttpStatus.OK);
     }
 
     @PostMapping
