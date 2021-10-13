@@ -19,6 +19,13 @@ public interface DetailTransactionRepository extends CrudRepository<DetailTransa
             "where d.transaction.id = :id")
     List<IDetailTransactions> getDetailTransactionsByTransactionId(@Param("id") UUID id);
 
+    @Query("select d.id as id, d.name as name, d.price as price, d.weight as weight, " +
+            "d.imageUrl as imageUrl, d.product as product, d.transaction as transaction, " +
+            "d.perUnit as perUnit, d.total as total "+
+            "from DetailTransaction d " +
+            "where d.transaction.customer.id = :id")
+    List<IDetailTransactions> getDetailTransactionsByCustomerId(@Param("id") UUID id);
+
     interface IDetailTransactions{
         String getImageUrl();
         Integer getWeight();

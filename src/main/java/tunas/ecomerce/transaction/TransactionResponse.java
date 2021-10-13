@@ -11,6 +11,9 @@ public class TransactionResponse {
         this.detailTransaction = detailTransaction;
     }
 
+    public TransactionResponse() {
+    }
+
     public TransactionRepository.ITransactionResponse getTransaction() {
         return transaction;
     }

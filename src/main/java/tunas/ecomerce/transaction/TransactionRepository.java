@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import tunas.ecomerce.customer.Customer;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Component
@@ -18,6 +19,12 @@ public interface TransactionRepository extends CrudRepository<Transaction, UUID>
             "t.customerEmail as customerEmail "+
             "from Transaction t where t.id = :id")
     ITransactionResponse getTransactionById(@Param("id") UUID id);
+
+    @Query("select t.id as id, t.totalPrice as totalPrice, t.transactionDate as transactionDate, " +
+            "t.customerName as customerName, t.customerMobile as customerMobile, " +
+            "t.customerEmail as customerEmail "+
+            "from Transaction t where t.customer.id = :id")
+    List<ITransactionResponse> getTransactionsByCustomerId(@Param("id") UUID id);
 
     interface ITransactionResponse{
         UUID getId();

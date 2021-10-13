@@ -29,9 +29,9 @@ public class CustomerController {
     }
 
     @GetMapping
-    public ListResponse<List<Customer>> getAllCustomers(){
-        List<Customer> customers = customerService.getCustomers();
-        CustomResponse<Customer> customResponse = new CustomResponse<>();
+    public ListResponse<CustomerRepository.ICustomer> getAllCustomers(){
+        List<CustomerRepository.ICustomer> customers = customerService.getCustomers();
+        CustomResponse<CustomerRepository.ICustomer> customResponse = new CustomResponse<>();
         return customResponse.sendResponse(customers,HttpStatus.OK);
     }
 

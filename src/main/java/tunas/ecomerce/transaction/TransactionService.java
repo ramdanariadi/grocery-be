@@ -6,18 +6,19 @@ import com.google.gson.Gson;
 import org.joda.time.DateTime;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import tunas.ecomerce.customer.Customer;
 import tunas.ecomerce.customer.CustomerService;
+import tunas.ecomerce.cutomresponse.ApiRequestException;
 import tunas.ecomerce.cutomresponse.ObjectResponse;
 import tunas.ecomerce.product.Product;
 import tunas.ecomerce.product.ProductRepository;
 import tunas.ecomerce.transaction.TransactionRepository.ITransactionResponse;
 
 import java.lang.reflect.Type;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class TransactionService {
@@ -66,5 +67,24 @@ public class TransactionService {
         List<DetailTransactionRepository.IDetailTransactions> savedDetailTransaction = detailTransactionRepository.
                 getDetailTransactionsByTransactionId(transaction.getId());
         return new TransactionResponse(savedTransaction,savedDetailTransaction);
+    }
+
+    TransactionResponse getTransactionById(UUID id){
+        ITransactionResponse savedTransaction = transactionRepository.getTransactionById(id);
+        List<DetailTransactionRepository.IDetailTransactions> savedDetailTransaction = detailTransactionRepository.
+                getDetailTransactionsByTransactionId(id);
+        return new TransactionResponse(savedTransaction,savedDetailTransaction);
+    }
+
+    List<TransactionResponse> getTransactionByCustomerId(UUID id){
+        List<ITransactionResponse> iTransactionResponses = transactionRepository.getTransactionsByCustomerId(id);
+        List<DetailTransactionRepository.IDetailTransactions> iDetailTransactions = detailTransactionRepository.getDetailTransactionsByCustomerId(id);
+        List<TransactionResponse> transactionResponseList = iTransactionResponses.stream().map((t) -> {
+            TransactionResponse transactionResponse = new TransactionResponse();
+            transactionResponse.setTransaction(t);
+            transactionResponse.setDetailTransaction(iDetailTransactions.stream().filter(e -> e.getTransactionId().toString().equals(t.getId().toString())).collect(Collectors.toList()));
+            return transactionResponse;
+        }).collect(Collectors.toList());
+        return transactionResponseList;
     }
 }
