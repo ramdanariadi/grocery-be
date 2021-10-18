@@ -28,7 +28,7 @@ public interface ChartRepository extends CrudRepository<Chart, UUID> {
         Integer getPerUnit();
         Integer getTotal();
         @Value("#{target.product.id}")
-        String getProduct();
+        UUID getProduct();
         String getCategory();
         @Value("#{target.id}")
         UUID getId();

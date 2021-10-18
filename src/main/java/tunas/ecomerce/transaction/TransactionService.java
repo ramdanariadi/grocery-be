@@ -16,6 +16,7 @@ import tunas.ecomerce.product.Product;
 import tunas.ecomerce.product.ProductRepository;
 import tunas.ecomerce.transaction.TransactionRepository.ITransactionResponse;
 
+import javax.transaction.Transactional;
 import java.lang.reflect.Type;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -74,6 +75,12 @@ public class TransactionService {
         List<DetailTransactionRepository.IDetailTransactions> savedDetailTransaction = detailTransactionRepository.
                 getDetailTransactionsByTransactionId(id);
         return new TransactionResponse(savedTransaction,savedDetailTransaction);
+    }
+
+    @Transactional
+    int destroyTransaction(UUID id){
+        transactionRepository.destroyTransactionDetail(id);
+        return transactionRepository.destroyTransaction(id);
     }
 
     List<TransactionResponse> getTransactionByCustomerId(UUID id){

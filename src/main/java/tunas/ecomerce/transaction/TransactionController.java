@@ -35,6 +35,16 @@ public class TransactionController {
         return customResponse.sendResponse(transaction,HttpStatus.OK);
     }
 
+    @DeleteMapping("/{id}")
+    public ObjectResponse deleteTransaction(@PathVariable UUID id){
+        int nModified = transactionService.destroyTransaction(id);
+        CustomResponse<String> response = new CustomResponse<>();
+        if(nModified < 1){
+            return response.sendResponse("",HttpStatus.NOT_MODIFIED);
+        }
+        return response.sendResponse("",HttpStatus.OK);
+    }
+
     @GetMapping("/customer/{id}")
     public ListResponse<TransactionResponse> getCustomerTransactions(@PathVariable UUID id){
         CustomResponse<TransactionResponse> customResponse = new CustomResponse<>();
