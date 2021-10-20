@@ -1,4 +1,4 @@
-package tunas.ecomerce.transaction.chart;
+package tunas.ecomerce.transaction.cart;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -8,23 +8,22 @@ import tunas.ecomerce.cutomresponse.ListResponse;
 import tunas.ecomerce.cutomresponse.ObjectResponse;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/api/v1/chart")
-public class ChartController {
+@RequestMapping("/api/v1/cart")
+public class CartController {
 
-    private final ChartService chartService;
+    private final CartService cartService;
 
     @Autowired
-    public ChartController(ChartService chartService) {
-        this.chartService = chartService;
+    public CartController(CartService cartService) {
+        this.cartService = cartService;
     }
 
     @PostMapping("/{customerId}/{productId}/{total}")
     public ObjectResponse addToChart(@PathVariable UUID customerId,@PathVariable UUID productId, @PathVariable Integer total){
-        boolean saved = chartService.storeToChart(customerId,productId,total);
+        boolean saved = cartService.storeToChart(customerId,productId,total);
         CustomResponse<String> customResponse = new CustomResponse<>();
         if(saved){
             return customResponse.sendResponse("", HttpStatus.CREATED);
@@ -34,7 +33,7 @@ public class ChartController {
 
     @DeleteMapping("/{customerId}/{productId}")
     public ObjectResponse removeFromChart(@PathVariable UUID customerId,@PathVariable UUID productId){
-        Integer deleted = chartService.removeFromChart(customerId,productId);
+        Integer deleted = cartService.removeFromChart(customerId,productId);
         CustomResponse<String> customResponse = new CustomResponse<>();
         if(deleted > 0){
             return customResponse.sendResponse("", HttpStatus.OK);
@@ -44,8 +43,8 @@ public class ChartController {
 
     @GetMapping("/{customerId}")
     public ListResponse customerChart(@PathVariable UUID customerId){
-        List<ChartRepository.ICharts> charts = chartService.chartList(customerId);
-        CustomResponse<ChartRepository.ICharts> customResponse = new CustomResponse<>();
+        List<CartRepository.ICharts> charts = cartService.chartList(customerId);
+        CustomResponse<CartRepository.ICharts> customResponse = new CustomResponse<>();
         return customResponse.sendResponse(charts,HttpStatus.OK);
     }
 }

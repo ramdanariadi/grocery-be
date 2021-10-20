@@ -1,4 +1,4 @@
-package tunas.ecomerce.transaction.chart;
+package tunas.ecomerce.transaction.cart;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.repository.Modifying;
@@ -13,11 +13,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Component
-public interface ChartRepository extends CrudRepository<Chart, UUID> {
+public interface CartRepository extends CrudRepository<Cart, UUID> {
 
     @Query("select c.id as id, c.name as name, c.price as price, c.weight as weight, c.category as category, " +
             "c.perUnit as perUnit, c.imageUrl as imageUrl, c.total as total, c.product as product " +
-            "from Chart c where c.customer.id = :id")
+            "from Cart c where c.customer.id = :id")
     List<ICharts> findChartsByCustomerId(@Param("id") UUID id);
 
     interface ICharts{
@@ -34,15 +34,15 @@ public interface ChartRepository extends CrudRepository<Chart, UUID> {
         UUID getId();
     }
 
-    Optional<Chart> findChartByCustomerIdAndProductId(@Param("customerId") UUID customerId, @Param("productId") UUID productId);
+    Optional<Cart> findChartByCustomerIdAndProductId(@Param("customerId") UUID customerId, @Param("productId") UUID productId);
 
     @Transactional
     @Modifying
-    @Query("delete from Chart c where c.customer.id = :customerId and c.product.id = :productId")
+    @Query("delete from Cart c where c.customer.id = :customerId and c.product.id = :productId")
     int removeFromChart(@Param("customerId") UUID customerId, @Param("productId") UUID productId);
 
     @Transactional
     @Modifying
-    @Query("update Chart c set c.total = (c.total + 1) where c.customer.id = :customerId and c.product.id = :productId")
+    @Query("update Cart c set c.total = (c.total + 1) where c.customer.id = :customerId and c.product.id = :productId")
     int incrementProductTotalInChart(@Param("customerId") UUID customerId, @Param("productId") UUID productId);
 }

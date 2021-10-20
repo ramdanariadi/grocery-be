@@ -1,4 +1,4 @@
-package tunas.ecomerce.transaction.chart;
+package tunas.ecomerce.transaction.cart;
 
 import tunas.ecomerce.customer.Customer;
 import tunas.ecomerce.product.Product;
@@ -7,7 +7,7 @@ import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
-public class Chart {
+public class Cart {
     @Id
     UUID id;
     private String name;
@@ -25,7 +25,7 @@ public class Chart {
     @OneToOne
     Product product;
 
-    public Chart() {
+    public Cart() {
     }
 
     public String getCategory() {
