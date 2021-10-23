@@ -45,4 +45,9 @@ public interface CartRepository extends CrudRepository<Cart, UUID> {
     @Modifying
     @Query("update Cart c set c.total = (c.total + 1) where c.customer.id = :customerId and c.product.id = :productId")
     int incrementProductTotalInChart(@Param("customerId") UUID customerId, @Param("productId") UUID productId);
+
+    @Transactional
+    @Modifying
+    @Query("delete from Cart c where c.customer.id = :customerId")
+    int destroyCustomerCart(@Param("customerId") UUID customerId);
 }

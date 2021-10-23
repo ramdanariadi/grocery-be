@@ -15,6 +15,7 @@ import tunas.ecomerce.cutomresponse.ObjectResponse;
 import tunas.ecomerce.product.Product;
 import tunas.ecomerce.product.ProductRepository;
 import tunas.ecomerce.transaction.TransactionRepository.ITransactionResponse;
+import tunas.ecomerce.transaction.cart.CartRepository;
 
 import javax.transaction.Transactional;
 import java.lang.reflect.Type;
@@ -28,16 +29,18 @@ public class TransactionService {
     private final TransactionRepository transactionRepository;
     private final ProductRepository productRepository;
     private final DetailTransactionRepository detailTransactionRepository;
+    private final CartRepository cartRepository;
 
     @Autowired
-    public TransactionService(CustomerService customerService, TransactionRepository transactionRepository,
-                              ProductRepository productRepository, DetailTransactionRepository detailTransactionRepository){
+    public TransactionService(CustomerService customerService, TransactionRepository transactionRepository, ProductRepository productRepository, DetailTransactionRepository detailTransactionRepository, CartRepository cartRepository) {
         this.customerService = customerService;
         this.transactionRepository = transactionRepository;
         this.productRepository = productRepository;
         this.detailTransactionRepository = detailTransactionRepository;
+        this.cartRepository = cartRepository;
     }
 
+    @Transactional
     public TransactionResponse makeTransaction(String jsonObject){
         JSONObject reqBody = new JSONObject(jsonObject);
         Customer customer = customerService.getCustomer(UUID.fromString(reqBody.getString("userId")));
@@ -63,7 +66,7 @@ public class TransactionService {
         transaction.setTotalPrice(totalPrice);
         transactionRepository.save(transaction);
         detailTransactionRepository.saveAll(detailTransactions);
-
+        cartRepository.destroyCustomerCart(customer.getId());
         ITransactionResponse savedTransaction = transactionRepository.getTransactionById(transaction.getId());
         List<DetailTransactionRepository.IDetailTransactions> savedDetailTransaction = detailTransactionRepository.
                 getDetailTransactionsByTransactionId(transaction.getId());
@@ -77,10 +80,14 @@ public class TransactionService {
         return new TransactionResponse(savedTransaction,savedDetailTransaction);
     }
 
-    @Transactional
+    @Transactional(rollbackOn = ApiRequestException.class)
     int destroyTransaction(UUID id){
         transactionRepository.destroyTransactionDetail(id);
-        return transactionRepository.destroyTransaction(id);
+        int transactionDestroy = transactionRepository.destroyTransaction(id);
+        if(transactionDestroy < 1){
+            throw new ApiRequestException("",HttpStatus.NOT_MODIFIED);
+        }
+        return transactionDestroy;
     }
 
     List<TransactionResponse> getTransactionByCustomerId(UUID id){
