@@ -65,6 +65,11 @@ public class DetailTransaction {
 
     public void setProduct(Product product) {
         this.product = product;
+        this.setImageUrl(product.getImageUrl());
+        this.setName(product.getName());
+        this.setPrice(product.getPrice());
+        this.setPerUnit(product.getPerUnit());
+        this.setWeight(product.getWeight());
     }
 
     public String getName() {
