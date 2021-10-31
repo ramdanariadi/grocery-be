@@ -6,19 +6,30 @@ import org.springframework.web.bind.annotation.*;
 import tunas.ecomerce.cutomresponse.CustomResponse;
 import tunas.ecomerce.cutomresponse.ListResponse;
 import tunas.ecomerce.cutomresponse.ObjectResponse;
+import tunas.ecomerce.product.ProductController;
 
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/product/recommendation")
 public class RecommendationProductController {
+
+    private final RecommendationProductService recommendationProductService;
+
     @Autowired
-    RecommendationProductService recommendationProductService;
+    public RecommendationProductController(RecommendationProductService recommendationProductService) {
+        this.recommendationProductService = recommendationProductService;
+    }
 
     @GetMapping("{id}")
-    ObjectResponse<RecommendationProduct> getRecommendationProductById(@RequestParam UUID id){
+    ObjectResponse<RecommendationProduct> getRecommendationProductById(@PathVariable UUID id){
         CustomResponse customResponse = new CustomResponse();
         return customResponse.sendResponse(recommendationProductService.getById(id).get(),HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    ObjectResponse destroyRecommendationProduct(@PathVariable UUID id){
+        return ProductController.getDeleteObjectResponse(recommendationProductService.destroy(id));
     }
 
     @GetMapping("")

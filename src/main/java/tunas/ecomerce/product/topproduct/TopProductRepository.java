@@ -40,4 +40,9 @@ public interface TopProductRepository extends CrudRepository<TopProduct, UUID> {
                @Param("price") Long price,
                @Param("imageUrl") String imageUrl,
                @Param("category") String category);
+
+    @Modifying
+    @Transactional
+    @Query("delete from TopProduct tp where tp.id = :id")
+    int destroy(@Param("id") UUID id);
 }

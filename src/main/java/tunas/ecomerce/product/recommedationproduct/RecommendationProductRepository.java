@@ -42,4 +42,9 @@ public interface RecommendationProductRepository extends CrudRepository<Recommen
                @Param("price") Long price,
                @Param("imageUrl") String imageUrl,
                @Param("category") String category);
+
+    @Modifying
+    @Transactional
+    @Query("delete from RecommendationProduct rp where rp.id = :id")
+    int destroy(@Param("id") UUID id);
 }

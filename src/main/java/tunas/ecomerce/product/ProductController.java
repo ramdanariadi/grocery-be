@@ -27,6 +27,14 @@ public class ProductController {
         this.categoryService = categoryService;
     }
 
+    public static ObjectResponse getDeleteObjectResponse(int nModified){
+        CustomResponse<String> customResponse = new CustomResponse<>();
+        if(nModified > 0){
+            return customResponse.sendResponse("",HttpStatus.OK);
+        }
+        return customResponse.sendResponse("",HttpStatus.NOT_MODIFIED);
+    }
+
     @GetMapping
     @ResponseBody
     public ListResponse getProducts(){

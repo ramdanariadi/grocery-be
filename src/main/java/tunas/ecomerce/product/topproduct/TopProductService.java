@@ -54,5 +54,8 @@ public class TopProductService {
         return topProductRepository.findById(id);
     }
 
+    int destroy(UUID id){
+        return topProductRepository.destroy(id);
+    }
 
 }

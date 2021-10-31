@@ -50,4 +50,9 @@ public class RecommendationProductService {
         RecommendationProduct recommendationProduct = new RecommendationProduct(product);
         return recommendationProductRepository.save(recommendationProduct) != null;
     }
+
+    int destroy(UUID id){
+        return recommendationProductRepository.destroy(id);
+    }
+
 }

@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import tunas.ecomerce.cutomresponse.CustomResponse;
 import tunas.ecomerce.cutomresponse.ListResponse;
 import tunas.ecomerce.cutomresponse.ObjectResponse;
+import tunas.ecomerce.product.ProductController;
 
 import java.util.UUID;
 
@@ -24,6 +25,11 @@ public class TopProductController {
     ObjectResponse<TopProduct> getProductById(@PathVariable UUID id){
         CustomResponse customResponse = new CustomResponse();
         return customResponse.sendResponse(topProductService.getById(id).get(), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    ObjectResponse destroyTopProduct(@PathVariable UUID id){
+        return ProductController.getDeleteObjectResponse(topProductService.destroy(id));
     }
 
     @GetMapping
