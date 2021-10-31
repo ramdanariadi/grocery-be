@@ -27,4 +27,12 @@ public class CustomResponse<T> {
         MessageBody messageBody = new MessageBody(httpResponseCode.value(), httpResponseCode.getReasonPhrase());
         return new ListResponse(listOfObject,messageBody);
     }
+
+    public static ObjectResponse getModifyingObjectResponse(int nModified){
+        CustomResponse<String> customResponse = new CustomResponse<>();
+        if(nModified > 0){
+            return customResponse.sendResponse("",HttpStatus.OK);
+        }
+        return customResponse.sendResponse("",HttpStatus.NOT_MODIFIED);
+    }
 }

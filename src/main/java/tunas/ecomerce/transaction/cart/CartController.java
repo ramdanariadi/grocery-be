@@ -31,14 +31,9 @@ public class CartController {
         return customResponse.sendResponse("", HttpStatus.OK);
     }
 
-    @DeleteMapping("/{customerId}/{productId}")
-    public ObjectResponse removeFromChart(@PathVariable UUID customerId,@PathVariable UUID productId){
-        Integer deleted = cartService.removeFromChart(customerId,productId);
-        CustomResponse<String> customResponse = new CustomResponse<>();
-        if(deleted > 0){
-            return customResponse.sendResponse("", HttpStatus.OK);
-        }
-        return customResponse.sendResponse("", HttpStatus.NOT_MODIFIED);
+    @DeleteMapping("/{customerId}/{cartId}")
+    public ObjectResponse removeFromChart(@PathVariable UUID customerId,@PathVariable UUID cartId){
+        return CustomResponse.getModifyingObjectResponse(cartService.removeFromChart(customerId,cartId));
     }
 
     @GetMapping("/{customerId}")

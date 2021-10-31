@@ -40,12 +40,7 @@ public class LikedProductController {
 
     @DeleteMapping("/{customerId}/{productId}")
     public ObjectResponse removeFromWishList(@PathVariable UUID customerId,@PathVariable UUID productId){
-        int deleted = likedProductService.removeFromWishList(customerId, productId);
-        CustomResponse<String> customResponse = new CustomResponse<>();
-        if(deleted > 0){
-            return customResponse.sendResponse("", HttpStatus.OK);
-        }
-        return customResponse.sendResponse("", HttpStatus.NOT_MODIFIED);
+        return CustomResponse.getModifyingObjectResponse(likedProductService.removeFromWishList(customerId, productId));
     }
 
     @GetMapping("/{customerId}")

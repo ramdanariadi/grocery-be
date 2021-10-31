@@ -2,7 +2,6 @@ package tunas.ecomerce.category;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import tunas.ecomerce.cutomresponse.CustomResponse;
@@ -40,22 +39,12 @@ public class CategoryController {
 
     @DeleteMapping(path = "/{id}")
     public ObjectResponse<String> destroyCategory(@PathVariable UUID id){
-        int nModified = categoryService.destroyCategory(id);
-        CustomResponse<String> customResponse = new CustomResponse<>();
-        if(nModified > 0){
-            return customResponse.sendResponse("",HttpStatus.OK);
-        }
-        return customResponse.sendResponse("", HttpStatus.NOT_MODIFIED);
+        return CustomResponse.getModifyingObjectResponse(categoryService.destroyCategory(id));
     }
 
     @PutMapping
     public ObjectResponse<String> updateCategory(@RequestBody Category category){
-        int nModified = categoryService.updateCategory(category);
-        CustomResponse<String> customResponse = new CustomResponse<>();
-        if(nModified > 0){
-            return customResponse.sendResponse("",HttpStatus.OK);
-        }
-        return customResponse.sendResponse("Not Modified",HttpStatus.NOT_MODIFIED);
+        return CustomResponse.getModifyingObjectResponse(categoryService.updateCategory(category));
     }
 
     @PostMapping
