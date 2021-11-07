@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 import tunas.ecomerce.cutomresponse.CustomResponse;
+import tunas.ecomerce.cutomresponse.ListResponse;
 import tunas.ecomerce.cutomresponse.ObjectResponse;
 import tunas.ecomerce.security.filter.TokenGenerationAlgorithm;
 import tunas.ecomerce.security.role.Role;
@@ -37,9 +38,40 @@ public class UserController {
 
     @PostMapping("/register")
     public ObjectResponse register(@RequestBody User user){
-        userService.addUser(user);
+        userService.saveUser(user);
         CustomResponse<String> customResponse = new CustomResponse<>();
         return customResponse.sendResponse("", HttpStatus.CREATED);
+    }
+
+    @PutMapping()
+    public ObjectResponse update(@RequestBody User user){
+        userService.updateUser(user);
+        CustomResponse<String> customResponse = new CustomResponse<>();
+        return customResponse.sendResponse("", HttpStatus.OK);
+    }
+
+    @GetMapping("/all")
+    public ListResponse getAllUser(){
+        CustomResponse<User> customResponse = new CustomResponse<>();
+        return customResponse.sendResponse((List<User>) userService.findAll(), HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ObjectResponse getUserById(@PathVariable Long id){
+        CustomResponse<User> customResponse = new CustomResponse<>();
+        return customResponse.sendResponse(userService.findById(id).get(), HttpStatus.OK);
+    }
+
+    @PostMapping("/role/{userid}/{roleid}")
+    public ObjectResponse grantRole(@PathVariable("userid") Long userId, @PathVariable("roleid") Long roleId){
+        userService.grantRole(userId, roleId);
+        return CustomResponse.getModifyingObjectResponse(1);
+    }
+
+    @DeleteMapping("/role/{userid}/{roleid}")
+    public ObjectResponse revokeRole(@PathVariable("userid") Long userId, @PathVariable("roleid") Long roleId){
+        userService.revokeRole(userId, roleId);
+        return CustomResponse.getModifyingObjectResponse(1);
     }
 
     @GetMapping("/token")

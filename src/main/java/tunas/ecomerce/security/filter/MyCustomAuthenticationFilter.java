@@ -3,8 +3,11 @@ package tunas.ecomerce.security.filter;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.MediaType;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -17,11 +20,16 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.stream.Collectors;
+
+import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Slf4j
 public class MyCustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
@@ -34,11 +42,31 @@ public class MyCustomAuthenticationFilter extends UsernamePasswordAuthentication
 
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        String username = request.getParameter("username");
-        String password = request.getParameter("password");
-        log.info("Username is : {}",username);
-        log.info("Password is : {}",password);
-        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(username,password);
+        UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = null;
+        String username = null;
+        String password = null;
+        if(request.getHeader(CONTENT_TYPE).equals(APPLICATION_JSON)){
+            BufferedReader bufferedReader = null;
+            try {
+                bufferedReader = request.getReader();
+                Gson gson = new Gson();
+                LoginRequest loginRequest = gson.fromJson(bufferedReader, LoginRequest.class);
+                username = loginRequest.getUsername(); //request.getParameter("username");
+                password = loginRequest.getPassword(); //request.getParameter("password");
+            } catch (IOException e) {
+                e.printStackTrace();
+            } finally {
+                try {
+                    bufferedReader.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }else{
+            username = request.getParameter("username");
+            password = request.getParameter("password");
+        }
+        usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(username,password);
         return authenticationManager.authenticate(usernamePasswordAuthenticationToken);
     }
 
@@ -60,7 +88,14 @@ public class MyCustomAuthenticationFilter extends UsernamePasswordAuthentication
         Map<String, String> tokens = new HashMap<>();
         tokens.put("access_token",access_token);
         tokens.put("refresh_token",refresh_token);
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setContentType(APPLICATION_JSON_VALUE);
         new ObjectMapper().writeValue(response.getOutputStream(), tokens);
     }
+}
+
+@Getter
+@Setter
+class LoginRequest{
+    String username;
+    String password;
 }
