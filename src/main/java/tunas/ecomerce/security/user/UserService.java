@@ -60,7 +60,7 @@ public class UserService implements UserDetailsService{
         Map<String, Object> entities = this.validateUserAndRole(userId, roleId);
         User user = (User) entities.get("user");
         Role role = (Role) entities.get("role");
-        user.setRoles(user.getRoles().stream().filter(roleItem -> !roleItem.equals(role.getName())).collect(Collectors.toList()));
+        user.setRoles(user.getRoles().stream().filter(roleItem -> !roleItem.getName().equals(role.getName())).collect(Collectors.toList()));
         userRepository.save(user);
     }
 
