@@ -1,6 +1,6 @@
 package tunas.ecomerce.product.liked;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import tunas.ecomerce.cutomresponse.CustomResponse;
@@ -12,14 +12,10 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/wishlist")
+@AllArgsConstructor
 public class LikedProductController {
 
     private final LikedProductService likedProductService;
-
-    @Autowired
-    public LikedProductController(LikedProductService likedProductService) {
-        this.likedProductService = likedProductService;
-    }
 
     @PostMapping("/{customerId}/{productId}")
     public ObjectResponse addToWishList(@PathVariable UUID customerId,@PathVariable UUID productId){

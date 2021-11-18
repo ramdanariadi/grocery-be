@@ -1,8 +1,8 @@
 package tunas.ecomerce.product;
 
 import com.fasterxml.uuid.Generators;
+import lombok.AllArgsConstructor;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import tunas.ecomerce.category.Category;
@@ -16,16 +16,11 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping(path = "api/v1/product")
+@AllArgsConstructor
 public class ProductController {
 
     private final ProductService productService;
     private final CategoryService categoryService;
-
-    @Autowired
-    ProductController(ProductService productService, CategoryService categoryService){
-        this.productService = productService;
-        this.categoryService = categoryService;
-    }
 
     @GetMapping
     @ResponseBody

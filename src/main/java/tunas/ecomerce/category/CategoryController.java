@@ -1,6 +1,6 @@
 package tunas.ecomerce.category;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -14,14 +14,10 @@ import java.util.UUID;
 @RestController
 @RequestMapping("api/v1/category")
 @Validated
+@AllArgsConstructor
 public class CategoryController {
 
     private final CategoryService categoryService;
-
-    @Autowired
-    public CategoryController(CategoryService categoryService){
-        this.categoryService = categoryService;
-    }
 
     @GetMapping
     public ListResponse<Category> allCategories(){

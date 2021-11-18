@@ -1,7 +1,7 @@
 package tunas.ecomerce.category;
 
 import com.fasterxml.uuid.Generators;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import tunas.ecomerce.cutomresponse.ApiRequestException;
@@ -10,18 +10,13 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@AllArgsConstructor
 public class CategoryService {
 
     private final CategoryRepository categoryRepository;
 
-    @Autowired
-    public CategoryService(CategoryRepository categoryRepository){
-        this.categoryRepository = categoryRepository;
-    }
-
     public Category findById(UUID id){
         return categoryRepository.findCategoryById(id);
-
     }
 
     public List<Category> findAllCategory(){

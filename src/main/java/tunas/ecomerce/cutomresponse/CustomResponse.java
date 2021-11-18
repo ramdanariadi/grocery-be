@@ -1,10 +1,7 @@
 package tunas.ecomerce.cutomresponse;
 
 import org.springframework.http.HttpStatus;
-
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class CustomResponse<T> {
 

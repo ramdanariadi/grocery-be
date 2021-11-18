@@ -1,6 +1,6 @@
 package tunas.ecomerce.product.topproduct;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import tunas.ecomerce.cutomresponse.CustomResponse;
@@ -11,14 +11,10 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/product/top")
+@AllArgsConstructor
 public class TopProductController {
 
     private final TopProductService topProductService;
-
-    @Autowired
-    TopProductController(TopProductService topProductService){
-        this.topProductService = topProductService;
-    }
 
     @GetMapping("/{id}")
     ObjectResponse<TopProduct> getProductById(@PathVariable UUID id){

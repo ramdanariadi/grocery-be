@@ -1,9 +1,7 @@
 package tunas.ecomerce.product.topproduct;
 
-import com.fasterxml.jackson.databind.util.JSONPObject;
-import com.google.gson.JsonObject;
+import lombok.AllArgsConstructor;
 import org.json.JSONObject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import tunas.ecomerce.cutomresponse.ApiRequestException;
@@ -16,16 +14,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Service
+@AllArgsConstructor
 public class TopProductService {
 
     private final TopProductRepository topProductRepository;
     private final ProductRepository productRepository;
-
-    @Autowired
-    public TopProductService(TopProductRepository topProductRepository, ProductRepository productRepository){
-        this.topProductRepository = topProductRepository;
-        this.productRepository = productRepository;
-    }
 
     @Transactional
     Boolean addTopProduct(UUID id){

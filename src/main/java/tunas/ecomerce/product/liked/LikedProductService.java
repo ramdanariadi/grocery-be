@@ -1,7 +1,7 @@
 package tunas.ecomerce.product.liked;
 
 import com.fasterxml.uuid.Generators;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import tunas.ecomerce.customer.Customer;
@@ -14,17 +14,11 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@AllArgsConstructor
 public class LikedProductService {
     private final ProductRepository productRepository;
     private final CustomerRepository customerRepository;
     private final LikedProductRepository likedProductRepository;
-
-    @Autowired
-    public LikedProductService(ProductRepository productRepository, CustomerRepository customerRepository, LikedProductRepository likedProductRepository) {
-        this.productRepository = productRepository;
-        this.customerRepository = customerRepository;
-        this.likedProductRepository = likedProductRepository;
-    }
 
     public Liked storeToWishlist(UUID customerId, UUID productId){
         Product product = productRepository.findProductById(productId);
