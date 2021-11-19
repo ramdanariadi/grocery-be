@@ -7,7 +7,6 @@ import com.google.gson.Gson;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -28,7 +27,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @Slf4j
@@ -45,7 +43,7 @@ public class MyCustomAuthenticationFilter extends UsernamePasswordAuthentication
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = null;
         String username = null;
         String password = null;
-        if(request.getHeader(CONTENT_TYPE).equals(APPLICATION_JSON)){
+        if(request.getHeader(CONTENT_TYPE).equals(APPLICATION_JSON_VALUE)){
             BufferedReader bufferedReader = null;
             try {
                 bufferedReader = request.getReader();
