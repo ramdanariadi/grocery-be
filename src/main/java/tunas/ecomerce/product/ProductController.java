@@ -57,11 +57,10 @@ public class ProductController {
         product.setPerUnit(jsonObject.getInt("perUnit"));
         product.setWeight(jsonObject.getInt("weight"));
         product.setImageUrl(jsonObject.get("imageUrl").toString());
-        Category category = categoryService.findById(UUID.fromString(jsonObject.get("category").toString()));
 
-        if(category != null){
-            product.setCategory(category);
-        }
+        Category category = categoryService.findById(UUID.fromString(jsonObject.get("category").toString()));
+        product.setCategory(category);
+
         productService.saveProduct(product);
         CustomResponse<String> customResponse = new CustomResponse<>();
         return customResponse.sendResponse("",HttpStatus.CREATED);
