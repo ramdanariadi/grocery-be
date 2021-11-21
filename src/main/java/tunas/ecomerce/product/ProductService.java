@@ -27,6 +27,9 @@ public class ProductService {
     }
 
     public void saveProduct(Product product){
+        if(product.getCategory() == null){
+            throw new ApiRequestException("Category not found", HttpStatus.PRECONDITION_FAILED);
+        }
         if(product.getPrice() == null || product.getPrice() < 1L)
             throw new ApiRequestException("Price cannot lower than 1", HttpStatus.PRECONDITION_FAILED);
         productRepository.save(product);
