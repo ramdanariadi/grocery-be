@@ -56,6 +56,7 @@ public class ProductController {
         product.setPrice(jsonObject.getLong("price"));
         product.setPerUnit(jsonObject.getInt("perUnit"));
         product.setWeight(jsonObject.getInt("weight"));
+        product.setImageUrl(jsonObject.getString("imageUrl"));
         Category category = categoryService.findById(UUID.fromString(jsonObject.get("category").toString()));
 
         if(category != null){
