@@ -7,7 +7,6 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 import tunas.ecomerce.cutomresponse.CustomResponse;
 import tunas.ecomerce.cutomresponse.ListResponse;
@@ -17,13 +16,15 @@ import tunas.ecomerce.security.role.Role;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
 import java.io.IOException;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.http.HttpStatus.FORBIDDEN;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @RestController
@@ -97,6 +98,7 @@ public class UserController {
                 tokens.put("refresh_token",refresh_token);
                 new ObjectMapper().writeValue(response.getOutputStream(),tokens);
             }catch (Exception e){
+                response.setStatus(FORBIDDEN.value());
                 new ObjectMapper().writeValue(response.getOutputStream(),e.getMessage());
             }
         }else{
