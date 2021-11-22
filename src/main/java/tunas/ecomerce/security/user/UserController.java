@@ -89,7 +89,7 @@ public class UserController {
                 String access_token = JWT.create()
                         .withSubject(username)
                         .withClaim("roles",user.getRoles().stream().map(Role::getName).collect(Collectors.toList()))
-                        .withExpiresAt(new Date(System.currentTimeMillis() + 10 * 60 * 1000))
+                        .withExpiresAt(new Date(System.currentTimeMillis() + 1440 * 60 * 1000))
                         .withIssuer(request.getRequestURL().toString())
                         .sign(algorithm);
                 response.setContentType(APPLICATION_JSON_VALUE);
