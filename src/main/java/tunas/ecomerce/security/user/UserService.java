@@ -1,5 +1,6 @@
 package tunas.ecomerce.security.user;
 
+import com.fasterxml.uuid.Generators;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -23,6 +24,7 @@ public class UserService implements UserDetailsService{
     private final PasswordEncoder passwordEncoder;
 
     public User saveUser(User user){
+        user.setId(Generators.timeBasedGenerator().generate());
         if(userRepository.findUserByUsername(user.getUsername()) != null){
             throw new ApiRequestException("username taken", HttpStatus.PRECONDITION_FAILED);
         }
@@ -48,7 +50,7 @@ public class UserService implements UserDetailsService{
         userRepository.save(userContext);
     }
 
-    public void grantRole(Long userId, Long roleId){
+    public void grantRole(UUID userId, UUID roleId){
         Map<String, Object> entities = this.validateUserAndRole(userId, roleId);
         User user = (User) entities.get("user");
         Role role = (Role) entities.get("role");
@@ -56,7 +58,7 @@ public class UserService implements UserDetailsService{
         userRepository.save(user);
     }
 
-    public void revokeRole(Long userId, Long roleId){
+    public void revokeRole(UUID userId, UUID roleId){
         Map<String, Object> entities = this.validateUserAndRole(userId, roleId);
         User user = (User) entities.get("user");
         Role role = (Role) entities.get("role");
@@ -64,7 +66,7 @@ public class UserService implements UserDetailsService{
         userRepository.save(user);
     }
 
-    private Map<String, Object> validateUserAndRole(Long userId, Long roleId){
+    private Map<String, Object> validateUserAndRole(UUID userId, UUID roleId){
         Optional<User> userContext = userRepository.findById(userId);
         if(!userContext.isPresent()){
             throw new ApiRequestException("user not found", HttpStatus.NO_CONTENT);
@@ -102,7 +104,7 @@ public class UserService implements UserDetailsService{
         return userRepository.saveAll(iterable);
     }
 
-    public Optional<User> findById(Long aLong) {
+    public Optional<User> findById(UUID aLong) {
         Optional<User> user = userRepository.findById(aLong);
         if(!user.isPresent()){
             throw new ApiRequestException(null, HttpStatus.PRECONDITION_FAILED);
@@ -110,7 +112,7 @@ public class UserService implements UserDetailsService{
         return user;
     }
 
-    public boolean existsById(Long aLong) {
+    public boolean existsById(UUID aLong) {
         return userRepository.existsById(aLong);
     }
 
@@ -118,7 +120,7 @@ public class UserService implements UserDetailsService{
         return userRepository.findAll();
     }
 
-    public Iterable<User> findAllById(Iterable<Long> iterable) {
+    public Iterable<User> findAllById(Iterable<UUID> iterable) {
         return userRepository.findAllById(iterable);
     }
 
@@ -126,7 +128,7 @@ public class UserService implements UserDetailsService{
         return userRepository.count();
     }
 
-    public void deleteById(Long aLong) {
+    public void deleteById(UUID aLong) {
         userRepository.deleteById(aLong);
     }
 

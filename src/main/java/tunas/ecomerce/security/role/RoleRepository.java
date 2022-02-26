@@ -2,5 +2,7 @@ package tunas.ecomerce.security.role;
 
 import org.springframework.data.repository.CrudRepository;
 
-public interface RoleRepository extends CrudRepository<Role, Long> {
+import java.util.UUID;
+
+public interface RoleRepository extends CrudRepository<Role, UUID> {
 }
