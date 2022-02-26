@@ -9,6 +9,7 @@ import tunas.ecomerce.cutomresponse.ObjectResponse;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/role")
@@ -30,7 +31,7 @@ public class RoleController {
     }
 
     @GetMapping("/{id}")
-    public ObjectResponse getRoleById(@PathVariable("id") Long id){
+    public ObjectResponse getRoleById(@PathVariable("id") UUID id){
         CustomResponse<Role> customResponse = new CustomResponse<>();
         Optional<Role> role = roleService.findById(id);
         return customResponse.sendResponse(role.get(),HttpStatus.OK);

@@ -17,10 +17,7 @@ import tunas.ecomerce.security.role.Role;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static org.springframework.http.HttpHeaders.AUTHORIZATION;
@@ -58,19 +55,19 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ObjectResponse getUserById(@PathVariable Long id){
+    public ObjectResponse getUserById(@PathVariable UUID id){
         CustomResponse<User> customResponse = new CustomResponse<>();
         return customResponse.sendResponse(userService.findById(id).get(), HttpStatus.OK);
     }
 
     @PostMapping("/role/{userid}/{roleid}")
-    public ObjectResponse grantRole(@PathVariable("userid") Long userId, @PathVariable("roleid") Long roleId){
+    public ObjectResponse grantRole(@PathVariable("userid") UUID userId, @PathVariable("roleid") UUID roleId){
         userService.grantRole(userId, roleId);
         return CustomResponse.getModifyingObjectResponse(1);
     }
 
     @DeleteMapping("/role/{userid}/{roleid}")
-    public ObjectResponse revokeRole(@PathVariable("userid") Long userId, @PathVariable("roleid") Long roleId){
+    public ObjectResponse revokeRole(@PathVariable("userid") UUID userId, @PathVariable("roleid") UUID roleId){
         userService.revokeRole(userId, roleId);
         return CustomResponse.getModifyingObjectResponse(1);
     }

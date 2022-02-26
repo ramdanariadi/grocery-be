@@ -1,0 +1,659 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "tunas-spec",
+    "description": "Tunas REST api",
+    "version": "v0.0.1"
+  },
+  "servers": [
+    {
+      "url": "{environment}.localhost:8080",
+      "description": "local dev",
+      "variables": {
+        "environment": {
+          "default": "dev",
+          "description": "Server environment",
+          "enum": [
+            "dev",
+            "prod",
+            "qa"
+          ]
+        }
+      }
+    }
+  ],
+  "paths": {
+    "/category": {
+      "summary": "All about categories",
+      "get": {
+        "responses": {
+          "200": {
+            "description": "Get categories success response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/categorySchema"
+                      }
+                    },
+                    "metaData": {
+                      "$ref": "#/components/schemas/metaData"
+                    }
+                  }
+                },
+                "examples": {
+                  "success": {
+                    "value": {
+                      "response": [
+                        {
+                          "id": "8c2c184e-11d2-11ec-82a8-0242ac130003",
+                          "category": "Seafood",
+                          "imageUrl": "",
+                          "deleted": false
+                        }
+                      ],
+                      "metaData": {
+                        "code": 200,
+                        "message": "OK"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "store new category",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "category": {
+                    "type": "string"
+                  },
+                  "imageUrl": {
+                    "type": "string"
+                  }
+                }
+              },
+              "examples": {
+                "Seafood": {
+                  "value": {
+                    "category": "Seafood",
+                    "imageUrl": ""
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "category",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "string"
+                    },
+                    "metaData": {
+                      "$ref": "#/components/schemas/metaData"
+                    }
+                  }
+                },
+                "examples": {
+                  "success": {
+                    "value": {
+                      "response": "",
+                      "metaData": {
+                        "message": "Created",
+                        "code": 200
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "description": "update category",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "category": {
+                    "type": "string"
+                  },
+                  "imageUrl": {
+                    "type": "string"
+                  }
+                }
+              },
+              "examples": {
+                "fastfood": {
+                  "value": {
+                    "id": "1e0a0e91-95fe-11ec-9185-8deab4502942",
+                    "category": "Fast food",
+                    "imageUrl": null
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success update category",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response": {
+                      "type": "string"
+                    },
+                    "metaData": {
+                      "type": "object",
+                      "properties": {
+                        "message": {
+                          "type": "string"
+                        },
+                        "code": {
+                          "type": "number"
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "category": {
+                    "value": {
+                      "response": "",
+                      "metaData": {
+                        "code": 200,
+                        "message": "OK"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/category/{categoryid}": {
+      "get": {
+        "parameters": [
+          {
+            "required": true,
+            "in": "path",
+            "name": "categoryid"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "success getting category by id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "response" : {
+                      "$ref": "#/components/schemas/categorySchema"
+                    },
+                    "metaData" : {
+                      "$ref": "#/components/schemas/metaData"
+                    }
+                  }
+                },
+                "examples": {
+                  "fastfood": {
+                    "value": {
+                      "response": {
+                        "id": "1e0a0e91-95fe-11ec-9185-8deab4502942",
+                        "category": "Fast food",
+                        "imageUrl": null,
+                        "deleted": false
+                      },
+                      "metaData": {
+                        "code": 200,
+                        "message": "OK"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "delete category",
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "name": "categoryId",
+            "examples": {
+              "categoryId": {
+                "value": {
+                  "id": "1e0a0e91-95fe-11ec-9185-8deab4502942"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success destroying category",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/schema200"
+                },
+                "examples": {
+                  "success": {
+                    "value": {
+                      "response" : "",
+                      "metaData" : {
+                        "code" : 200,
+                        "message": "OK"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/product": {
+      "summary": "All about product",
+      "get": {
+        "description": "get all product",
+        "responses": {
+          "200": {
+            "description": "successfully getting product",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/schema200Products"
+                },
+                "examples": {
+                  "success" : {
+                    "value": {
+                      "response": [
+                        {
+                          "name": "Broccoli",
+                          "id": "a3c02e8c-11d2-11ec-82a8-0242ac130003",
+                          "category": "Vegetables",
+                          "imageUrl": null,
+                          "price": 1100,
+                          "weight": 1500,
+                          "categoryId": "8c2c184e-11d2-11ec-82a8-0242ac130003"
+                        },
+                        {
+                          "name": "Carrot",
+                          "id": "9313f2b4-962f-11ec-9185-bfd12b400332",
+                          "category": "Vegetables",
+                          "imageUrl": null,
+                          "price": 10,
+                          "weight": 1000,
+                          "categoryId": "87999023-962f-11ec-9185-7315e008192c"
+                        }
+                      ],
+                      "metaData": {
+                        "code": 200,
+                        "message": "OK"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "description": "store product",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/productSchema"
+              },
+              "examples": {
+                "carrot": {
+                  "value": {
+                    "name": "Carrot",
+                    "price": 10,
+                    "weight": 1000,
+                    "perUnit": 100,
+                    "description": "Good for health",
+                    "imageUrl" : null,
+                    "category": "8c2c184e-11d2-11ec-82a8-0242ac130003"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successfully store product",
+            "content": {
+              "application/json" : {
+                "schema": {
+                  "$ref": "#/components/schemas/schema200"
+                },
+                "examples": {
+                  "created": {
+                    "value": {
+                      "response": "",
+                      "metaData": {
+                        "code": 201,
+                        "message": "Created"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put" : {
+        "description": "store product",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "required": true
+                  },
+                  "id": {
+                    "type": "string",
+                    "required": true
+                  },
+                  "imageUrl": {
+                    "type": "string"
+                  },
+                  "price": {
+                    "type": "number",
+                    "required": true
+                  },
+                  "categoryId": {
+                    "type": "string"
+                  }
+                }
+              },
+              "examples": {
+                "carrot": {
+                  "value": {
+                    "name": "BLACK",
+                    "id": "a3c02e8c-11d2-11ec-82a8-0242ac130003",
+                    "imageUrl": null,
+                    "price": 18500,
+                    "categoryId": "8c2c184e-11d2-11ec-82a8-0242ac130003"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "successfully update product",
+            "content": {
+              "application/json" : {
+                "schema": {
+                  "$ref": "#/components/schemas/schema200"
+                },
+                "examples": {
+                  "created": {
+                    "value": {
+                      "response": "",
+                      "metaData": {
+                        "code": 201,
+                        "message": "Created"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/product/{productId}": {
+      "get": {
+        "description": "get product by id",
+        "parameters": [{
+          "in": "path",
+          "name": "productId",
+          "required": true
+        }
+        ],
+        "responses": {
+          "200": {
+            "description": "success",
+            "content": {
+              "application/json"  : {
+                "schema": {
+                  "$ref": "#/components/schemas/schema200"
+                },
+                "examples": {
+                  "success": {
+                    "value": {
+                      "response" : "",
+                      "metaData" : {
+                        "code" : 200,
+                        "message": "OK"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "description": "delete product",
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "name": "productId"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success destroying category",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/schema200"
+                },
+                "examples": {
+                  "success": {
+                    "value": {
+                      "response" : "",
+                      "metaData" : {
+                        "code" : 200,
+                        "message": "OK"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/product/{categoryId)": {
+      "get": {
+        "description": "getting product by category id",
+        "parameters": [{
+          "in": "path",
+          "name": "categoryId",
+          "required": true
+        }],
+        "responses": {
+          "200": {
+            "description": "success getting product by category",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/schema200Products"
+                },
+                "examples": {
+                  "success" : {
+                    "value": {
+                      "response": [
+                        {
+                          "name": "Broccoli",
+                          "id": "a3c02e8c-11d2-11ec-82a8-0242ac130003",
+                          "category": "Vegetables",
+                          "imageUrl": null,
+                          "price": 1100,
+                          "weight": 1500,
+                          "categoryId": "8c2c184e-11d2-11ec-82a8-0242ac130003"
+                        }
+                      ],
+                      "metaData": {
+                        "code": 200,
+                        "message": "OK"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "categorySchema": {
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
+          },
+          "imageUrl": {
+            "type": "string"
+          },
+          "deleted": {
+            "type": "boolean"
+          }
+        }
+      },
+      "productSchema": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "required": true
+          },
+          "price": {
+            "type": "number",
+            "required": true
+          },
+          "weight": {
+            "type": "number",
+            "required": true
+          },
+          "perUnit": {
+            "type": "number",
+            "required": true
+          },
+          "description": {
+            "type": "string"
+          },
+          "imageUrl" : {
+            "type": "string"
+          },
+          "category": {
+            "type": "string",
+            "required": true
+          }
+        }
+      },
+      "metaData": {
+        "type": "object",
+        "properties": {
+          "message": {
+            "type": "string"
+          },
+          "code": {
+            "type": "number"
+          }
+        }
+      },
+      "schema200": {
+        "type": "object",
+        "properties": {
+          "response": {
+            "type": "string"
+          },
+          "metaData": {
+            "$ref": "#/components/schemas/metaData"
+          }
+        }
+      },
+      "schema200Product": {
+        "type": "object",
+        "properties": {
+          "response" : {
+            "$ref": "#/components/schemas/productSchema"
+          },
+          "metaData": {
+            "$ref": "#/components/schemas/metaData"
+          }
+        }
+      },
+      "schema200Products": {
+        "type": "object",
+        "properties": {
+          "response" : {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/productSchema"
+            }
+          },
+          "metaData": {
+            "$ref": "#/components/schemas/metaData"
+          }
+        }
+      }
+    }
+  }
+}
