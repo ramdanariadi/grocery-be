@@ -17,8 +17,8 @@ public interface CartRepository extends CrudRepository<Cart, UUID> {
 
     @Query("select c.id as id, c.name as name, c.price as price, c.weight as weight, c.category as category, " +
             "c.perUnit as perUnit, c.imageUrl as imageUrl, c.total as total, c.product as product " +
-            "from Cart c where c.customer.id = :id")
-    List<ICharts> findChartsByCustomerId(@Param("id") UUID id);
+            "from Cart c where c.user.id = :id")
+    List<ICharts> findChartsByUserId(@Param("id") UUID id);
 
     interface ICharts{
         String getImageUrl();
@@ -34,20 +34,20 @@ public interface CartRepository extends CrudRepository<Cart, UUID> {
         UUID getId();
     }
 
-    Optional<Cart> findChartByCustomerIdAndProductId(@Param("customerId") UUID customerId, @Param("productId") UUID productId);
+    Optional<Cart> findChartByUserIdAndProductId(@Param("userId") UUID userId, @Param("productId") UUID productId);
 
     @Transactional
     @Modifying
-    @Query("delete from Cart c where c.customer.id = :customerId and c.product.id = :productId")
-    int removeFromChart(@Param("customerId") UUID customerId, @Param("productId") UUID productId);
+    @Query("delete from Cart c where c.user.id = :userId and c.product.id = :productId")
+    int removeFromChart(@Param("userId") UUID userId, @Param("productId") UUID productId);
 
     @Transactional
     @Modifying
-    @Query("update Cart c set c.total = (c.total + 1) where c.customer.id = :customerId and c.product.id = :productId")
-    int incrementProductTotalInChart(@Param("customerId") UUID customerId, @Param("productId") UUID productId);
+    @Query("update Cart c set c.total = (c.total + 1) where c.user.id = :userId and c.product.id = :productId")
+    int incrementProductTotalInChart(@Param("userId") UUID userId, @Param("productId") UUID productId);
 
     @Transactional
     @Modifying
-    @Query("delete from Cart c where c.customer.id = :customerId")
-    int destroyCustomerCart(@Param("customerId") UUID customerId);
+    @Query("delete from Cart c where c.user.id = :userId")
+    int destroyUserCart(@Param("userId") UUID userId);
 }

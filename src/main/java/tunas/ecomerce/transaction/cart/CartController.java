@@ -21,9 +21,9 @@ public class CartController {
         this.cartService = cartService;
     }
 
-    @PostMapping("/{customerId}/{productId}/{total}")
-    public ObjectResponse addToChart(@PathVariable UUID customerId,@PathVariable UUID productId, @PathVariable Integer total){
-        boolean saved = cartService.storeToChart(customerId,productId,total);
+    @PostMapping("/{userId}/{productId}/{total}")
+    public ObjectResponse addToChart(@PathVariable UUID userId,@PathVariable UUID productId, @PathVariable Integer total){
+        boolean saved = cartService.storeToChart(userId,productId,total);
         CustomResponse<String> customResponse = new CustomResponse<>();
         if(saved){
             return customResponse.sendResponse("", HttpStatus.CREATED);
@@ -31,14 +31,14 @@ public class CartController {
         return customResponse.sendResponse("", HttpStatus.OK);
     }
 
-    @DeleteMapping("/{customerId}/{cartId}")
-    public ObjectResponse removeFromChart(@PathVariable UUID customerId,@PathVariable UUID cartId){
-        return CustomResponse.getModifyingObjectResponse(cartService.removeFromChart(customerId,cartId));
+    @DeleteMapping("/{userId}/{cartId}")
+    public ObjectResponse removeFromChart(@PathVariable UUID userId,@PathVariable UUID cartId){
+        return CustomResponse.getModifyingObjectResponse(cartService.removeFromChart(userId,cartId));
     }
 
-    @GetMapping("/{customerId}")
-    public ListResponse customerChart(@PathVariable UUID customerId){
-        List<CartRepository.ICharts> charts = cartService.chartList(customerId);
+    @GetMapping("/{userId}")
+    public ListResponse userChart(@PathVariable UUID userId){
+        List<CartRepository.ICharts> charts = cartService.chartList(userId);
         CustomResponse<CartRepository.ICharts> customResponse = new CustomResponse<>();
         return customResponse.sendResponse(charts,HttpStatus.OK);
     }

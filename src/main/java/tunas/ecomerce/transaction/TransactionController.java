@@ -40,10 +40,10 @@ public class TransactionController {
         return CustomResponse.getModifyingObjectResponse(transactionService.destroyTransaction(id));
     }
 
-    @GetMapping("/customer/{id}")
-    public ListResponse<TransactionResponse> getCustomerTransactions(@PathVariable UUID id){
+    @GetMapping("/user/{id}")
+    public ListResponse<TransactionResponse> getUserTransactions(@PathVariable UUID id){
         CustomResponse<TransactionResponse> customResponse = new CustomResponse<>();
-        List<TransactionResponse> transactions = transactionService.getTransactionByCustomerId(id);
+        List<TransactionResponse> transactions = transactionService.getTransactionByUserId(id);
         return customResponse.sendResponse(transactions,HttpStatus.OK);
     }
 }

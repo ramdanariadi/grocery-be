@@ -57,7 +57,7 @@ public class UserController {
     @GetMapping("/{id}")
     public ObjectResponse getUserById(@PathVariable UUID id){
         CustomResponse<User> customResponse = new CustomResponse<>();
-        return customResponse.sendResponse(userService.findById(id).get(), HttpStatus.OK);
+        return customResponse.sendResponse(userService.findById(id), HttpStatus.OK);
     }
 
     @PostMapping("/role/{userid}/{roleid}")

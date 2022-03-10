@@ -1,12 +1,16 @@
 package tunas.ecomerce.transaction.cart;
 
-import tunas.ecomerce.customer.Customer;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import tunas.ecomerce.product.Product;
+import tunas.ecomerce.security.user.User;
 
 import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
+@NoArgsConstructor
+@Data
 public class Cart {
     @Id
     UUID id;
@@ -19,90 +23,11 @@ public class Cart {
     private String category;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id",nullable = false)
-    Customer customer;
+    @JoinColumn(name = "user_id",nullable = false)
+    User user;
 
     @OneToOne
     Product product;
-
-    public Cart() {
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-
-    public Long getPrice() {
-        return price;
-    }
-
-    public void setPrice(Long price) {
-        this.price = price;
-    }
-
-    public Integer getPerUnit() {
-        return perUnit;
-    }
-
-    public void setPerUnit(Integer perUnit) {
-        this.perUnit = perUnit;
-    }
-
-    public Integer getWeight() {
-        return weight;
-    }
-
-    public void setWeight(Integer weight) {
-        this.weight = weight;
-    }
-
-    public Integer getTotal() {
-        return total;
-    }
-
-    public void setTotal(Integer total) {
-        this.total = total;
-    }
-
-    public Customer getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
-    }
-
-    public Product getProduct() {
-        return product;
-    }
 
     public void setProduct(Product product) {
         this.product = product;

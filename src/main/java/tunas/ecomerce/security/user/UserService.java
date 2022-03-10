@@ -104,12 +104,12 @@ public class UserService implements UserDetailsService{
         return userRepository.saveAll(iterable);
     }
 
-    public Optional<User> findById(UUID aLong) {
+    public User findById(UUID aLong) {
         Optional<User> user = userRepository.findById(aLong);
         if(!user.isPresent()){
             throw new ApiRequestException(null, HttpStatus.PRECONDITION_FAILED);
         }
-        return user;
+        return user.get();
     }
 
     public boolean existsById(UUID aLong) {

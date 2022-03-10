@@ -1,4 +1,4 @@
-package tunas.ecomerce.product.recommedationproduct;
+package tunas.ecomerce.product.recommendationproduct;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
