@@ -1,4 +1,4 @@
-package tunas.ecomerce.product.recommedationproduct;
+package tunas.ecomerce.product.recommendationproduct;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

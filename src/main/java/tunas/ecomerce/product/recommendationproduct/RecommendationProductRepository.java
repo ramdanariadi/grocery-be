@@ -1,11 +1,10 @@
-package tunas.ecomerce.product.recommedationproduct;
+package tunas.ecomerce.product.recommendationproduct;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
-import tunas.ecomerce.product.topproduct.TopProductRepository;
 
 import javax.transaction.Transactional;
 import java.util.List;

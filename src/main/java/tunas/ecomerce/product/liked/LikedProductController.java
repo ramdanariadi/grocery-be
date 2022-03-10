@@ -17,9 +17,9 @@ public class LikedProductController {
 
     private final LikedProductService likedProductService;
 
-    @PostMapping("/{customerId}/{productId}")
-    public ObjectResponse addToWishList(@PathVariable UUID customerId,@PathVariable UUID productId){
-        Liked saved = likedProductService.storeToWishlist(customerId,productId);
+    @PostMapping("/{userId}/{productId}")
+    public ObjectResponse addToWishList(@PathVariable UUID userId,@PathVariable UUID productId){
+        Liked saved = likedProductService.storeToWishlist(userId,productId);
         CustomResponse<String> customResponse = new CustomResponse<>();
         if(saved != null){
             return customResponse.sendResponse("", HttpStatus.CREATED);
@@ -27,21 +27,21 @@ public class LikedProductController {
         return customResponse.sendResponse("", HttpStatus.OK);
     }
 
-    @GetMapping("/{customerId}/{productId}")
-    public ObjectResponse findProductFromWishList(@PathVariable UUID customerId,@PathVariable UUID productId){
-        LikedProductRepository.IWishProductNative lovedProduct = likedProductService.findProductFromWishlist(customerId,productId);
+    @GetMapping("/{userId}/{productId}")
+    public ObjectResponse findProductFromWishList(@PathVariable UUID userId,@PathVariable UUID productId){
+        LikedProductRepository.IWishProductNative lovedProduct = likedProductService.findProductFromWishlist(userId,productId);
         CustomResponse<LikedProductRepository.IWishProductNative> customResponse = new CustomResponse<>();
         return customResponse.sendResponse(lovedProduct, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{customerId}/{productId}")
-    public ObjectResponse removeFromWishList(@PathVariable UUID customerId,@PathVariable UUID productId){
-        return CustomResponse.getModifyingObjectResponse(likedProductService.removeFromWishList(customerId, productId));
+    @DeleteMapping("/{userId}/{productId}")
+    public ObjectResponse removeFromWishList(@PathVariable UUID userId,@PathVariable UUID productId){
+        return CustomResponse.getModifyingObjectResponse(likedProductService.removeFromWishList(userId, productId));
     }
 
-    @GetMapping("/{customerId}")
-    public ListResponse customerWishList(@PathVariable UUID customerId){
-        List<LikedProductRepository.IWishProduct> likedProductList = likedProductService.wishList(customerId);
+    @GetMapping("/{userId}")
+    public ListResponse userWishList(@PathVariable UUID userId){
+        List<LikedProductRepository.IWishProduct> likedProductList = likedProductService.wishList(userId);
         CustomResponse<LikedProductRepository.IWishProduct> customResponse = new CustomResponse<>();
         return customResponse.sendResponse(likedProductList,HttpStatus.OK);
     }

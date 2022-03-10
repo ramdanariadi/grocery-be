@@ -2,8 +2,8 @@ package tunas.ecomerce.product.liked;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import tunas.ecomerce.customer.Customer;
 import tunas.ecomerce.product.Product;
+import tunas.ecomerce.security.user.User;
 
 import javax.persistence.*;
 import java.util.UUID;
@@ -22,8 +22,8 @@ public class Liked {
     private String category;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id", nullable = false)
-    Customer customer;
+    @JoinColumn(name = "user_id", nullable = false)
+    User user;
 
     @OneToOne
     Product product;

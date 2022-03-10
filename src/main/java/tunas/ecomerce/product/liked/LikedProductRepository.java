@@ -14,10 +14,10 @@ import java.util.UUID;
 @Component
 public interface LikedProductRepository extends CrudRepository<Liked, UUID> {
 
-    @Query("select c.id as id, c.name as name, c.price as price, c.weight as weight, c.category as category, " +
-            "c.perUnit as perUnit, c.imageUrl as imageUrl, c.product as product " +
-            "from Liked c where c.customer.id = :id")
-    List<IWishProduct> findWishListByCustomerId(@Param("id") UUID id);
+    @Query("select l.id as id, l.name as name, l.price as price, l.weight as weight, l.category as category, " +
+            "l.perUnit as perUnit, l.imageUrl as imageUrl, l.product as product " +
+            "from Liked l where l.user.id = :id")
+    List<IWishProduct> findWishListByuserId(@Param("id") UUID id);
 
     interface IWishProduct {
         String getImageUrl();
@@ -43,14 +43,14 @@ public interface LikedProductRepository extends CrudRepository<Liked, UUID> {
         UUID getId();
     }
 
-    @Query(value = "select cast(c.id AS varchar) as id, c.name as name, c.price as price, c.weight as weight, " +
-            "c.category as category, " +
-            "c.per_unit as perUnit, c.image_url as imageUrl, cast(product_id AS varchar) as productId " +
-            "from liked c where customer_id = :customerId and product_id = :productId limit 1",nativeQuery = true)
-    IWishProductNative findProductFromWishLIst(@Param("customerId") UUID customerId, @Param("productId") UUID productId);
+    @Query(value = "select cast(l.id AS varchar) as id, l.name as name, l.price as price, l.weight as weight, " +
+            "l.category as category, " +
+            "l.per_unit as perUnit, l.image_url as imageUrl, cast(product_id AS varchar) as productId " +
+            "from liked l where user_id = :userId and product_id = :productId limit 1",nativeQuery = true)
+    IWishProductNative findProductFromWishLIst(@Param("userId") UUID userId, @Param("productId") UUID productId);
 
     @Modifying
     @Transactional
-    @Query("delete from Liked L where L.customer.id = :customerId and L.product.id = :productId")
-    int removeWishlist(@Param("customerId") UUID customerId, @Param("productId") UUID productId);
+    @Query("delete from Liked L where L.user.id = :userId and L.product.id = :productId")
+    int removeWishlist(@Param("userId") UUID userId, @Param("productId") UUID productId);
 }
