@@ -33,7 +33,7 @@ public class ProductController {
     @GetMapping("/{id}")
     @ResponseBody
     public ObjectResponse<Product> getProduct(@PathVariable UUID id){
-        Product product = productService.findProductById(id);
+        Product product = productService.findProductByIdGRPC(id);
         CustomResponse<Product> customResponse = new CustomResponse<>();
         return customResponse.sendResponse(product,HttpStatus.OK);
     }

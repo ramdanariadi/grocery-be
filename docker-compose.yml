@@ -13,7 +13,14 @@ services:
       - tunas_pgdb_data:/var/lib/postgresql/data/ecomerce
     networks:
       - tunas-network
-
+  rabbitmq:
+    image: rabbitmq:3-management
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin
+    ports:
+      - "5672:5672"
+      - "15672:15672"
 networks:
   tunas-network:
     driver: bridge

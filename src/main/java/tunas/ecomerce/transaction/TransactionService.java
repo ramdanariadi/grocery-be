@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import tunas.ecomerce.cutomresponse.ApiRequestException;
+import tunas.ecomerce.messaging.QueueSender;
 import tunas.ecomerce.product.Product;
 import tunas.ecomerce.product.ProductRepository;
 import tunas.ecomerce.security.user.User;
@@ -33,6 +34,9 @@ public class TransactionService {
     private final ProductRepository productRepository;
     private final DetailTransactionRepository detailTransactionRepository;
     private final CartRepository cartRepository;
+
+    @Autowired
+    private QueueSender queueSender;
 
     @Autowired
     public TransactionService(UserService userService, TransactionRepository transactionRepository, ProductRepository productRepository, DetailTransactionRepository detailTransactionRepository, CartRepository cartRepository) {
@@ -75,6 +79,9 @@ public class TransactionService {
         ITransactionResponse savedTransaction = transactionRepository.getTransactionById(transaction.getId());
         List<DetailTransactionRepository.IDetailTransactions> savedDetailTransaction = detailTransactionRepository.
                 getDetailTransactionsByTransactionId(transaction.getId());
+
+        queueSender.send(jsonObject);
+
         return new TransactionResponse(savedTransaction,savedDetailTransaction);
     }
 

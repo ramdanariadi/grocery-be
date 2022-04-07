@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import tunas.ecomerce.cutomresponse.CustomResponse;
 import tunas.ecomerce.cutomresponse.ListResponse;
 import tunas.ecomerce.cutomresponse.ObjectResponse;
+import tunas.ecomerce.messaging.QueueSender;
 
 import java.util.List;
 import java.util.UUID;
@@ -19,6 +20,15 @@ public class TransactionController {
     @Autowired
     public TransactionController(TransactionService transactionService) {
         this.transactionService = transactionService;
+    }
+
+    @Autowired
+    private QueueSender queueSender;
+
+    @GetMapping
+    public String tesRMQ(){
+        queueSender.send("tes send rmq");
+        return "OK DONE";
     }
 
     @PostMapping

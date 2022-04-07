@@ -9,6 +9,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 import org.mockito.junit.jupiter.MockitoExtension;
+import tunas.ecomerce.category.Category;
 import tunas.ecomerce.cutomresponse.ApiRequestException;
 
 import java.util.UUID;
@@ -55,6 +56,7 @@ class ProductServiceTest {
         product.setId(UUID.fromString("0b589615-f910-11eb-936c-41a335bdee2c"));
         product.setPrice(1000L);
         product.setName("tes");
+        product.setCategory(new Category());
 
         // when
         productService.saveProduct(product);
@@ -72,6 +74,7 @@ class ProductServiceTest {
         Product product = new Product();
         product.setPrice(0L);
         product.setId(UUID.fromString("0b589615-f910-11eb-936c-41a335bdee2c"));
+        product.setCategory(new Category());
 
         // when
         // then
