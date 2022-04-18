@@ -8,11 +8,13 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RmqSenderConfig{
 
-    @Value("${queue.name}")
-    private String message;
+    @Bean
+    public Queue queueTransaction(@Value("${queue.transaction}") String message){
+        return new Queue(message, true);
+    }
 
     @Bean
-    public Queue queue(){
+    public Queue queueMailing(@Value("${queue.mailing}") String message){
         return new Queue(message, true);
     }
 }

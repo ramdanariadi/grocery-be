@@ -11,9 +11,11 @@ message Product{
   string id = 2;
   string category = 3;
   string imageUrl = 4;
-  int32 price = 5;
-  int32 weight = 6;
+  uint64 price = 5;
+  uint32 weight = 6;
   string categoryId = 7;
+  uint64 perUnit = 8;
+  string description = 9;
 }
 
 message ProductId{
@@ -45,6 +47,6 @@ service ProductService{
   rpc FindById(ProductId) returns(ResponseWithData);
   rpc FindAll(ProductEmpty) returns(MultipleDataResponse);
   rpc Save(Product) returns(Response);
-  rpc Update(ProductId) returns(Response);
+  rpc Update(Product) returns(Response);
   rpc Delete(ProductId) returns(Response);
 }

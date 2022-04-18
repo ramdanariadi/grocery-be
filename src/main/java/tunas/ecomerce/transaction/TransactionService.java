@@ -20,6 +20,7 @@ import tunas.ecomerce.transaction.cart.CartRepository;
 
 import javax.transaction.Transactional;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
@@ -49,10 +50,14 @@ public class TransactionService {
 
     @Transactional
     public TransactionResponse makeTransaction(String jsonObject){
+        // reqBody will used as messaging data : queue transaction
         JSONObject reqBody = new JSONObject(jsonObject);
         User user = userService.findById(UUID.fromString(reqBody.getString("userId")));
         System.out.println(reqBody.getString("userId"));
         System.out.println(user.getUsername());
+
+        reqBody.put("name",user.getUsername());
+
         Transaction transaction = new Transaction();
         transaction.setId(Generators.timeBasedGenerator().generate());
         transaction.setTransactionDate(new DateTime().toDate());
@@ -60,6 +65,8 @@ public class TransactionService {
         transaction.setUserEmail(user.getEmail());
         transaction.setUserMobile(user.getMobile());
         transaction.setUserName(user.getUsername());
+
+        reqBody.put("id", transaction.getId().toString());
 
         Gson gson = new Gson();
         Type datasetListType = new TypeToken<Collection<DetailTransaction>>() {}.getType();
@@ -72,15 +79,33 @@ public class TransactionService {
             d.setId(Generators.timeBasedGenerator().generate());
             d.setTransaction(transaction);
         }
+
         transaction.setTotalPrice(totalPrice);
-        transactionRepository.save(transaction);
-        detailTransactionRepository.saveAll(detailTransactions);
-        cartRepository.destroyUserCart(user.getId());
+        reqBody.put("total", totalPrice);
+
+//        transactionRepository.save(transaction);
+//        detailTransactionRepository.saveAll(detailTransactions);
+//        cartRepository.destroyUserCart(user.getId());
         ITransactionResponse savedTransaction = transactionRepository.getTransactionById(transaction.getId());
         List<DetailTransactionRepository.IDetailTransactions> savedDetailTransaction = detailTransactionRepository.
                 getDetailTransactionsByTransactionId(transaction.getId());
 
-        queueSender.send(jsonObject);
+        queueSender.sendTransaction(reqBody.toString());
+
+        JSONObject dataEmail = new JSONObject();
+        JSONObject Cc = new JSONObject();
+        Cc.put("address","tralalala@gmail.com");
+        Cc.put("name","tralalala");
+        List<String> to = new ArrayList<>();
+        to.add("holmesxme@gmail.com");
+        dataEmail.put("to", to);
+        List<String> subject = new ArrayList<>();
+        subject.add("Transaction resume");
+        dataEmail.put("subject",subject);
+        dataEmail.put("body", "<h1>From</h1>");
+        dataEmail.put("cc",Cc);
+        queueSender.sendEmail(dataEmail.toString());
+        log.info(dataEmail.toString());
 
         return new TransactionResponse(savedTransaction,savedDetailTransaction);
     }

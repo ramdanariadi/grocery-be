@@ -1,0 +1,19 @@
+syntax="proto3";
+package proto;
+
+option go_package="/proto/model";
+
+option java_multiple_files = true;
+option java_package = "com.proto.email";
+
+message Cc {
+  string Address = 1;
+  string Name = 2;
+}
+
+message DataEmail{
+  string From = 1;
+  repeated string To = 2;
+  repeated string Subject = 3;
+  string Body = 4;
+}

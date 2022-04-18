@@ -25,15 +25,15 @@ public class ProductController {
     @GetMapping
     @ResponseBody
     public ListResponse getProducts(){
-        List<ProductRepository.ICustomSelect> products = productService.getAll();
-        CustomResponse<ProductRepository.ICustomSelect> customResponse = new CustomResponse<>();
+        List<ProductResponseModel> products = productService.getAll();
+        CustomResponse<ProductResponseModel> customResponse = new CustomResponse<>();
         return customResponse.sendResponse(products, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
     @ResponseBody
     public ObjectResponse<Product> getProduct(@PathVariable UUID id){
-        Product product = productService.findProductByIdGRPC(id);
+        Product product = productService.findProductById(id);
         CustomResponse<Product> customResponse = new CustomResponse<>();
         return customResponse.sendResponse(product,HttpStatus.OK);
     }
@@ -61,16 +61,15 @@ public class ProductController {
         Category category = categoryService.findById(UUID.fromString(jsonObject.get("category").toString()));
         product.setCategory(category);
 
-        productService.saveProduct(product);
+        var saved = productService.saveProduct(product);
         CustomResponse<String> customResponse = new CustomResponse<>();
-        return customResponse.sendResponse("",HttpStatus.CREATED);
+        return customResponse.sendResponse("",saved ? HttpStatus.CREATED : HttpStatus.CONFLICT);
     }
 
     @PutMapping
     public ObjectResponse<String> updateProduct(@RequestBody Product product){
-        int nModified = productService.updateProduct(product);
         CustomResponse<String> customResponse = new CustomResponse<>();
-        if(nModified > 0){
+        if(productService.updateProduct(product)){
             return customResponse.sendResponse("",HttpStatus.OK);
         }
         return customResponse.sendResponse("",HttpStatus.NOT_MODIFIED);
@@ -78,6 +77,6 @@ public class ProductController {
 
     @DeleteMapping("/{id}")
     public ObjectResponse<String> destroyProduct(@PathVariable UUID id){
-        return CustomResponse.getModifyingObjectResponse(productService.destroyProduct(id));
+        return CustomResponse.getModifyingObjectResponse(productService.destroyProduct(id) ? 1 : 0);
     }
 }

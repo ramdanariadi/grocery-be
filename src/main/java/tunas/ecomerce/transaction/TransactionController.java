@@ -27,7 +27,7 @@ public class TransactionController {
 
     @GetMapping
     public String tesRMQ(){
-        queueSender.send("tes send rmq");
+        queueSender.sendTransaction("tes send rmq");
         return "OK DONE";
     }
 

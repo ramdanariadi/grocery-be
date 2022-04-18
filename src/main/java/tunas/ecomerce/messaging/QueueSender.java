@@ -12,9 +12,16 @@ public class QueueSender {
     private RabbitTemplate rabbitTemplate;
 
     @Autowired
-    private Queue queue;
+    private Queue queueTransaction;
 
-    public void send(String order){
-        rabbitTemplate.convertAndSend(this.queue.getName(), order);
+    @Autowired
+    private Queue queueMailing;
+
+    public void sendTransaction(String order){
+        rabbitTemplate.convertAndSend(this.queueTransaction.getName(), order);
+    }
+
+    public void sendEmail(String order){
+        rabbitTemplate.convertAndSend(this.queueMailing.getName(), order);
     }
 }
