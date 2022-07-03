@@ -1,5 +1,6 @@
 package tunas.ecomerce.security.user;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import tunas.ecomerce.product.liked.Liked;
@@ -25,10 +26,12 @@ public class User {
     private String mobile;
     private String email;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Cart> cart;
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Liked> wishList;
 
     @ManyToMany(fetch = FetchType.EAGER)

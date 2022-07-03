@@ -11,16 +11,11 @@ import tunas.ecomerce.cutomresponse.ApiRequestException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @Slf4j
 public class ProductService {
-
-    private final ProductRepository productRepository;
-
-    public ProductService(ProductRepository productRepository) {
-        this.productRepository = productRepository;
-    }
 
     @GrpcClient("product-service")
     private ProductServiceGrpc.ProductServiceBlockingStub productServiceStub;
@@ -30,17 +25,15 @@ public class ProductService {
         List<ProductResponseModel> responseModelList = new ArrayList<>();
 
         if(all.getStatus()){
-            all.getDataList().stream().forEach((product) -> {
-                responseModelList.add(new ProductResponseModel(
-                        product.getImageUrl(),
-                        product.getWeight(),
-                        product.getName(),
-                        product.getPrice(),
-                        product.getCategory(),
-                        UUID.fromString(product.getId()),
-                        UUID.fromString(product.getCategoryId())
-                        ));
-            });
+            responseModelList = all.getDataList().stream().map((product) -> new ProductResponseModel(
+                    product.getImageUrl(),
+                    product.getWeight(),
+                    product.getName(),
+                    product.getPrice(),
+                    product.getCategory(),
+                    UUID.fromString(product.getId()),
+                    UUID.fromString(product.getCategoryId())
+            )).collect(Collectors.toList());
         }
 
         return responseModelList;
@@ -69,8 +62,20 @@ public class ProductService {
         return product;
     }
 
-    public List<ProductRepository.ICustomSelect> getAllBYCategory(UUID categoryId){
-        return productRepository.findProductsByCategory(categoryId);
+    public List<ProductResponseModel> getAllByCategory(UUID categoryId){
+        MultipleDataResponse productsByCategory = productServiceStub.findProductsByCategory(CategoryId.newBuilder().setId(categoryId.toString()).build());
+        List<ProductResponseModel> products = new ArrayList<>();
+        if(productsByCategory.getStatus()){
+            products = productsByCategory.getDataList().stream().map(product -> new ProductResponseModel(
+                    product.getImageUrl(),
+                    product.getWeight(),
+                    product.getName(),
+                    product.getPrice(),
+                    product.getCategory(),
+                    UUID.fromString(product.getId()),
+                    UUID.fromString(product.getCategoryId()))).collect(Collectors.toList());
+        }
+        return products;
     }
 
     public boolean saveProduct(Product product){

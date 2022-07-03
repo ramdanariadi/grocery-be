@@ -3,6 +3,8 @@ package tunas.ecomerce.product;
 import com.fasterxml.uuid.Generators;
 import lombok.AllArgsConstructor;
 import org.json.JSONObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import tunas.ecomerce.category.Category;
@@ -18,6 +20,8 @@ import java.util.UUID;
 @RequestMapping(path = "api/v1/product")
 @AllArgsConstructor
 public class ProductController {
+
+    private final Logger LOGGER = LoggerFactory.getLogger(ProductController.class);
 
     private final ProductService productService;
     private final CategoryService categoryService;
@@ -40,9 +44,10 @@ public class ProductController {
 
     @GetMapping("/category/{id}")
     @ResponseBody
-    public ObjectResponse<List<ProductRepository.ICustomSelect>> getProductByCategory(@PathVariable UUID id){
-        List<ProductRepository.ICustomSelect> products = productService.getAllBYCategory(id);
-        CustomResponse<List<ProductRepository.ICustomSelect>> customResponse = new CustomResponse<>();
+    public ObjectResponse<List<ProductResponseModel>> getProductByCategory(@PathVariable UUID id){
+        LOGGER.info("category id {}", id.toString());
+        List<ProductResponseModel> products = productService.getAllByCategory(id);
+        CustomResponse<List<ProductResponseModel>> customResponse = new CustomResponse<>();
         return customResponse.sendResponse(products,HttpStatus.OK);
     }
 

@@ -5,12 +5,12 @@ services:
     environment:
       POSTGRES_PASSWORD: secret
       POSTGRES_USER: postgres
-      POSTGRES_DB: DBTunasGrocery
-      PGDATA: /var/lib/postgresql/data/ecomerce
+      POSTGRES_DB: user_service
+      PGDATA: /var/lib/postgresql/data/ecommerce
     ports:
       - "5432:5432"
     volumes:
-      - tunas_pgdb_data:/var/lib/postgresql/data/ecomerce
+      - tunas_pgdb_data:/var/lib/postgresql/data/ecommerce
     networks:
       - tunas-network
   mongo:

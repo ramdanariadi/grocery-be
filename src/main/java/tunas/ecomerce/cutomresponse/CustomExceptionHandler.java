@@ -15,7 +15,7 @@ public class CustomExceptionHandler{
     }
 
     @ExceptionHandler({ApiRequestException.class})
-    public ResponseEntity<Object> handleCustomException(ApiRequestException e){
+    public ResponseEntity<Object> handleApiRequestException(ApiRequestException e){
         CustomResponse<String> customResponse = new CustomResponse<>();
         return new ResponseEntity<>(customResponse.sendResponse(e.getMessage(),e.getHttpStatus()),HttpStatus.PRECONDITION_FAILED);
     }
