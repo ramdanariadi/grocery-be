@@ -18,7 +18,7 @@ public class Cart {
     private Integer total;
     private String category;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id",nullable = false)
     Customer customer;
 

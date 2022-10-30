@@ -25,7 +25,7 @@ public class RecommendationProduct {
     @Column(columnDefinition = "boolean default false")
     Boolean deleted = false;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     @MapsId
     @JoinColumn(name = "product_id")
     Product product;

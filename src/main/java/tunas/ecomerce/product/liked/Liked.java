@@ -21,11 +21,11 @@ public class Liked {
     private Integer weight;
     private String category;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "customer_id", nullable = false)
     Customer customer;
 
-    @OneToOne
+    @OneToOne(fetch = FetchType.LAZY)
     Product product;
 
     public void setProduct(Product product) {
