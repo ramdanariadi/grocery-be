@@ -53,6 +53,12 @@
 			<artifactId>json</artifactId>
 			<version>20210307</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/io.vertx/vertx-json-schema -->
+		<dependency>
+			<groupId>io.vertx</groupId>
+			<artifactId>vertx-json-schema</artifactId>
+			<version>4.3.2</version>
+		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
