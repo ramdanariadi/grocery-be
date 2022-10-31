@@ -3,7 +3,7 @@ package tunas.ecomerce.security.role;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import tunas.ecomerce.cutomresponse.ApiRequestException;
+import tunas.ecomerce.exception.ApiRequestException;
 
 import java.util.Optional;
 
@@ -27,8 +27,8 @@ public class RoleService{
 
     public Optional<Role> findById(Long aLong) {
         Optional<Role> role = roleRepository.findById(aLong);
-        if(!role.isPresent()){
-            throw new ApiRequestException(null, HttpStatus.NO_CONTENT);
+        if(role.isEmpty()){
+            throw new ApiRequestException("BAD_REQUEST", HttpStatus.NO_CONTENT);
         }
         return roleRepository.findById(aLong);
     }

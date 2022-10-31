@@ -1,10 +1,10 @@
 package tunas.ecomerce.category;
 
 import com.fasterxml.uuid.Generators;
+import com.google.common.base.Strings;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import tunas.ecomerce.cutomresponse.ApiRequestException;
+import tunas.ecomerce.exception.ApiRequestException;
 
 import java.util.List;
 import java.util.UUID;
@@ -24,17 +24,16 @@ public class CategoryService {
     }
 
     public void addCategory(Category category){
-        String categoryStr = category.getCategory();
-        if(categoryStr == null || categoryStr.trim().equals("")){
-            throw new ApiRequestException("category empty not allowed", HttpStatus.PRECONDITION_FAILED);
+        if(Strings.isNullOrEmpty(category.getCategory())){
+            throw new ApiRequestException("CATEGORY_CANNOT_EMPTY");
         }
         category.setId(Generators.timeBasedGenerator().generate());
         categoryRepository.save(category);
     }
 
     public int updateCategory(Category category){
-        if(category.getId() == null){
-            throw new ApiRequestException("category id is empty", HttpStatus.PRECONDITION_FAILED);
+        if(null == category.getId()){
+            throw new ApiRequestException("category id is empty");
         }
         return categoryRepository.updateCategory(category.getId(), category.getCategory(), category.getImageUrl());
     }

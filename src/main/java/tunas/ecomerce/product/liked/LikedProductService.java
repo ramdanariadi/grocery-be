@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import tunas.ecomerce.customer.Customer;
 import tunas.ecomerce.customer.CustomerRepository;
-import tunas.ecomerce.cutomresponse.ApiRequestException;
+import tunas.ecomerce.exception.ApiRequestException;
 import tunas.ecomerce.product.Product;
 import tunas.ecomerce.product.ProductRepository;
 
@@ -32,7 +32,7 @@ public class LikedProductService {
 
     public LikedProductRepository.IWishProductNative findProductFromWishlist(UUID customerId, UUID productId){
         LikedProductRepository.IWishProductNative lovedProduct = likedProductRepository.findProductFromWishLIst(customerId,productId);
-        if(lovedProduct == null){
+        if(null == lovedProduct){
             throw new ApiRequestException("", HttpStatus.NO_CONTENT);
         }
         return lovedProduct;

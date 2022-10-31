@@ -1,4 +1,4 @@
-package tunas.ecomerce.cutomresponse;
+package tunas.ecomerce.exception;
 
 import org.springframework.http.HttpStatus;
 
@@ -10,6 +10,10 @@ public class ApiRequestException extends RuntimeException{
         super(message);
         this.message = message;
         this.httpStatus = httpStatus;
+    }
+
+    public ApiRequestException(String message){
+        super(message);
     }
 
     @Override

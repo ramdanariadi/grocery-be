@@ -1,15 +1,14 @@
 package tunas.ecomerce.product;
 
 import com.fasterxml.uuid.Generators;
+import io.vertx.core.json.JsonObject;
 import lombok.AllArgsConstructor;
 import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tunas.ecomerce.category.Category;
 import tunas.ecomerce.category.CategoryService;
-import tunas.ecomerce.cutomresponse.CustomResponse;
-import tunas.ecomerce.cutomresponse.ListResponse;
-import tunas.ecomerce.cutomresponse.ObjectResponse;
 
 import java.util.List;
 import java.util.UUID;
@@ -24,30 +23,33 @@ public class ProductController {
 
     @GetMapping
     @ResponseBody
-    public ListResponse getProducts(){
+    public ResponseEntity getProducts(){
         List<ProductRepository.ICustomSelect> products = productService.getAll();
-        CustomResponse<ProductRepository.ICustomSelect> customResponse = new CustomResponse<>();
-        return customResponse.sendResponse(products, HttpStatus.OK);
+        JsonObject result = new JsonObject();
+        result.put("data", products);
+        return ResponseEntity.ok(result.getMap());
     }
 
     @GetMapping("/{id}")
     @ResponseBody
-    public ObjectResponse<Product> getProduct(@PathVariable UUID id){
+    public ResponseEntity getProduct(@PathVariable UUID id){
         Product product = productService.findProductById(id);
-        CustomResponse<Product> customResponse = new CustomResponse<>();
-        return customResponse.sendResponse(product,HttpStatus.OK);
+        JsonObject result = new JsonObject();
+        result.put("data", product);
+        return ResponseEntity.ok(result.getMap());
     }
 
     @GetMapping("/category/{id}")
     @ResponseBody
-    public ObjectResponse<List<ProductRepository.ICustomSelect>> getProductByCategory(@PathVariable UUID id){
+    public ResponseEntity getProductByCategory(@PathVariable UUID id){
         List<ProductRepository.ICustomSelect> products = productService.getAllBYCategory(id);
-        CustomResponse<List<ProductRepository.ICustomSelect>> customResponse = new CustomResponse<>();
-        return customResponse.sendResponse(products,HttpStatus.OK);
+        JsonObject result = new JsonObject();
+        result.put("data", products);
+        return ResponseEntity.ok(result.getMap());
     }
 
     @PostMapping
-    public ObjectResponse<String> addProduct(@RequestBody String jsonBody){
+    public ResponseEntity addProduct(@RequestBody String jsonBody){
         JSONObject jsonObject = new JSONObject(jsonBody);
         Product product = new Product();
         product.setId(Generators.timeBasedGenerator().generate());
@@ -62,22 +64,20 @@ public class ProductController {
         product.setCategory(category);
 
         productService.saveProduct(product);
-        CustomResponse<String> customResponse = new CustomResponse<>();
-        return customResponse.sendResponse("",HttpStatus.CREATED);
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping
-    public ObjectResponse<String> updateProduct(@RequestBody Product product){
+    public ResponseEntity updateProduct(@RequestBody Product product){
         int nModified = productService.updateProduct(product);
-        CustomResponse<String> customResponse = new CustomResponse<>();
-        if(nModified > 0){
-            return customResponse.sendResponse("",HttpStatus.OK);
-        }
-        return customResponse.sendResponse("",HttpStatus.NOT_MODIFIED);
+        if(nModified > 0) return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
     }
 
     @DeleteMapping("/{id}")
-    public ObjectResponse<String> destroyProduct(@PathVariable UUID id){
-        return CustomResponse.getModifyingObjectResponse(productService.destroyProduct(id));
+    public ResponseEntity destroyProduct(@PathVariable UUID id){
+        int nModified = productService.destroyProduct(id);
+        if(nModified > 0) return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
     }
 }

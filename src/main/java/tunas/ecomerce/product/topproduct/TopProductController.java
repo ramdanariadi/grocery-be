@@ -1,12 +1,13 @@
 package tunas.ecomerce.product.topproduct;
 
+import io.vertx.core.json.JsonObject;
 import lombok.AllArgsConstructor;
+import org.apache.catalina.connector.Response;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import tunas.ecomerce.cutomresponse.CustomResponse;
-import tunas.ecomerce.cutomresponse.ListResponse;
-import tunas.ecomerce.cutomresponse.ObjectResponse;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @RestController
@@ -17,29 +18,30 @@ public class TopProductController {
     private final TopProductService topProductService;
 
     @GetMapping("/{id}")
-    ObjectResponse<TopProduct> getProductById(@PathVariable UUID id){
-        CustomResponse customResponse = new CustomResponse();
-        return customResponse.sendResponse(topProductService.getById(id).get(), HttpStatus.OK);
+    public ResponseEntity getProductById(@PathVariable UUID id){
+        Optional<TopProduct> topProduct = topProductService.getById(id);
+        JsonObject result = new JsonObject();
+        topProduct.ifPresent(topProduct1 -> result.put("data", result));
+        return ResponseEntity.ok(result.getMap());
     }
 
     @DeleteMapping("/{id}")
-    ObjectResponse destroyTopProduct(@PathVariable UUID id){
-        return CustomResponse.getModifyingObjectResponse(topProductService.destroy(id));
+    public ResponseEntity destroyTopProduct(@PathVariable UUID id){
+        int nModified = topProductService.destroy(id);
+        if(nModified > 0) return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
     }
 
     @GetMapping
-    ListResponse<TopProductRepository.iCustomSelect> getAllProducts(){
-         CustomResponse<TopProductRepository.iCustomSelect> customResponse = new CustomResponse();
-         return customResponse.sendResponse(topProductService.getAll(),HttpStatus.OK);
+    public ResponseEntity getAllProducts(){
+        JsonObject result = new JsonObject();
+        result.put("data", topProductService.getAll());
+        return ResponseEntity.ok(result.getMap());
     }
 
     @PostMapping("/{id}")
-    ObjectResponse<String> addTopProduct(@PathVariable UUID id){
-        Boolean saved = topProductService.addTopProduct(id);
-        CustomResponse<String> customResponse = new CustomResponse<>();
-        if(saved){
-            return customResponse.sendResponse("",HttpStatus.CREATED);
-        }
-        return customResponse.sendResponse("",HttpStatus.OK);
+    public ResponseEntity addTopProduct(@PathVariable UUID id){
+        topProductService.addTopProduct(id);
+        return ResponseEntity.ok().build();
     }
 }

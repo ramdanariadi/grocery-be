@@ -1,12 +1,9 @@
 package tunas.ecomerce.customer;
 
+import io.vertx.core.json.JsonObject;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import tunas.ecomerce.cutomresponse.CustomResponse;
-import tunas.ecomerce.cutomresponse.ListResponse;
-import tunas.ecomerce.cutomresponse.ObjectResponse;
 
 import java.util.List;
 import java.util.UUID;
@@ -19,24 +16,24 @@ public class CustomerController {
     private final CustomerService customerService;
 
     @GetMapping("/{id}")
-    public ObjectResponse<Customer> getCustomer(@PathVariable UUID id){
+    public ResponseEntity getCustomer(@PathVariable UUID id){
         Customer customer = customerService.getCustomer(id);
-        CustomResponse<Customer> customResponse = new CustomResponse<>();
-        return customResponse.sendResponse(customer, HttpStatus.OK);
+        JsonObject result = new JsonObject();
+        result.put("data", customer);
+        return ResponseEntity.ok(result.getMap());
     }
 
     @GetMapping
-    public ListResponse<CustomerRepository.ICustomer> getAllCustomers(){
+    public ResponseEntity getAllCustomers(){
         List<CustomerRepository.ICustomer> customers = customerService.getCustomers();
-        CustomResponse<CustomerRepository.ICustomer> customResponse = new CustomResponse<>();
-        return customResponse.sendResponse(customers,HttpStatus.OK);
+        JsonObject result = new JsonObject();
+        result.put("data", customers);
+        return ResponseEntity.ok(result.getMap());
     }
 
     @PostMapping
-    public ObjectResponse<String> saveCustomer(@RequestBody Customer customer){
-        System.out.println(customer);
+    public ResponseEntity saveCustomer(@RequestBody Customer customer){
         customerService.saveCustomer(customer);
-        CustomResponse<String> customResponse = new CustomResponse<>();
-        return customResponse.sendResponse("",HttpStatus.CREATED);
+        return ResponseEntity.ok().build();
     }
 }

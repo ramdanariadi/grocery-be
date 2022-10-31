@@ -1,10 +1,9 @@
 package tunas.ecomerce.product.topproduct;
 
 import lombok.AllArgsConstructor;
-import org.json.JSONObject;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import tunas.ecomerce.cutomresponse.ApiRequestException;
+import tunas.ecomerce.exception.ApiRequestException;
 import tunas.ecomerce.product.Product;
 import tunas.ecomerce.product.ProductRepository;
 

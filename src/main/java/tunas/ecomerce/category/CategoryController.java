@@ -1,12 +1,11 @@
 package tunas.ecomerce.category;
 
+import io.vertx.core.json.JsonObject;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import tunas.ecomerce.cutomresponse.CustomResponse;
-import tunas.ecomerce.cutomresponse.ListResponse;
-import tunas.ecomerce.cutomresponse.ObjectResponse;
 
 import java.util.List;
 import java.util.UUID;
@@ -20,33 +19,38 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @GetMapping
-    public ListResponse<Category> allCategories(){
+    public ResponseEntity allCategories(){
         List<Category> categories = categoryService.findAllCategory();
-        CustomResponse<Category> categoryCustomResponse = new CustomResponse<>();
-        return categoryCustomResponse.sendResponse(categories,HttpStatus.OK);
+        JsonObject result = new JsonObject();
+        result.put("data", categories);
+        return ResponseEntity.ok(result.getMap());
     }
 
     @GetMapping(path = "/{id}")
-    public ObjectResponse<Category> categoryById(@PathVariable UUID id){
+    public ResponseEntity categoryById(@PathVariable UUID id){
         Category category = categoryService.findById(id);
-        CustomResponse<Category> customResponse = new CustomResponse<>();
-        return customResponse.sendResponse(category, HttpStatus.OK);
+        JsonObject result = new JsonObject();
+        result.put("data", category);
+        return ResponseEntity.ok(result.getMap());
     }
 
     @DeleteMapping(path = "/{id}")
-    public ObjectResponse<String> destroyCategory(@PathVariable UUID id){
-        return CustomResponse.getModifyingObjectResponse(categoryService.destroyCategory(id));
+    public ResponseEntity destroyCategory(@PathVariable UUID id){
+        int nModified = categoryService.destroyCategory(id);
+        if(nModified > 0) return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
     }
 
     @PutMapping
-    public ObjectResponse<String> updateCategory(@RequestBody Category category){
-        return CustomResponse.getModifyingObjectResponse(categoryService.updateCategory(category));
+    public ResponseEntity updateCategory(@RequestBody Category category){
+        int nModified = categoryService.updateCategory(category);
+        if(nModified > 0) return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
     }
 
     @PostMapping
-    public ObjectResponse<String> addCategory(@RequestBody Category category){
+    public ResponseEntity addCategory(@RequestBody Category category){
         categoryService.addCategory(category);
-        CustomResponse<String> customResponse = new CustomResponse<>();
-        return customResponse.sendResponse("",HttpStatus.CREATED);
+        return ResponseEntity.ok().build();
     }
 }

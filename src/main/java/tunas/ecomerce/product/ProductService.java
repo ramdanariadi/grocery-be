@@ -1,8 +1,9 @@
 package tunas.ecomerce.product;
 
+import com.google.common.base.Strings;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import tunas.ecomerce.cutomresponse.ApiRequestException;
+import tunas.ecomerce.exception.ApiRequestException;
 import lombok.AllArgsConstructor;
 import java.util.List;
 import java.util.UUID;
@@ -27,17 +28,17 @@ public class ProductService {
     }
 
     public void saveProduct(Product product){
-        if(product.getCategory() == null){
-            throw new ApiRequestException("Category not found", HttpStatus.PRECONDITION_FAILED);
+        if(null == product.getCategory()){
+            throw new ApiRequestException("CATEGORY_NOT_FOUND");
         }
-        if(product.getPrice() == null || product.getPrice() < 1L)
-            throw new ApiRequestException("Price cannot lower than 1", HttpStatus.PRECONDITION_FAILED);
+        if(null == product.getPrice() || product.getPrice() < 1L)
+            throw new ApiRequestException("PRICE_CANNOT_LOWER_THAN_0");
         productRepository.save(product);
     }
 
     public int updateProduct(Product product){
-        if(product.getName() == null || product.getName().trim().equals("")){
-            throw new ApiRequestException("Product name cannot empty",HttpStatus.PRECONDITION_FAILED);
+        if(Strings.isNullOrEmpty(product.getName())){
+            throw new ApiRequestException("PRODUCT_NAME_CANNOT_EMPTY");
         }
         return productRepository.updateProduct(product.getId(),product.getName(),product.getPrice(),product.getImageUrl());
     }

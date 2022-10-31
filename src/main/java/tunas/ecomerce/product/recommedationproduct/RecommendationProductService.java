@@ -3,7 +3,7 @@ package tunas.ecomerce.product.recommedationproduct;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import tunas.ecomerce.cutomresponse.ApiRequestException;
+import tunas.ecomerce.exception.ApiRequestException;
 import tunas.ecomerce.product.Product;
 import tunas.ecomerce.product.ProductRepository;
 
@@ -28,7 +28,7 @@ public class RecommendationProductService {
 
     Boolean addRecommendationProduct(UUID id){
         Product product = productRepository.findProductById(id);
-        if(product == null){
+        if(null == product){
             throw new ApiRequestException("Product not found", HttpStatus.PRECONDITION_FAILED);
         }
         Optional<RecommendationProduct> optionalRecommendationProduct = recommendationProductRepository.findById(id);
@@ -43,7 +43,8 @@ public class RecommendationProductService {
             return nModified > 0;
         }
         RecommendationProduct recommendationProduct = new RecommendationProduct(product);
-        return recommendationProductRepository.save(recommendationProduct) != null;
+        recommendationProductRepository.save(recommendationProduct);
+        return true;
     }
 
     int destroy(UUID id){

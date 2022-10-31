@@ -1,11 +1,10 @@
 package tunas.ecomerce.transaction;
 
+import io.vertx.core.json.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import tunas.ecomerce.cutomresponse.CustomResponse;
-import tunas.ecomerce.cutomresponse.ListResponse;
-import tunas.ecomerce.cutomresponse.ObjectResponse;
 
 import java.util.List;
 import java.util.UUID;
@@ -22,28 +21,31 @@ public class TransactionController {
     }
 
     @PostMapping
-    public ObjectResponse addTransaction(@RequestBody String jsonBody){
-        CustomResponse<String> customResponse = new CustomResponse<>();
+    public ResponseEntity addTransaction(@RequestBody String jsonBody){
         transactionService.makeTransaction(jsonBody);
-        return customResponse.sendResponse("", HttpStatus.OK);
+        return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{id}")
-    public ObjectResponse getTransactions(@PathVariable UUID id){
-        CustomResponse<TransactionResponse> customResponse = new CustomResponse<>();
+    public ResponseEntity getTransactions(@PathVariable UUID id){
         TransactionResponse transaction = transactionService.getTransactionById(id);
-        return customResponse.sendResponse(transaction,HttpStatus.OK);
+        JsonObject result = new JsonObject();
+        result.put("data", transaction);
+        return ResponseEntity.ok(result.getMap());
     }
 
     @DeleteMapping("/{id}")
-    public ObjectResponse deleteTransaction(@PathVariable UUID id){
-        return CustomResponse.getModifyingObjectResponse(transactionService.destroyTransaction(id));
+    public ResponseEntity deleteTransaction(@PathVariable UUID id){
+        int nModified = transactionService.destroyTransaction(id);
+        if(nModified > 0) return ResponseEntity.ok().build();
+        return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
     }
 
     @GetMapping("/customer/{id}")
-    public ListResponse<TransactionResponse> getCustomerTransactions(@PathVariable UUID id){
-        CustomResponse<TransactionResponse> customResponse = new CustomResponse<>();
+    public ResponseEntity getCustomerTransactions(@PathVariable UUID id){
         List<TransactionResponse> transactions = transactionService.getTransactionByCustomerId(id);
-        return customResponse.sendResponse(transactions,HttpStatus.OK);
+        JsonObject result = new JsonObject();
+        result.put("data", transactions);
+        return ResponseEntity.ok(result.getMap());
     }
 }
