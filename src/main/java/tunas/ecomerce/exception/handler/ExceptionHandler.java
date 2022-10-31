@@ -12,7 +12,7 @@ public class ExceptionHandler {
     protected ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException ex) {
         JsonObject body = new JsonObject();
         body.put("message", ex.getMessage());
-        return ResponseEntity.internalServerError().body(body);
+        return ResponseEntity.internalServerError().body(body.getMap());
     }
 
     @org.springframework.web.bind.annotation.ExceptionHandler({ApiRequestException.class})

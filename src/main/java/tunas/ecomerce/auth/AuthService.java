@@ -33,8 +33,7 @@ public class AuthService {
         this.userService = userService;
     }
 
-    public Map<String, Object> token(HttpServletRequest request){
-        final String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
+    public Map<String, Object> token(String authorization){
 
         if(null == authorization || !authorization.startsWith("Bearer ")) throw new ApiRequestException("TOKEN_IS_MISSING", HttpStatus.UNAUTHORIZED);
 
@@ -49,7 +48,6 @@ public class AuthService {
                     .withSubject(username)
                     .withClaim("roles",user.getRoles().stream().map(Role::getName).collect(Collectors.toList()))
                     .withExpiresAt(new Date(System.currentTimeMillis() + 1440 * 60 * 1000))
-                    .withIssuer(request.getRequestURL().toString())
                     .sign(algorithm);
             Map<String, Object> tokens = new HashMap<>();
             tokens.put("access_token",access_token);
