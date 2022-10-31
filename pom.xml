@@ -8,11 +8,11 @@
 		<version>2.5.2</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>tunas.ecommerce</groupId>
+	<groupId>grocery.tunas</groupId>
 	<artifactId>ecommerce</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>ecommerce</name>
-	<description>ecommerce dari tunas</description>
+	<name>grocery</name>
+	<description>grocery by tunas</description>
 	<properties>
 		<java.version>11</java.version>
 	</properties>
@@ -47,23 +47,11 @@
 			<artifactId>joda-time</artifactId>
 			<version>2.10.10</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/org.json/json -->
-		<dependency>
-			<groupId>org.json</groupId>
-			<artifactId>json</artifactId>
-			<version>20210307</version>
-		</dependency>
 		<!-- https://mvnrepository.com/artifact/io.vertx/vertx-json-schema -->
 		<dependency>
 			<groupId>io.vertx</groupId>
 			<artifactId>vertx-json-schema</artifactId>
 			<version>4.3.2</version>
-		</dependency>
-		<!-- https://mvnrepository.com/artifact/com.google.code.gson/gson -->
-		<dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
-			<version>2.8.5</version>
 		</dependency>
 		<!-- https://mvnrepository.com/artifact/com.fasterxml.uuid/java-uuid-generator -->
 		<dependency>
@@ -102,7 +90,6 @@
 			<version>31.1-jre</version>
 		</dependency>
 	</dependencies>
-
 	<build>
 		<plugins>
 			<plugin>
@@ -120,5 +107,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
 </project>
