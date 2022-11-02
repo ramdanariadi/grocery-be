@@ -1,11 +1,13 @@
 package id.grocery.tunas.security.role;
 
+import com.fasterxml.uuid.Generators;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import id.grocery.tunas.exception.ApiRequestException;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -14,6 +16,7 @@ public class RoleService{
     private final RoleRepository roleRepository;
 
     public void saveRole(Role role){
+        role.setId(Generators.timeBasedGenerator().generate());
         roleRepository.save(role);
     }
 
@@ -25,7 +28,7 @@ public class RoleService{
         return null;
     }
 
-    public Optional<Role> findById(Long aLong) {
+    public Optional<Role> findById(UUID aLong) {
         Optional<Role> role = roleRepository.findById(aLong);
         if(role.isEmpty()){
             throw new ApiRequestException("BAD_REQUEST", HttpStatus.NO_CONTENT);
@@ -33,7 +36,7 @@ public class RoleService{
         return roleRepository.findById(aLong);
     }
 
-    public boolean existsById(Long aLong) {
+    public boolean existsById(UUID aLong) {
         return roleRepository.existsById(aLong);
     }
 
@@ -41,7 +44,7 @@ public class RoleService{
         return roleRepository.findAll();
     }
 
-    public Iterable<Role> findAllById(Iterable<Long> iterable) {
+    public Iterable<Role> findAllById(Iterable<UUID> iterable) {
         return roleRepository.findAllById(iterable);
     }
 
@@ -49,7 +52,7 @@ public class RoleService{
         return roleRepository.count();
     }
 
-    public void deleteById(Long aLong) {
+    public void deleteById(UUID aLong) {
         roleRepository.deleteById(aLong);
     }
 
