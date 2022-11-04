@@ -30,8 +30,8 @@ spec:
               value: secret
           resources:
             limits:
-              memory: 128Mi
-              cpu: "0.1"
+              memory: 1Gi
+              cpu: "2"
 
 ---
 

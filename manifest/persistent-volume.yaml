@@ -3,10 +3,10 @@ kind: PersistentVolume
 metadata:
   name: grocery-persistent-volume
 spec:
-  storageClassName: do-block-storage
+  storageClassName: standard
   capacity:
-    storage: 4Gi
+    storage: 5Gi
   accessModes:
     - ReadWriteOnce
   hostPath:
-    path: /grocery-postgres-data
+    path: /mnt/c/Users/ramdan/Documents/tunas/tunas-pv-space
