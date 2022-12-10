@@ -21,20 +21,20 @@ public class CartController {
     }
 
     @PostMapping("/{userId}/{productId}/{total}")
-    public ResponseEntity addToChart(@PathVariable String userId, @PathVariable UUID productId, @PathVariable Integer total){
+    public ResponseEntity<Object> addToChart(@PathVariable String userId, @PathVariable UUID productId, @PathVariable Integer total){
         cartService.storeToChart(userId,productId,total);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{userId}/{cartId}")
-    public ResponseEntity removeFromChart(@PathVariable String userId,@PathVariable UUID cartId){
+    public ResponseEntity<Object> removeFromChart(@PathVariable String userId,@PathVariable UUID cartId){
         Integer nModified = cartService.removeFromChart(userId, cartId);
         if(nModified > 0) return ResponseEntity.ok().build();
         return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
     }
 
     @GetMapping("/{userId}")
-    public ResponseEntity customerChart(@PathVariable String userId){
+    public ResponseEntity<Object> customerChart(@PathVariable String userId){
         List<CartRepository.ICharts> charts = cartService.chartList(userId);
         JsonObject result = new JsonObject();
         result.put("data", charts);

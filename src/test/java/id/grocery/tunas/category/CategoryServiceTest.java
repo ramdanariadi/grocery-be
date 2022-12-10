@@ -104,7 +104,6 @@ class CategoryServiceTest {
     @Test
     void updateCategoryShouldThrownError(){
         // given
-        UUID id = UUID.randomUUID();
         Category category = new Category();
 
         //when

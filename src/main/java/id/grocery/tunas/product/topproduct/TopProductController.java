@@ -17,7 +17,7 @@ public class TopProductController {
     private final TopProductService topProductService;
 
     @GetMapping("/{id}")
-    public ResponseEntity getProductById(@PathVariable UUID id){
+    public ResponseEntity<Object> getProductById(@PathVariable UUID id){
         Optional<TopProduct> topProduct = topProductService.getById(id);
         JsonObject result = new JsonObject();
         topProduct.ifPresent(topProduct1 -> result.put("data", result));
@@ -25,21 +25,21 @@ public class TopProductController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity destroyTopProduct(@PathVariable UUID id){
+    public ResponseEntity<Object> destroyTopProduct(@PathVariable UUID id){
         int nModified = topProductService.destroy(id);
         if(nModified > 0) return ResponseEntity.ok().build();
         return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
     }
 
     @GetMapping
-    public ResponseEntity getAllProducts(){
+    public ResponseEntity<Object> getAllProducts(){
         JsonObject result = new JsonObject();
         result.put("data", topProductService.getAll());
         return ResponseEntity.ok(result.getMap());
     }
 
     @PostMapping("/{id}")
-    public ResponseEntity addTopProduct(@PathVariable UUID id){
+    public ResponseEntity<Object> addTopProduct(@PathVariable UUID id){
         topProductService.addTopProduct(id);
         return ResponseEntity.ok().build();
     }

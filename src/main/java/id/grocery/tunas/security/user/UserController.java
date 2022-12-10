@@ -1,12 +1,20 @@
 package id.grocery.tunas.security.user;
 
-import io.vertx.core.json.JsonObject;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-
 import java.util.Optional;
 import java.util.UUID;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import io.vertx.core.json.JsonObject;
 
 @RestController
 @RequestMapping("/api/v1/user")
@@ -19,26 +27,26 @@ public class UserController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity register(@RequestBody User user){
+    public ResponseEntity<Object> register(@RequestBody User user){
         userService.saveUser(user);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping()
-    public ResponseEntity update(@RequestBody User user){
+    public ResponseEntity<Object> update(@RequestBody User user){
         userService.updateUser(user);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/all")
-    public ResponseEntity getAllUser(){
+    public ResponseEntity<Object> getAllUser(){
         JsonObject result = new JsonObject();
         result.put("data", userService.findAll());
         return ResponseEntity.ok(result.getMap());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity getUserById(@PathVariable String id){
+    public ResponseEntity<Object> getUserById(@PathVariable String id){
         JsonObject result = new JsonObject();
         Optional<User> user = userService.findById(id);
         user.ifPresent(value -> result.put("data", value));
@@ -46,13 +54,13 @@ public class UserController {
     }
 
     @PostMapping("/role/{userid}/{roleid}")
-    public ResponseEntity grantRole(@PathVariable("userid") String userId, @PathVariable("roleid") UUID roleId){
+    public ResponseEntity<Object> grantRole(@PathVariable("userid") String userId, @PathVariable("roleid") UUID roleId){
         userService.grantRole(userId, roleId);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/role/{userid}/{roleid}")
-    public ResponseEntity revokeRole(@PathVariable("userid") String userId, @PathVariable("roleid") UUID roleId){
+    public ResponseEntity<Object> revokeRole(@PathVariable("userid") String userId, @PathVariable("roleid") UUID roleId){
         userService.revokeRole(userId, roleId);
         return ResponseEntity.ok().build();
     }

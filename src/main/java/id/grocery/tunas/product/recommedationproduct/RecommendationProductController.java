@@ -17,7 +17,7 @@ public class RecommendationProductController {
     private final RecommendationProductService recommendationProductService;
 
     @GetMapping("{id}")
-    public ResponseEntity getRecommendationProductById(@PathVariable UUID id){
+    public ResponseEntity<Object> getRecommendationProductById(@PathVariable UUID id){
         Optional<RecommendationProduct> recommendationProduct = recommendationProductService.getById(id);
         JsonObject result = new JsonObject();
         recommendationProduct.ifPresent(product -> result.put("data", product));
@@ -25,21 +25,21 @@ public class RecommendationProductController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity destroyRecommendationProduct(@PathVariable UUID id){
+    public ResponseEntity<Object> destroyRecommendationProduct(@PathVariable UUID id){
         int nModified = recommendationProductService.destroy(id);
         if(nModified > 0) return ResponseEntity.ok().build();
         return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
     }
 
     @GetMapping("")
-    public ResponseEntity getAll(){
+    public ResponseEntity<Object> getAll(){
         JsonObject result = new JsonObject();
         result.put("data", recommendationProductService.getAll());
         return ResponseEntity.ok(result.getMap());
     }
 
     @PostMapping("/{id}")
-    public ResponseEntity addRecommendationProduct(@PathVariable UUID id){
+    public ResponseEntity<Object> addRecommendationProduct(@PathVariable UUID id){
         recommendationProductService.addRecommendationProduct(id);
         return ResponseEntity.ok().build();
     }

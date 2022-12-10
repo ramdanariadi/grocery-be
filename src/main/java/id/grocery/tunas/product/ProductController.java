@@ -23,7 +23,7 @@ public class ProductController {
 
     @GetMapping
     @ResponseBody
-    public ResponseEntity getProducts(){
+    public ResponseEntity<Object> getProducts(){
         List<ProductRepository.ICustomSelect> products = productService.getAll();
         JsonObject result = new JsonObject();
         result.put("data", products);
@@ -32,7 +32,7 @@ public class ProductController {
 
     @GetMapping("/{id}")
     @ResponseBody
-    public ResponseEntity getProduct(@PathVariable UUID id){
+    public ResponseEntity<Object> getProduct(@PathVariable UUID id){
         Product product = productService.findProductById(id);
         JsonObject result = new JsonObject();
         result.put("data", product);
@@ -41,7 +41,7 @@ public class ProductController {
 
     @GetMapping("/category/{id}")
     @ResponseBody
-    public ResponseEntity getProductByCategory(@PathVariable UUID id){
+    public ResponseEntity<Object> getProductByCategory(@PathVariable UUID id){
         List<ProductRepository.ICustomSelect> products = productService.getAllBYCategory(id);
         JsonObject result = new JsonObject();
         result.put("data", products);
@@ -49,7 +49,7 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity addProduct(@RequestBody String jsonBody){
+    public ResponseEntity<Object> addProduct(@RequestBody String jsonBody){
         JsonObject jsonObject = new JsonObject(jsonBody);
         Product product = new Product();
         product.setId(Generators.timeBasedGenerator().generate());
@@ -68,14 +68,14 @@ public class ProductController {
     }
 
     @PutMapping
-    public ResponseEntity updateProduct(@RequestBody Product product){
+    public ResponseEntity<Object> updateProduct(@RequestBody Product product){
         int nModified = productService.updateProduct(product);
         if(nModified > 0) return ResponseEntity.ok().build();
         return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity destroyProduct(@PathVariable UUID id){
+    public ResponseEntity<Object> destroyProduct(@PathVariable UUID id){
         int nModified = productService.destroyProduct(id);
         if(nModified > 0) return ResponseEntity.ok().build();
         return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();

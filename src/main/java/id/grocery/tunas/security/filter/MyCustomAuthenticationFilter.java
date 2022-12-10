@@ -1,10 +1,20 @@
 package id.grocery.tunas.security.filter;
 
-import com.auth0.jwt.JWT;
-import com.auth0.jwt.algorithms.Algorithm;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
-import org.slf4j.LoggerFactory;
+import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -14,20 +24,12 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.util.StreamUtils;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.stream.Collectors;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import io.vertx.core.json.JsonObject;
 
-@Slf4j
 public class MyCustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
@@ -43,10 +45,9 @@ public class MyCustomAuthenticationFilter extends UsernamePasswordAuthentication
         if(request.getHeader(CONTENT_TYPE).equalsIgnoreCase(APPLICATION_JSON_VALUE)){
             try {
                 byte[] bytes = StreamUtils.copyToByteArray(request.getInputStream());
-                Map<String, Object> requestBody = new ObjectMapper().readValue(bytes, Map.class);
-                username = requestBody.get("username").toString();
-                password = requestBody.get("password").toString();
-                LoggerFactory.getLogger(MyCustomAuthenticationFilter.class).info("raw reqeust {}", requestBody);
+                JsonObject requestBody = new JsonObject(new String(bytes, StandardCharsets.UTF_8));
+                username = requestBody.getString("username");
+                password = requestBody.getString("password");
             } catch (IOException e) {
                 throw new RuntimeException(e.getMessage());
             }

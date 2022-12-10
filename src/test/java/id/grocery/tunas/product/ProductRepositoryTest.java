@@ -36,7 +36,6 @@ class ProductRepositoryTest {
         product.setPrice(1100L);
         product.setWeight(1500);
         product.setPerUnit(100);
-        Category c = underTest.findCategoryByCategory("Vegetables");
         product.setCategory(category);
         productRepository.save(product);
     }

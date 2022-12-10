@@ -16,22 +16,6 @@ Content-Type: application/json
   "password": "rahasia"
 }
 
-### PRODUCT
-POST http://localhost:8080/api/v1/product
-Content-Type: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbXSwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2FwaS92MS9sb2dpbiIsImV4cCI6MTY1Njg0MjczOX0.Mi7tlgJmUZxVrQ7DANwZMg0ViphUJVRX-gSRrSEKDqo
-
-{
-  "name": "Carrot",
-  "price": 10,
-  "weight": 1000,
-  "perUnit": 100,
-  "description": "Good for health",
-  "imageUrl" : null,
-  "category": "8c2c184e-11d2-11ec-82a8-0242ac130003"
-}
-
-
 ###
 GET http://localhost:8080/api/v1/user/token
 Content-Type: application/json

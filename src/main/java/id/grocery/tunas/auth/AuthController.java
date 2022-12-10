@@ -23,7 +23,7 @@ public class AuthController {
     }
 
     @GetMapping(path = "/token")
-    public ResponseEntity token(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorization){
+    public ResponseEntity<Object> token(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorization){
         Map<String, Object> token = authService.token(authorization);
         JsonObject result = new JsonObject();
         result.put("data", token);

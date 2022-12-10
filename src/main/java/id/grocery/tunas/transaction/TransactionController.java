@@ -21,13 +21,13 @@ public class TransactionController {
     }
 
     @PostMapping
-    public ResponseEntity addTransaction(@RequestBody String jsonBody){
+    public ResponseEntity<Object> addTransaction(@RequestBody String jsonBody){
         transactionService.makeTransaction(jsonBody);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity getTransactions(@PathVariable UUID id){
+    public ResponseEntity<Object> getTransactions(@PathVariable UUID id){
         TransactionResponse transaction = transactionService.getTransactionById(id);
         JsonObject result = new JsonObject();
         result.put("data", transaction);
@@ -35,14 +35,14 @@ public class TransactionController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteTransaction(@PathVariable UUID id){
+    public ResponseEntity<Object> deleteTransaction(@PathVariable UUID id){
         int nModified = transactionService.destroyTransaction(id);
         if(nModified > 0) return ResponseEntity.ok().build();
         return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
     }
 
     @GetMapping("/customer/{id}")
-    public ResponseEntity getCustomerTransactions(@PathVariable UUID id){
+    public ResponseEntity<Object> getCustomerTransactions(@PathVariable UUID id){
         List<TransactionResponse> transactions = transactionService.getTransactionByCustomerId(id);
         JsonObject result = new JsonObject();
         result.put("data", transactions);

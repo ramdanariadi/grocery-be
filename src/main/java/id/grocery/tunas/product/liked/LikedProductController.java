@@ -17,13 +17,13 @@ public class LikedProductController {
     private final LikedProductService likedProductService;
 
     @PostMapping("/{customerId}/{productId}")
-    public ResponseEntity addToWishList(@PathVariable String customerId, @PathVariable UUID productId){
+    public ResponseEntity<Object> addToWishList(@PathVariable String customerId, @PathVariable UUID productId){
         likedProductService.storeToWishlist(customerId,productId);
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/{customerId}/{productId}")
-    public ResponseEntity findProductFromWishList(@PathVariable UUID customerId,@PathVariable UUID productId){
+    public ResponseEntity<Object> findProductFromWishList(@PathVariable UUID customerId,@PathVariable UUID productId){
         LikedProductRepository.IWishProductNative lovedProduct = likedProductService.findProductFromWishlist(customerId,productId);
         JsonObject result = new JsonObject();
         result.put("data", lovedProduct);
@@ -31,14 +31,14 @@ public class LikedProductController {
     }
 
     @DeleteMapping("/{customerId}/{productId}")
-    public ResponseEntity removeFromWishList(@PathVariable UUID customerId,@PathVariable UUID productId){
+    public ResponseEntity<Object> removeFromWishList(@PathVariable UUID customerId,@PathVariable UUID productId){
         int nModified = likedProductService.removeFromWishList(customerId, productId);
         if(nModified > 0) return ResponseEntity.ok().build();
         return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
     }
 
     @GetMapping("/{customerId}")
-    public ResponseEntity customerWishList(@PathVariable UUID customerId){
+    public ResponseEntity<Object> customerWishList(@PathVariable UUID customerId){
         List<LikedProductRepository.IWishProduct> likedProductList = likedProductService.wishList(customerId);
         JsonObject result = new JsonObject();
         result.put("data", likedProductList);
