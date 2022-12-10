@@ -28,12 +28,12 @@ public class RoleService{
         return null;
     }
 
-    public Optional<Role> findById(UUID aLong) {
+    public Role findById(UUID aLong) {
         Optional<Role> role = roleRepository.findById(aLong);
         if(role.isEmpty()){
             throw new ApiRequestException("BAD_REQUEST", HttpStatus.NO_CONTENT);
         }
-        return roleRepository.findById(aLong);
+        return role.get();
     }
 
     public boolean existsById(UUID aLong) {

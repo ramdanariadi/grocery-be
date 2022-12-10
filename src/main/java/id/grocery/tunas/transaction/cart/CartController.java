@@ -20,22 +20,22 @@ public class CartController {
         this.cartService = cartService;
     }
 
-    @PostMapping("/{customerId}/{productId}/{total}")
-    public ResponseEntity addToChart(@PathVariable UUID customerId, @PathVariable UUID productId, @PathVariable Integer total){
-        cartService.storeToChart(customerId,productId,total);
+    @PostMapping("/{userId}/{productId}/{total}")
+    public ResponseEntity addToChart(@PathVariable String userId, @PathVariable UUID productId, @PathVariable Integer total){
+        cartService.storeToChart(userId,productId,total);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{customerId}/{cartId}")
-    public ResponseEntity removeFromChart(@PathVariable UUID customerId,@PathVariable UUID cartId){
-        Integer nModified = cartService.removeFromChart(customerId, cartId);
+    @DeleteMapping("/{userId}/{cartId}")
+    public ResponseEntity removeFromChart(@PathVariable String userId,@PathVariable UUID cartId){
+        Integer nModified = cartService.removeFromChart(userId, cartId);
         if(nModified > 0) return ResponseEntity.ok().build();
         return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
     }
 
-    @GetMapping("/{customerId}")
-    public ResponseEntity customerChart(@PathVariable UUID customerId){
-        List<CartRepository.ICharts> charts = cartService.chartList(customerId);
+    @GetMapping("/{userId}")
+    public ResponseEntity customerChart(@PathVariable String userId){
+        List<CartRepository.ICharts> charts = cartService.chartList(userId);
         JsonObject result = new JsonObject();
         result.put("data", charts);
         return ResponseEntity.ok(result.getMap());

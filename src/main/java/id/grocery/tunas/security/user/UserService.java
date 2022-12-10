@@ -47,7 +47,7 @@ public class UserService implements UserDetailsService{
         userRepository.save(userContext);
     }
 
-    public void grantRole(Long userId, Long roleId){
+    public void grantRole(String userId, UUID roleId){
         Map<String, Object> entities = this.validateUserAndRole(userId, roleId);
         User user = (User) entities.get("user");
         Role role = (Role) entities.get("role");
@@ -55,7 +55,7 @@ public class UserService implements UserDetailsService{
         userRepository.save(user);
     }
 
-    public void revokeRole(Long userId, Long roleId){
+    public void revokeRole(String userId, UUID roleId){
         Map<String, Object> entities = this.validateUserAndRole(userId, roleId);
         User user = (User) entities.get("user");
         Role role = (Role) entities.get("role");
@@ -63,7 +63,7 @@ public class UserService implements UserDetailsService{
         userRepository.save(user);
     }
 
-    private Map<String, Object> validateUserAndRole(Long userId, Long roleId){
+    private Map<String, Object> validateUserAndRole(String userId, UUID roleId){
         Optional<User> userContext = userRepository.findById(userId);
         if(userContext.isEmpty()){
             throw new ApiRequestException("USER_NOT_FOUND");
@@ -101,23 +101,23 @@ public class UserService implements UserDetailsService{
         return userRepository.saveAll(iterable);
     }
 
-    public Optional<User> findById(Long aLong) {
-        Optional<User> user = userRepository.findById(aLong);
+    public Optional<User> findById(String id) {
+        Optional<User> user = userRepository.findById(id);
         if(user.isEmpty()){
             throw new ApiRequestException("BAD_REQUEST");
         }
         return user;
     }
 
-    public boolean existsById(Long aLong) {
-        return userRepository.existsById(aLong);
+    public boolean existsById(String id) {
+        return userRepository.existsById(id);
     }
 
     public Iterable<User> findAll() {
         return userRepository.findAll();
     }
 
-    public Iterable<User> findAllById(Iterable<Long> iterable) {
+    public Iterable<User> findAllById(Iterable<String> iterable) {
         return userRepository.findAllById(iterable);
     }
 
@@ -125,8 +125,8 @@ public class UserService implements UserDetailsService{
         return userRepository.count();
     }
 
-    public void deleteById(Long aLong) {
-        userRepository.deleteById(aLong);
+    public void deleteById(String id) {
+        userRepository.deleteById(id);
     }
 
     public void delete(User user) {

@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/user")
@@ -37,7 +38,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity getUserById(@PathVariable Long id){
+    public ResponseEntity getUserById(@PathVariable String id){
         JsonObject result = new JsonObject();
         Optional<User> user = userService.findById(id);
         user.ifPresent(value -> result.put("data", value));
@@ -45,13 +46,13 @@ public class UserController {
     }
 
     @PostMapping("/role/{userid}/{roleid}")
-    public ResponseEntity grantRole(@PathVariable("userid") Long userId, @PathVariable("roleid") Long roleId){
+    public ResponseEntity grantRole(@PathVariable("userid") String userId, @PathVariable("roleid") UUID roleId){
         userService.grantRole(userId, roleId);
         return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/role/{userid}/{roleid}")
-    public ResponseEntity revokeRole(@PathVariable("userid") Long userId, @PathVariable("roleid") Long roleId){
+    public ResponseEntity revokeRole(@PathVariable("userid") String userId, @PathVariable("roleid") UUID roleId){
         userService.revokeRole(userId, roleId);
         return ResponseEntity.ok().build();
     }

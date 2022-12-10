@@ -2,8 +2,6 @@ package id.grocery.tunas;
 
 import id.grocery.tunas.category.Category;
 import id.grocery.tunas.category.CategoryRepository;
-import id.grocery.tunas.customer.Customer;
-import id.grocery.tunas.customer.CustomerRepository;
 import id.grocery.tunas.product.Product;
 import id.grocery.tunas.product.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,21 +19,15 @@ public class Seeder implements CommandLineRunner {
     @Autowired
     ProductRepository productRepository;
 
-    @Autowired
-    CustomerRepository customerRepository;
-
     private UUID categoryID;
     private UUID productID;
-    private UUID customerID;
 
     @Override
     public void run(String... args) throws Exception {
         categoryID = UUID.fromString("8c2c184e-11d2-11ec-82a8-0242ac130003");
         productID = UUID.fromString("a3c02e8c-11d2-11ec-82a8-0242ac130003");
-        customerID = UUID.fromString("ac723ce6-11d2-11ec-82a8-0242ac130003");
         loadDataCategory();
         loadDataProduct();
-        loadCustomer();
     }
 
     private void loadDataCategory(){
@@ -61,16 +53,6 @@ public class Seeder implements CommandLineRunner {
             Category category = categoryRepository.findCategoryById(categoryID);
             product.setCategory(category);
             productRepository.save(product);
-        }
-    }
-
-    private void loadCustomer(){
-        Customer customerCheck = customerRepository.findCustomersById(customerID);
-        if(customerCheck == null){
-            Customer customer = new Customer();
-            customer.setName("GUEST");
-            customer.setId(customerID);
-            customerRepository.save(customer);
         }
     }
 }

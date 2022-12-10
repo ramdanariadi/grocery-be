@@ -1,8 +1,4 @@
-<<<<<<<< HEAD:src/main/java/id/grocery/tunas/product/recommedationproduct/RecommendationProductRepository.java
 package id.grocery.tunas.product.recommedationproduct;
-========
-package tunas.ecomerce.product.recommendationproduct;
->>>>>>>> f8208d6d0d4fbd1adfc3c8e3c91ab72a08783d41:src/main/java/id/grocery/tunas/product/recommendationproduct/RecommendationProductRepository.java
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.repository.Modifying;

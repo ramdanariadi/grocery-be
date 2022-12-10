@@ -2,8 +2,8 @@ package id.grocery.tunas.product.liked;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import id.grocery.tunas.customer.Customer;
 import id.grocery.tunas.product.Product;
+import id.grocery.tunas.security.user.User;
 
 import javax.persistence.*;
 import java.util.UUID;
@@ -22,8 +22,8 @@ public class Liked {
     private String category;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "customer_id", nullable = false)
-    Customer customer;
+    @JoinColumn(name = "user_id", nullable = false)
+    User user;
 
     @OneToOne(fetch = FetchType.LAZY)
     Product product;

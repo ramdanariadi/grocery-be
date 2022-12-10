@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/v1/role")
@@ -27,10 +28,10 @@ public class RoleController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity getRoleById(@PathVariable("id") Long id){
-        Optional<Role> role = roleService.findById(id);
+    public ResponseEntity getRoleById(@PathVariable("id") UUID id){
+        Role role = roleService.findById(id);
         JsonObject result = new JsonObject();
-        result.put("data", result);
+        result.put("data", role);
         return ResponseEntity.ok(result.getMap());
     }
 }

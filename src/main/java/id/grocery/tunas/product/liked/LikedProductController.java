@@ -17,7 +17,7 @@ public class LikedProductController {
     private final LikedProductService likedProductService;
 
     @PostMapping("/{customerId}/{productId}")
-    public ResponseEntity addToWishList(@PathVariable UUID customerId, @PathVariable UUID productId){
+    public ResponseEntity addToWishList(@PathVariable String customerId, @PathVariable UUID productId){
         likedProductService.storeToWishlist(customerId,productId);
         return ResponseEntity.ok().build();
     }

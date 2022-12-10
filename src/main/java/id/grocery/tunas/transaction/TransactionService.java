@@ -2,11 +2,11 @@ package id.grocery.tunas.transaction;
 
 import com.fasterxml.uuid.Generators;
 import com.google.common.base.Strings;
-import id.grocery.tunas.customer.Customer;
-import id.grocery.tunas.customer.CustomerService;
 import id.grocery.tunas.exception.ApiRequestException;
 import id.grocery.tunas.product.Product;
 import id.grocery.tunas.product.ProductRepository;
+import id.grocery.tunas.security.user.User;
+import id.grocery.tunas.security.user.UserService;
 import id.grocery.tunas.transaction.TransactionRepository.ITransactionResponse;
 import id.grocery.tunas.transaction.cart.CartRepository;
 import io.vertx.core.json.JsonArray;
@@ -18,21 +18,22 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
 public class TransactionService {
 
-    private final CustomerService customerService;
+    private final UserService userService;
     private final TransactionRepository transactionRepository;
     private final ProductRepository productRepository;
     private final DetailTransactionRepository detailTransactionRepository;
     private final CartRepository cartRepository;
 
     @Autowired
-    public TransactionService(CustomerService customerService, TransactionRepository transactionRepository, ProductRepository productRepository, DetailTransactionRepository detailTransactionRepository, CartRepository cartRepository) {
-        this.customerService = customerService;
+    public TransactionService(UserService userService, TransactionRepository transactionRepository, ProductRepository productRepository, DetailTransactionRepository detailTransactionRepository, CartRepository cartRepository) {
+        this.userService = userService;
         this.transactionRepository = transactionRepository;
         this.productRepository = productRepository;
         this.detailTransactionRepository = detailTransactionRepository;
@@ -42,14 +43,11 @@ public class TransactionService {
     @Transactional
     public TransactionResponse makeTransaction(String jsonObject){
         JsonObject reqBody = new JsonObject(jsonObject);
-        Customer customer = customerService.getCustomer(UUID.fromString(reqBody.getString("userId")));
+        Optional<User> user = userService.findById(reqBody.getString("userId"));
         Transaction transaction = new Transaction();
         transaction.setId(Generators.timeBasedGenerator().generate());
         transaction.setTransactionDate(new DateTime().toDate());
-        transaction.setCustomer(customer);
-        transaction.setCustomerName(customer.getName());
-        transaction.setCustomerEmail(customer.getEmail());
-        transaction.setCustomerMobile(customer.getMobile());
+        transaction.setUser(user.get());
 
         JsonArray products = reqBody.getJsonArray("products");
         List<DetailTransaction> detailTransactions = products.stream().map(o -> {
@@ -76,7 +74,7 @@ public class TransactionService {
         transaction.setTotalPrice(totalPrice);
         transactionRepository.save(transaction);
         detailTransactionRepository.saveAll(detailTransactions);
-        cartRepository.destroyCustomerCart(customer.getId());
+        cartRepository.destroyUserCart(user.get().getId());
         ITransactionResponse savedTransaction = transactionRepository.getTransactionById(transaction.getId());
         List<DetailTransactionRepository.IDetailTransactions> savedDetailTransaction = detailTransactionRepository.
                 getDetailTransactionsByTransactionId(transaction.getId());
@@ -101,8 +99,8 @@ public class TransactionService {
     }
 
     List<TransactionResponse> getTransactionByCustomerId(UUID id){
-        List<ITransactionResponse> iTransactionResponses = transactionRepository.getTransactionsByCustomerId(id);
-        List<DetailTransactionRepository.IDetailTransactions> iDetailTransactions = detailTransactionRepository.getDetailTransactionsByCustomerId(id);
+        List<ITransactionResponse> iTransactionResponses = transactionRepository.getTransactionsByUserId(id);
+        List<DetailTransactionRepository.IDetailTransactions> iDetailTransactions = detailTransactionRepository.getDetailTransactionsByUserId(id);
         List<TransactionResponse> transactionResponseList = iTransactionResponses.stream().map((t) -> {
             TransactionResponse transactionResponse = new TransactionResponse();
             transactionResponse.setTransaction(t);

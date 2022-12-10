@@ -1,6 +1,5 @@
 package id.grocery.tunas.transaction;
 
-import id.grocery.tunas.customer.Customer;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -8,6 +7,9 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+
+import id.grocery.tunas.security.user.User;
+
 import java.util.Date;
 import java.util.UUID;
 
@@ -21,8 +23,5 @@ public class Transaction{
     private Date transactionDate;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    private Customer customer;
-    private String customerName;
-    private String customerMobile;
-    private String customerEmail;
+    private User user;
 }

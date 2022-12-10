@@ -14,15 +14,11 @@ import java.util.UUID;
 @Component
 public interface TransactionRepository extends CrudRepository<Transaction, UUID> {
 
-    @Query("select t.id as id, t.totalPrice as totalPrice, t.transactionDate as transactionDate, " +
-            "t.userName as userName, t.userMobile as userMobile, " +
-            "t.userEmail as userEmail "+
+    @Query("select t.id as id, t.totalPrice as totalPrice, t.transactionDate as transactionDate " +
             "from Transaction t where t.id = :id")
     ITransactionResponse getTransactionById(@Param("id") UUID id);
 
-    @Query("select t.id as id, t.totalPrice as totalPrice, t.transactionDate as transactionDate, " +
-            "t.userName as userName, t.userMobile as userMobile, " +
-            "t.userEmail as userEmail "+
+    @Query("select t.id as id, t.totalPrice as totalPrice, t.transactionDate as transactionDate " +
             "from Transaction t where t.user.id = :id")
     List<ITransactionResponse> getTransactionsByUserId(@Param("id") UUID id);
 
@@ -30,9 +26,6 @@ public interface TransactionRepository extends CrudRepository<Transaction, UUID>
         UUID getId();
         Long getTotalPrice();
         Date getTransactionDate();
-        String getUserName();
-        String getUserMobile();
-        String getUserEmail();
     }
 
     @Transactional
