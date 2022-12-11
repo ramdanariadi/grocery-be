@@ -1,28 +1,29 @@
 package id.grocery.tunas.transaction;
 
+import java.util.Date;
+import java.util.List;
+import java.util.UUID;
+
+import javax.transaction.Transactional;
+
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Component;
 
-import javax.transaction.Transactional;
-import java.util.Date;
-import java.util.List;
-import java.util.UUID;
-
 @Component
 public interface TransactionRepository extends CrudRepository<Transaction, UUID> {
 
     @Query("select t.id as id, t.totalPrice as totalPrice, t.transactionDate as transactionDate " +
             "from Transaction t where t.id = :id")
-    ITransactionResponse getTransactionById(@Param("id") UUID id);
+    ITransactionData getTransactionById(@Param("id") UUID id);
 
     @Query("select t.id as id, t.totalPrice as totalPrice, t.transactionDate as transactionDate " +
             "from Transaction t where t.user.id = :id")
-    List<ITransactionResponse> getTransactionsByUserId(@Param("id") UUID id);
+    List<ITransactionData> getTransactionsByUserId(@Param("id") UUID id);
 
-    interface ITransactionResponse{
+    interface ITransactionData{
         UUID getId();
         Long getTotalPrice();
         Date getTransactionDate();

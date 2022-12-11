@@ -1,26 +1,29 @@
 package id.grocery.tunas.transaction;
 
-import com.fasterxml.uuid.Generators;
-import com.google.common.base.Strings;
-import id.grocery.tunas.exception.ApiRequestException;
-import id.grocery.tunas.product.Product;
-import id.grocery.tunas.product.ProductRepository;
-import id.grocery.tunas.security.user.User;
-import id.grocery.tunas.security.user.UserService;
-import id.grocery.tunas.transaction.TransactionRepository.ITransactionResponse;
-import id.grocery.tunas.transaction.cart.CartRepository;
-import io.vertx.core.json.JsonArray;
-import io.vertx.core.json.JsonObject;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import javax.transaction.Transactional;
+
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Collectors;
+import com.fasterxml.uuid.Generators;
+import com.google.common.base.Strings;
+
+import id.grocery.tunas.exception.ApiRequestException;
+import id.grocery.tunas.product.Product;
+import id.grocery.tunas.product.ProductRepository;
+import id.grocery.tunas.security.user.User;
+import id.grocery.tunas.security.user.UserService;
+import id.grocery.tunas.transaction.TransactionRepository.ITransactionData;
+import id.grocery.tunas.transaction.cart.CartRepository;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
 
 @Service
 public class TransactionService {
@@ -41,7 +44,7 @@ public class TransactionService {
     }
 
     @Transactional
-    public TransactionResponse makeTransaction(String jsonObject){
+    public TransactionData makeTransaction(String jsonObject){
         JsonObject reqBody = new JsonObject(jsonObject);
         Optional<User> user = userService.findById(reqBody.getString("userId"));
         Transaction transaction = new Transaction();
@@ -53,7 +56,7 @@ public class TransactionService {
         List<DetailTransaction> detailTransactions = products.stream().map(o -> {
             JsonObject product = (JsonObject) o;
             DetailTransaction detailTransaction = new DetailTransaction();
-            detailTransaction.setId(UUID.fromString(product.getString("di")));
+            detailTransaction.setId(UUID.fromString(product.getString("id")));
             detailTransaction.setImageUrl(Strings.emptyToNull(product.getString("imageUrl")));
             detailTransaction.setName(product.getString("name"));
             detailTransaction.setPerUnit(product.getInteger("perUnit"));
@@ -75,21 +78,21 @@ public class TransactionService {
         transactionRepository.save(transaction);
         detailTransactionRepository.saveAll(detailTransactions);
         cartRepository.destroyUserCart(user.get().getId());
-        ITransactionResponse savedTransaction = transactionRepository.getTransactionById(transaction.getId());
+        ITransactionData savedTransaction = transactionRepository.getTransactionById(transaction.getId());
         List<DetailTransactionRepository.IDetailTransactions> savedDetailTransaction = detailTransactionRepository.
                 getDetailTransactionsByTransactionId(transaction.getId());
-        return new TransactionResponse(savedTransaction,savedDetailTransaction);
+        return new TransactionData(savedTransaction,savedDetailTransaction);
     }
 
-    TransactionResponse getTransactionById(UUID id){
-        ITransactionResponse savedTransaction = transactionRepository.getTransactionById(id);
+    TransactionData getTransactionById(UUID id){
+        ITransactionData savedTransaction = transactionRepository.getTransactionById(id);
         List<DetailTransactionRepository.IDetailTransactions> savedDetailTransaction = detailTransactionRepository.
                 getDetailTransactionsByTransactionId(id);
-        return new TransactionResponse(savedTransaction,savedDetailTransaction);
+        return new TransactionData(savedTransaction,savedDetailTransaction);
     }
 
     @Transactional(rollbackOn = ApiRequestException.class)
-    int destroyTransaction(UUID id){
+    public int destroyTransaction(UUID id){
         transactionRepository.destroyTransactionDetail(id);
         int transactionDestroy = transactionRepository.destroyTransaction(id);
         if(transactionDestroy < 1){
@@ -98,11 +101,11 @@ public class TransactionService {
         return transactionDestroy;
     }
 
-    List<TransactionResponse> getTransactionByCustomerId(UUID id){
-        List<ITransactionResponse> iTransactionResponses = transactionRepository.getTransactionsByUserId(id);
+    public List<TransactionData> getTransactionByCustomerId(UUID id){
+        List<ITransactionData> iTransactionResponses = transactionRepository.getTransactionsByUserId(id);
         List<DetailTransactionRepository.IDetailTransactions> iDetailTransactions = detailTransactionRepository.getDetailTransactionsByUserId(id);
-        List<TransactionResponse> transactionResponseList = iTransactionResponses.stream().map((t) -> {
-            TransactionResponse transactionResponse = new TransactionResponse();
+        List<TransactionData> transactionResponseList = iTransactionResponses.stream().map((t) -> {
+            TransactionData transactionResponse = new TransactionData();
             transactionResponse.setTransaction(t);
             transactionResponse.setDetailTransaction(iDetailTransactions.stream().filter(e -> e.getTransactionId().toString().equals(t.getId().toString())).collect(Collectors.toList()));
             return transactionResponse;

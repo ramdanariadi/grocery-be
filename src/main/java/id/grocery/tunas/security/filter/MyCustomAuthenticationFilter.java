@@ -28,14 +28,17 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import id.grocery.tunas.security.user.UserService;
 import io.vertx.core.json.JsonObject;
 
 public class MyCustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
+    private UserService userService;
 
-    public MyCustomAuthenticationFilter(AuthenticationManager authenticationManager) {
+    public MyCustomAuthenticationFilter(AuthenticationManager authenticationManager, UserService userService) {
         this.authenticationManager = authenticationManager;
+        this.userService = userService;
     }
 
     @Override
@@ -73,10 +76,16 @@ public class MyCustomAuthenticationFilter extends UsernamePasswordAuthentication
                 .withExpiresAt(new Date(System.currentTimeMillis() + 10080 * 60 * 1000))
                 .withIssuer(request.getRequestURL().toString())
                 .sign(algorithm);
-        Map<String, String> tokens = new HashMap<>();
-        tokens.put("access_token",access_token);
-        tokens.put("refresh_token",refresh_token);
+
+        id.grocery.tunas.security.user.User rawUser = userService.getUserByUsername(user.getUsername());
+        Map<String, Object> result = new HashMap<>();
+        Map<String, String> data = new HashMap<>();
+        data.put("userId",rawUser.getId());
+        data.put("access_token",access_token);
+        data.put("refresh_token",refresh_token);
+        result.put("data", data);
+        
         response.setContentType(APPLICATION_JSON_VALUE);
-        new ObjectMapper().writeValue(response.getOutputStream(), tokens);
+        new ObjectMapper().writeValue(response.getOutputStream(), result);
     }
 }

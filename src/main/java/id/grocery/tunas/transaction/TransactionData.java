@@ -2,23 +2,23 @@ package id.grocery.tunas.transaction;
 
 import java.util.List;
 
-public class TransactionResponse {
-    private TransactionRepository.ITransactionResponse transaction;
+public class TransactionData {
+    private TransactionRepository.ITransactionData transaction;
     private List<DetailTransactionRepository.IDetailTransactions> detailTransaction;
 
-    public TransactionResponse(TransactionRepository.ITransactionResponse transaction, List<DetailTransactionRepository.IDetailTransactions> detailTransaction) {
+    public TransactionData(TransactionRepository.ITransactionData transaction, List<DetailTransactionRepository.IDetailTransactions> detailTransaction) {
         this.transaction = transaction;
         this.detailTransaction = detailTransaction;
     }
 
-    public TransactionResponse() {
+    public TransactionData() {
     }
 
-    public TransactionRepository.ITransactionResponse getTransaction() {
+    public TransactionRepository.ITransactionData getTransaction() {
         return transaction;
     }
 
-    public void setTransaction(TransactionRepository.ITransactionResponse transaction) {
+    public void setTransaction(TransactionRepository.ITransactionData transaction) {
         this.transaction = transaction;
     }
 

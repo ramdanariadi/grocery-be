@@ -86,7 +86,7 @@ Content-Type: application/json
 ### GET ALL PRODUCT
 GET http://localhost:8080/api/v1/product
 Content-Type: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbXSwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2FwaS92MS9sb2dpbiIsImV4cCI6MTY3MDc2NjI5MX0.Lsz0kbhfwSZmYDc59Ap9Xl2iijuhbX-5VkLZ5Kpxhvc
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbXSwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2FwaS92MS9sb2dpbiIsImV4cCI6MTY3MDgxMjE4OH0.QncQcsHZstKgxT2rVU4hwopyCdQlGH1wk6xUqgydIj4
 
 ### DELTE PRODUCT
 DELETE http://localhost:8080/api/v1/product/a3c02e8c-11d2-11ec-82a8-0242ac130003
@@ -141,10 +141,10 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsI
 ###
 POST http://localhost:8080/api/v1/transaction
 Content-Type: application/json
-Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbXSwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2FwaS92MS9sb2dpbiIsImV4cCI6MTY1Njg0MjczOX0.Mi7tlgJmUZxVrQ7DANwZMg0ViphUJVRX-gSRrSEKDqo
+Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbXSwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2FwaS92MS9sb2dpbiIsImV4cCI6MTY3MDg1Mjk3NH0.AzhwQtC1f80tIPbKvFQGo9d78xe4PdJw1C8YPgrNP2k
 
 {
-  "userId": "a72f4021-bad3-11ec-853d-41e62da1b591",
+  "userId": "1479eca3-f0f7-4b28-b582-0809a0d36747",
   "products": [
     {
       "id": "a3c02e8c-11d2-11ec-82a8-0242ac130003",

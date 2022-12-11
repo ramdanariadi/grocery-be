@@ -28,7 +28,7 @@ public class TransactionController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> getTransactions(@PathVariable UUID id){
-        TransactionResponse transaction = transactionService.getTransactionById(id);
+        TransactionData transaction = transactionService.getTransactionById(id);
         JsonObject result = new JsonObject();
         result.put("data", transaction);
         return ResponseEntity.ok(result.getMap());
@@ -41,9 +41,9 @@ public class TransactionController {
         return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
     }
 
-    @GetMapping("/customer/{id}")
+    @GetMapping("/user/{id}")
     public ResponseEntity<Object> getCustomerTransactions(@PathVariable UUID id){
-        List<TransactionResponse> transactions = transactionService.getTransactionByCustomerId(id);
+        List<TransactionData> transactions = transactionService.getTransactionByCustomerId(id);
         JsonObject result = new JsonObject();
         result.put("data", transactions);
         return ResponseEntity.ok(result.getMap());
