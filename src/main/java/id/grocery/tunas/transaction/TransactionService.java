@@ -49,7 +49,7 @@ public class TransactionService {
         Optional<User> user = userService.findById(reqBody.getString("userId"));
         Transaction transaction = new Transaction();
         transaction.setId(Generators.timeBasedGenerator().generate());
-        transaction.setTransactionDate(new DateTime().toDate());
+        transaction.setCreatedAt(new DateTime().toDate());
         transaction.setUser(user.get());
 
         JsonArray products = reqBody.getJsonArray("products");

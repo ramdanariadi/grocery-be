@@ -1,11 +1,15 @@
 package id.grocery.tunas.product;
 
+import id.grocery.tunas.base.BaseModel;
+import id.grocery.tunas.category.Category;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import id.grocery.tunas.category.Category;
 
-import javax.persistence.*;
-import java.util.UUID;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.ManyToOne;
+import javax.persistence.Table;
+import javax.persistence.Index;
 
 @Entity
 @Table(name = "products", indexes = {
@@ -14,9 +18,7 @@ import java.util.UUID;
 })
 @Data
 @NoArgsConstructor
-public class Product {
-    @Id
-    private UUID id;
+public class Product extends BaseModel {
     private String name;
     private Long price; // per unit
     private Integer perUnit; // gram
@@ -24,7 +26,6 @@ public class Product {
     private Integer weight; // on gram
     private String imageUrl;
 
-    private Boolean deleted = false;
     private Boolean isTop = false;
     private Boolean isRecommended = false;
 

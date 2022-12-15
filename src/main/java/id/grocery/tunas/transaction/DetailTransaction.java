@@ -1,5 +1,6 @@
 package id.grocery.tunas.transaction;
 
+import id.grocery.tunas.base.BaseModel;
 import id.grocery.tunas.product.Product;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,9 +11,7 @@ import java.util.UUID;
 @Entity
 @Data
 @NoArgsConstructor
-public class DetailTransaction {
-    @Id
-    private UUID id;
+public class DetailTransaction extends BaseModel {
     @ManyToOne(fetch = FetchType.LAZY)
     private Product product;
     private String name;

@@ -15,11 +15,11 @@ import org.springframework.stereotype.Component;
 @Component
 public interface TransactionRepository extends CrudRepository<Transaction, UUID> {
 
-    @Query("select t.id as id, t.totalPrice as totalPrice, t.transactionDate as transactionDate " +
+    @Query("select t.id as id, t.totalPrice as totalPrice, t.createdAt as transactionDate " +
             "from Transaction t where t.id = :id")
     ITransactionData getTransactionById(@Param("id") UUID id);
 
-    @Query("select t.id as id, t.totalPrice as totalPrice, t.transactionDate as transactionDate " +
+    @Query("select t.id as id, t.totalPrice as totalPrice, t.createdAt as transactionDate " +
             "from Transaction t where t.user.id = :id")
     List<ITransactionData> getTransactionsByUserId(@Param("id") UUID id);
 

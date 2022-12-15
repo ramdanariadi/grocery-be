@@ -11,10 +11,10 @@ import java.util.UUID;
 
 public interface CategoryRepository extends CrudRepository<Category, UUID> {
 
-    @Query("select c from Category c where c.id = :id and c.deleted = false")
+    @Query("select c from Category c where c.id = :id and c.deletedAt IS NULL")
     Category findCategoryById(@Param("id") UUID id);
 
-    @Query("select c from Category c where c.deleted = false")
+    @Query("select c from Category c where c.deletedAt IS NULL")
     List<Category> findAllCategories();
 
     Category findCategoryByCategory(String category);
@@ -26,6 +26,6 @@ public interface CategoryRepository extends CrudRepository<Category, UUID> {
 
     @Modifying
     @Transactional
-    @Query("update Category c set c.deleted = true where c.id = :id")
+    @Query("update Category c set c.deletedAt = NOW() where c.id = :id")
     int destroyCategoryById(@Param("id") UUID id);
 }

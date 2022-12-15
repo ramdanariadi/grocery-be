@@ -1,19 +1,17 @@
 package id.grocery.tunas.product.liked;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import id.grocery.tunas.base.BaseModel;
 import id.grocery.tunas.product.Product;
 import id.grocery.tunas.security.user.User;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.UUID;
 
 @Entity
 @Data
 @NoArgsConstructor
-public class Liked {
-    @Id
-    UUID id;
+public class Liked extends BaseModel {
     private String name;
     private String imageUrl;
     private Long price;

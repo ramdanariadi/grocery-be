@@ -1,5 +1,6 @@
 package id.grocery.tunas.transaction.cart;
 
+import id.grocery.tunas.base.BaseModel;
 import id.grocery.tunas.product.Product;
 import id.grocery.tunas.security.user.User;
 import lombok.Data;
@@ -9,9 +10,7 @@ import java.util.UUID;
 
 @Entity
 @Data
-public class Cart {
-    @Id
-    UUID id;
+public class Cart extends BaseModel {
     private String name;
     private String imageUrl;
     private Long price;

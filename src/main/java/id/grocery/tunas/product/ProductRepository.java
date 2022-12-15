@@ -14,7 +14,7 @@ import java.util.UUID;
 @Component
 public interface ProductRepository extends CrudRepository<Product, UUID> {
 
-    @Query("select p.id as id, p.name as name, p.price as price, p.weight as weight, p.imageUrl as imageUrl, p.category as category from Product p where p.deleted = false")
+    @Query("select p.id as id, p.name as name, p.price as price, p.weight as weight, p.imageUrl as imageUrl, p.category as category from Product p where p.deletedAt is null")
     List<ICustomSelect> findCustomColumn();
 
     interface ICustomSelect {
@@ -30,7 +30,7 @@ public interface ProductRepository extends CrudRepository<Product, UUID> {
         UUID getCategoryId();
     }
 
-    @Query("select p.id as id, p.name as name, p.price as price, p.weight as weight, p.imageUrl as imageUrl, p.category as category from Product p where p.deleted = false and p.category.id = :category_id")
+    @Query("select p.id as id, p.name as name, p.price as price, p.weight as weight, p.imageUrl as imageUrl, p.category as category from Product p where p.deletedAt is null and p.category.id = :category_id")
     List<ICustomSelect> findProductsByCategory(@Param("category_id") UUID id);
 
     Product findProductById(UUID id);
@@ -45,6 +45,6 @@ public interface ProductRepository extends CrudRepository<Product, UUID> {
 
     @Modifying
     @Transactional
-    @Query("update Product p set p.deleted = true where p.id = :id")
+    @Query("update Product p set p.deletedAt = NOW() where p.id = :id")
     int destroyProduct(@Param("id") UUID id);
 }
