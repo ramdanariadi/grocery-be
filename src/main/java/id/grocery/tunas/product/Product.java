@@ -8,7 +8,10 @@ import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
-@Table(name = "products")
+@Table(name = "products", indexes = {
+        @Index(name = "idx_product_name", columnList = "name"),
+        @Index(name = "idx_product_category",columnList = "category_id")
+})
 @Data
 @NoArgsConstructor
 public class Product {
@@ -21,8 +24,9 @@ public class Product {
     private Integer weight; // on gram
     private String imageUrl;
 
-    @Column(columnDefinition = "boolean default false")
     private Boolean deleted = false;
+    private Boolean isTop = false;
+    private Boolean isRecommended = false;
 
     @ManyToOne(fetch = FetchType.LAZY)
     Category category;
