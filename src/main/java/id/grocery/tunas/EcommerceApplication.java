@@ -1,5 +1,7 @@
 package id.grocery.tunas;
 
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -15,6 +17,11 @@ public class EcommerceApplication {
 	@Bean
 	public BCryptPasswordEncoder passwordEncoder(){
 		return new BCryptPasswordEncoder();
+	}
+
+	@Bean
+	public ManagedChannel managedChannel(){
+		return ManagedChannelBuilder.forAddress("localhost", 9000).usePlaintext().build();
 	}
 
 }

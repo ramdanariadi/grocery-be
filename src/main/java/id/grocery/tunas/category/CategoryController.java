@@ -2,12 +2,12 @@ package id.grocery.tunas.category;
 
 import io.vertx.core.json.JsonObject;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -20,7 +20,7 @@ public class CategoryController {
 
     @GetMapping
     public ResponseEntity<Object> allCategories(){
-        List<Category> categories = categoryService.findAllCategory();
+        List<Map<String, Object>> categories = categoryService.findAllCategory();
         JsonObject result = new JsonObject();
         result.put("data", categories);
         return ResponseEntity.ok(result.getMap());
@@ -28,24 +28,22 @@ public class CategoryController {
 
     @GetMapping(path = "/{id}")
     public ResponseEntity<Object> categoryById(@PathVariable UUID id){
-        Category category = categoryService.findById(id);
+        JsonObject data = categoryService.findById(id);
         JsonObject result = new JsonObject();
-        result.put("data", category);
+        result.put("data", data.getMap());
         return ResponseEntity.ok(result.getMap());
     }
 
     @DeleteMapping(path = "/{id}")
     public ResponseEntity<Object> destroyCategory(@PathVariable UUID id){
-        int nModified = categoryService.destroyCategory(id);
-        if(nModified > 0) return ResponseEntity.ok().build();
-        return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
+        categoryService.destroyCategory(id);
+        return ResponseEntity.ok().build();
     }
 
     @PutMapping
     public ResponseEntity<Object> updateCategory(@RequestBody Category category){
-        int nModified = categoryService.updateCategory(category);
-        if(nModified > 0) return ResponseEntity.ok().build();
-        return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
+        categoryService.updateCategory(category);
+        return ResponseEntity.ok().build();
     }
 
     @PostMapping
