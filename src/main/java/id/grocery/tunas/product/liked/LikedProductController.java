@@ -2,11 +2,11 @@ package id.grocery.tunas.product.liked;
 
 import io.vertx.core.json.JsonObject;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -16,30 +16,21 @@ public class LikedProductController {
 
     private final LikedProductService likedProductService;
 
-    @PostMapping("/{customerId}/{productId}")
-    public ResponseEntity<Object> addToWishList(@PathVariable String customerId, @PathVariable UUID productId){
-        likedProductService.storeToWishlist(customerId,productId);
+    @PostMapping("/{userId}/{productId}")
+    public ResponseEntity<Object> addToWishlist(@PathVariable UUID userId, @PathVariable UUID productId){
+        likedProductService.addWishlist(userId,productId);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/{customerId}/{productId}")
-    public ResponseEntity<Object> findProductFromWishList(@PathVariable UUID customerId,@PathVariable UUID productId){
-        LikedProductRepository.IWishProductNative lovedProduct = likedProductService.findProductFromWishlist(customerId,productId);
-        JsonObject result = new JsonObject();
-        result.put("data", lovedProduct);
-        return ResponseEntity.ok(result.getMap());
+    @DeleteMapping("/{userId}/{likedId}")
+    public ResponseEntity<Object> destroyFromWishlist(@PathVariable UUID userId,@PathVariable UUID likedId){
+        likedProductService.destroyWishlist(userId, likedId);
+        return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{customerId}/{productId}")
-    public ResponseEntity<Object> removeFromWishList(@PathVariable UUID customerId,@PathVariable UUID productId){
-        int nModified = likedProductService.removeFromWishList(customerId, productId);
-        if(nModified > 0) return ResponseEntity.ok().build();
-        return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
-    }
-
-    @GetMapping("/{customerId}")
-    public ResponseEntity<Object> customerWishList(@PathVariable UUID customerId){
-        List<LikedProductRepository.IWishProduct> likedProductList = likedProductService.wishList(customerId);
+    @GetMapping("/{userId}")
+    public ResponseEntity<Object> getWishlist(@PathVariable UUID userId){
+        List<Map<String, Object>> likedProductList = likedProductService.getWishlist(userId);
         JsonObject result = new JsonObject();
         result.put("data", likedProductList);
         return ResponseEntity.ok(result.getMap());

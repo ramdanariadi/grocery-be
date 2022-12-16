@@ -1,50 +1,82 @@
 package id.grocery.tunas.product.liked;
 
-import com.fasterxml.uuid.Generators;
-import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
 import id.grocery.tunas.exception.ApiRequestException;
-import id.grocery.tunas.product.Product;
-import id.grocery.tunas.product.ProductRepository;
+import id.grocery.tunas.product.ProductService;
+import id.grocery.tunas.proto.MultipleWishlistResponse;
+import id.grocery.tunas.proto.Response;
+import id.grocery.tunas.proto.WishlistServiceGrpc;
+import id.grocery.tunas.proto.WishlistUserId;
 import id.grocery.tunas.security.user.User;
-import id.grocery.tunas.security.user.UserRepository;
+import id.grocery.tunas.security.user.UserService;
+import io.grpc.ManagedChannel;
+import io.vertx.core.json.JsonObject;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
 public class LikedProductService {
-    private final ProductRepository productRepository;
-    private final UserRepository userRepository;
-    private final LikedProductRepository likedProductRepository;
+    private final WishlistServiceGrpc.WishlistServiceBlockingStub wishlistServiceBlockingStub;
+    private final ProductService productService;
+    private final UserService userService;
 
-    public Liked storeToWishlist(String userId, UUID productId){
-        Product product = productRepository.findProductById(productId);
-        Optional<User> user = userRepository.findById(userId);
-        Liked liked = new Liked();
-        liked.setId(Generators.timeBasedGenerator().generate());
-        liked.setProduct(product);
-        liked.setUser(user.get());
-        return likedProductRepository.save(liked);
+    private final String STATUS_FAILED = "FAILED";
+    private final String STATUS_SUCCESS = "SUCCESS";
+
+    @Autowired
+    public LikedProductService(ManagedChannel managedChannel, ProductService productService, UserService userService) {
+        this.wishlistServiceBlockingStub = WishlistServiceGrpc.newBlockingStub(managedChannel);
+        this.productService = productService;
+        this.userService = userService;
     }
 
-    public LikedProductRepository.IWishProductNative findProductFromWishlist(UUID userId, UUID productId){
-        LikedProductRepository.IWishProductNative lovedProduct = likedProductRepository.findProductFromWishLIst(userId,productId);
-        if(null == lovedProduct){
-            throw new ApiRequestException("", HttpStatus.NO_CONTENT);
+    public void addWishlist(UUID userId, UUID productId){
+        Optional<User> user = userService.findById(userId.toString());
+
+        if(user.isEmpty()){
+            throw new ApiRequestException("INVALID_USER");
         }
-        return lovedProduct;
+
+        JsonObject product = productService.findProductById(productId);
+        Response response = wishlistServiceBlockingStub.save(id.grocery.tunas.proto.Wishlist.newBuilder()
+                        .setUserId(userId.toString())
+                        .setProductId(product.getString("id")).build());
+
+        if(STATUS_FAILED.equalsIgnoreCase(response.getStatus())){
+            throw new RuntimeException(response.getMessage());
+        }
     }
 
-    public int removeFromWishList(UUID userId, UUID productId){
-        return likedProductRepository.removeWishlist(userId, productId);
+    public void destroyWishlist(UUID userId, UUID wishlistId){
+        Response response = wishlistServiceBlockingStub.delete(id.grocery.tunas.proto.UserAndWishlistId.newBuilder()
+                        .setUserId(userId.toString())
+                        .setWishlistId(wishlistId.toString()).build());
+
+        if(STATUS_FAILED.equalsIgnoreCase(response.getStatus())){
+            throw new RuntimeException(response.getMessage());
+        }
     }
 
-    public List<LikedProductRepository.IWishProduct> wishList(UUID userId){
-        List<LikedProductRepository.IWishProduct> wishlist = likedProductRepository.findWishListByuserId(userId);
-        return wishlist;
+    public List<Map<String, Object>> getWishlist(UUID userId){
+        MultipleWishlistResponse response = wishlistServiceBlockingStub.findByUserId(WishlistUserId.newBuilder()
+                .setId(userId.toString()).build());
+
+        if(STATUS_FAILED.equalsIgnoreCase(response.getStatus())){
+            return List.of();
+        }
+
+        return response.getDataList().stream().map(wishlistDetail -> {
+            Map<String, Object> wishlist = new HashMap<>();
+            wishlist.put("id", wishlistDetail.getId());
+            wishlist.put("productId", wishlistDetail.getProductId());
+            wishlist.put("name", wishlistDetail.getName());
+            wishlist.put("category", wishlistDetail.getCategory());
+            wishlist.put("price", wishlistDetail.getPrice());
+            wishlist.put("perUnit", wishlistDetail.getPerUnit());
+            wishlist.put("imageUrl", wishlistDetail.getImageUrl());
+            return wishlist;
+        }).collect(Collectors.toList());
     }
 }
