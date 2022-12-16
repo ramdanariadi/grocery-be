@@ -1,47 +1,209 @@
 package id.grocery.tunas.product;
 
 import com.google.common.base.Strings;
+import id.grocery.tunas.category.CategoryService;
 import id.grocery.tunas.exception.ApiRequestException;
+import id.grocery.tunas.proto.Product;
+import id.grocery.tunas.proto.ProductId;
+import id.grocery.tunas.proto.ProductServiceGrpc;
+import id.grocery.tunas.proto.Response;
+import io.grpc.ManagedChannel;
+import io.vertx.core.json.JsonObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import lombok.AllArgsConstructor;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
-@AllArgsConstructor
 public class ProductService {
 
-    private final ProductRepository productRepository;
+    private final ProductServiceGrpc.ProductServiceBlockingStub productServiceBlockingStub;
+    private final CategoryService categoryService;
+    private final String STATUS_FAILED = "FAILED";
+    private final String STATUS_SUCCESS = "SUCCESS";
 
-    public List<ProductRepository.ICustomSelect> getAll(){
-        return productRepository.findCustomColumn();
+    @Autowired
+    public ProductService(ManagedChannel managedChannel, CategoryService categoryService){
+        this.categoryService = categoryService;
+        this.productServiceBlockingStub = id.grocery.tunas.proto.ProductServiceGrpc.newBlockingStub(managedChannel);
     }
 
-    public Product findProductById(UUID id){
-        return productRepository.findProductById(id);
+    public List<Map<String, Object>> getAll(){
+        id.grocery.tunas.proto.MultipleProductResponse response = productServiceBlockingStub.findAll(id.grocery.tunas.proto.ProductEmpty.newBuilder().build());
+
+        if(STATUS_FAILED.equalsIgnoreCase(response.getStatus())){
+            throw new RuntimeException(response.getMessage());
+        }
+
+        return response.getDataList().stream().map(product -> {
+            Map<String, Object> data = new HashMap<>();
+            data.put("id", product.getId());
+            data.put("name", product.getName());
+            data.put("price", product.getPrice());
+            data.put("perUnit", product.getPerUnit());
+            data.put("description", product.getDescription());
+            data.put("weight", product.getWeight());
+            data.put("imageUrl", product.getImageUrl());
+            return data;
+        }).collect(Collectors.toList());
     }
 
-    public List<ProductRepository.ICustomSelect> getAllBYCategory(UUID categoryId){
-        return productRepository.findProductsByCategory(categoryId);
+    public JsonObject findProductById(UUID id){
+        id.grocery.tunas.proto.ProductResponse response = productServiceBlockingStub.findById(ProductId.newBuilder()
+                .setId(id.toString()).build());
+
+        if(STATUS_FAILED.equalsIgnoreCase(response.getStatus())){
+            throw new RuntimeException(response.getMessage());
+        }
+
+        id.grocery.tunas.proto.Product product = response.getData();
+        JsonObject data = new JsonObject();
+        data.put("id", product.getId());
+        data.put("name", product.getName());
+        data.put("price", product.getPrice());
+        data.put("perUnit", product.getPerUnit());
+        data.put("description", product.getDescription());
+        data.put("weight", product.getWeight());
+        data.put("imageUrl", product.getImageUrl());
+
+        return data;
     }
 
-    public void saveProduct(Product product){
-        if(null == product.getCategory()){
+    public List<Map<String, Object>> getAllByCategory(UUID categoryId){
+        id.grocery.tunas.proto.MultipleProductResponse response = productServiceBlockingStub.findProductsByCategory(id.grocery.tunas.proto.CategoryId.newBuilder()
+                .setId(categoryId.toString()).build());
+
+        if(STATUS_FAILED.equalsIgnoreCase(response.getStatus())){
+            throw new RuntimeException(response.getMessage());
+        }
+
+        return response.getDataList().stream().map(product -> {
+            Map<String, Object> data = new HashMap<>();
+            data.put("id", product.getId());
+            data.put("name", product.getName());
+            data.put("price", product.getPrice());
+            data.put("perUnit", product.getPerUnit());
+            data.put("description", product.getDescription());
+            data.put("weight", product.getWeight());
+            data.put("imageUrl", product.getImageUrl());
+            return data;
+        }).collect(Collectors.toList());
+    }
+
+    public void saveProduct(JsonObject product){
+        if(Strings.isNullOrEmpty(product.getString("categoryId"))){
             throw new ApiRequestException("CATEGORY_NOT_FOUND");
         }
-        if(null == product.getPrice() || product.getPrice() < 1L)
-            throw new ApiRequestException("PRICE_CANNOT_LOWER_THAN_0");
-        productRepository.save(product);
-    }
 
-    public int updateProduct(Product product){
-        if(Strings.isNullOrEmpty(product.getName())){
-            throw new ApiRequestException("PRODUCT_NAME_CANNOT_EMPTY");
+        if(null == product.getLong("price") || product.getLong("price") < 1L
+        || null == product.getLong("perUnit") || product.getLong("perUnit") < 1L
+        || null == product.getInteger("weight") || product.getInteger("weight") < 1L)
+            throw new ApiRequestException("PRICE_PER_UNIT_WEIGHT_CANNOT_LOWER_THAN_ZERO");
+
+        if(Strings.isNullOrEmpty(product.getString("name")))
+            throw new ApiRequestException("NAME_CANNOT_EMPTY");
+
+        JsonObject category = categoryService.findById(UUID.fromString(product.getString("categoryId")));
+
+        Product productSave = id.grocery.tunas.proto.Product.newBuilder()
+                .setName(product.getString("name"))
+                .setPrice(product.getLong("price"))
+                .setPerUnit(product.getLong("perUnit"))
+                .setWeight(product.getInteger("weight"))
+                .setDescription(product.getString("description"))
+                .setImageUrl(Strings.nullToEmpty(product.getString("imageUrl")))
+                .setCategoryId(category.getString("id"))
+                .build();
+        Response response = productServiceBlockingStub.save(productSave);
+
+        if(STATUS_FAILED.equalsIgnoreCase(response.getStatus())){
+            throw new RuntimeException(response.getMessage());
         }
-        return productRepository.updateProduct(product.getId(),product.getName(),product.getPrice(),product.getImageUrl());
     }
 
-    public int destroyProduct(UUID id){
-        return productRepository.destroyProduct(id);
+    public void updateProduct(JsonObject product){
+        if(Strings.isNullOrEmpty(product.getString("categoryId"))
+        || Strings.isNullOrEmpty(product.getString("id"))){
+            throw new ApiRequestException("ID_OR_CATEGORY_ID_NOT_FOUND");
+        }
+
+        if(null == product.getLong("price") || product.getLong("price") < 1L
+                || null == product.getLong("perUnit") || product.getLong("perUnit") < 1L
+                || null == product.getInteger("weight") || product.getInteger("weight") < 1L)
+            throw new ApiRequestException("PRICE_PER_UNIT_WEIGHT_CANNOT_LOWER_THAN_ZERO");
+
+        if(Strings.isNullOrEmpty(product.getString("name")))
+            throw new ApiRequestException("NAME_CANNOT_EMPTY");
+
+        JsonObject category = categoryService.findById(UUID.fromString(product.getString("categoryId")));
+
+        Product productSave = Product.newBuilder()
+                .setId(product.getString("id"))
+                .setName(product.getString("name"))
+                .setPrice(product.getLong("price"))
+                .setPerUnit(product.getLong("perUnit"))
+                .setWeight(product.getInteger("weight"))
+                .setDescription(product.getString("description"))
+                .setImageUrl(Strings.nullToEmpty(product.getString("imageUrl")))
+                .setCategoryId(category.getString("id"))
+                .build();
+        Response response = productServiceBlockingStub.update(productSave);
+
+        if(STATUS_FAILED.equalsIgnoreCase(response.getStatus())){
+            throw new RuntimeException(response.getMessage());
+        }
+    }
+
+    public void destroyProduct(UUID id){
+        this.findProductById(id);
+        Response response = productServiceBlockingStub.delete(
+                ProductId.newBuilder().setId(id.toString()).build());
+        if(STATUS_FAILED.equalsIgnoreCase(response.getStatus())){
+            throw new RuntimeException(response.getMessage());
+        }
+    }
+
+    public List<Map<String, Object>> recommended(){
+        id.grocery.tunas.proto.MultipleProductResponse response = productServiceBlockingStub.findRecommendedProduct(id.grocery.tunas.proto.ProductEmpty.newBuilder().build());
+
+        if(STATUS_FAILED.equalsIgnoreCase(response.getStatus())){
+            throw new RuntimeException(response.getMessage());
+        }
+
+        return response.getDataList().stream().map(product -> {
+            Map<String, Object> data = new HashMap<>();
+            data.put("id", product.getId());
+            data.put("name", product.getName());
+            data.put("price", product.getPrice());
+            data.put("perUnit", product.getPerUnit());
+            data.put("description", product.getDescription());
+            data.put("weight", product.getWeight());
+            data.put("imageUrl", product.getImageUrl());
+            return data;
+        }).collect(Collectors.toList());
+    }
+
+    public List<Map<String, Object>> top(){
+        id.grocery.tunas.proto.MultipleProductResponse response = productServiceBlockingStub.findRecommendedProduct(id.grocery.tunas.proto.ProductEmpty.newBuilder().build());
+
+        if(STATUS_FAILED.equalsIgnoreCase(response.getStatus())){
+            throw new RuntimeException(response.getMessage());
+        }
+
+        return response.getDataList().stream().map(product -> {
+            Map<String, Object> data = new HashMap<>();
+            data.put("id", product.getId());
+            data.put("name", product.getName());
+            data.put("price", product.getPrice());
+            data.put("perUnit", product.getPerUnit());
+            data.put("description", product.getDescription());
+            data.put("weight", product.getWeight());
+            data.put("imageUrl", product.getImageUrl());
+            return data;
+        }).collect(Collectors.toList());
     }
 }

@@ -16,18 +16,18 @@ import java.util.stream.Collectors;
 @Service
 public class CategoryService {
 
-    private final CategoryServiceBlockingStub stub;
+    private final CategoryServiceBlockingStub categoryServiceBlockingStub;
     private final String STATUS_FAILED = "FAILED";
     private final String STATUS_SUCCESS = "SUCCESS";
 
     @Autowired
     public CategoryService(ManagedChannel managedChannel){
-        this.stub = id.grocery.tunas.proto.CategoryServiceGrpc.newBlockingStub(managedChannel);
+        this.categoryServiceBlockingStub = id.grocery.tunas.proto.CategoryServiceGrpc.newBlockingStub(managedChannel);
     }
 
     public JsonObject findById(UUID id){
         CategoryId categoryId = CategoryId.newBuilder().setId(id.toString()).build();
-        id.grocery.tunas.proto.CategoryResponse response = stub.findById(categoryId);
+        id.grocery.tunas.proto.CategoryResponse response = categoryServiceBlockingStub.findById(categoryId);
 
         if(STATUS_FAILED.equalsIgnoreCase(response.getStatus())){
             throw new RuntimeException(response.getMessage());
@@ -42,7 +42,7 @@ public class CategoryService {
     }
 
     public List<Map<String, Object>> findAllCategory(){
-        id.grocery.tunas.proto.MultipleCategoryResponse response = stub.findAll(id.grocery.tunas.proto.EmptyCategory.newBuilder().build());
+        id.grocery.tunas.proto.MultipleCategoryResponse response = categoryServiceBlockingStub.findAll(id.grocery.tunas.proto.EmptyCategory.newBuilder().build());
 
         if(STATUS_FAILED.equalsIgnoreCase(response.getStatus())){
             throw new RuntimeException(response.getMessage());
@@ -69,7 +69,7 @@ public class CategoryService {
                 .setImageUrl(category.getImageUrl())
                 .build();
 
-        Response response = stub.save(categorySave);
+        Response response = categoryServiceBlockingStub.save(categorySave);
         if(STATUS_FAILED.equalsIgnoreCase(response.getStatus())){
             throw new RuntimeException(response.getMessage());
         }
@@ -84,7 +84,7 @@ public class CategoryService {
                 .setId(category.getId().toString())
                 .setImageUrl(Strings.nullToEmpty(category.getImageUrl()))
                 .build();
-        Response response = stub.update(categorySave);
+        Response response = categoryServiceBlockingStub.update(categorySave);
         if(STATUS_FAILED.equalsIgnoreCase(response.getStatus())){
             throw new RuntimeException(response.getMessage());
         }
@@ -92,7 +92,7 @@ public class CategoryService {
 
     public void destroyCategory(UUID id){
         CategoryId categoryId = CategoryId.newBuilder().setId(id.toString()).build();
-        Response response = stub.delete(categoryId);
+        Response response = categoryServiceBlockingStub.delete(categoryId);
         if(STATUS_FAILED.equalsIgnoreCase(response.getStatus())){
             throw new RuntimeException(response.getMessage());
         }

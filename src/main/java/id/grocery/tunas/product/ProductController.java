@@ -1,16 +1,13 @@
 package id.grocery.tunas.product;
 
-import com.fasterxml.uuid.Generators;
-import com.google.common.base.Strings;
+import id.grocery.tunas.category.CategoryService;
 import io.vertx.core.json.JsonObject;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import id.grocery.tunas.category.Category;
-import id.grocery.tunas.category.CategoryService;
 
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -24,7 +21,7 @@ public class ProductController {
     @GetMapping
     @ResponseBody
     public ResponseEntity<Object> getProducts(){
-        List<ProductRepository.ICustomSelect> products = productService.getAll();
+        List<Map<String, Object>> products = productService.getAll();
         JsonObject result = new JsonObject();
         result.put("data", products);
         return ResponseEntity.ok(result.getMap());
@@ -33,16 +30,16 @@ public class ProductController {
     @GetMapping("/{id}")
     @ResponseBody
     public ResponseEntity<Object> getProduct(@PathVariable UUID id){
-        Product product = productService.findProductById(id);
+        JsonObject product = productService.findProductById(id);
         JsonObject result = new JsonObject();
-        result.put("data", product);
+        result.put("data", product.getMap());
         return ResponseEntity.ok(result.getMap());
     }
 
     @GetMapping("/category/{id}")
     @ResponseBody
     public ResponseEntity<Object> getProductByCategory(@PathVariable UUID id){
-        List<ProductRepository.ICustomSelect> products = productService.getAllBYCategory(id);
+        List<Map<String, Object>> products = productService.getAllByCategory(id);
         JsonObject result = new JsonObject();
         result.put("data", products);
         return ResponseEntity.ok(result.getMap());
@@ -50,34 +47,35 @@ public class ProductController {
 
     @PostMapping
     public ResponseEntity<Object> addProduct(@RequestBody String jsonBody){
-        JsonObject jsonObject = new JsonObject(jsonBody);
-        Product product = new Product();
-        product.setId(Generators.timeBasedGenerator().generate());
-        product.setName(jsonObject.getString("name"));
-        product.setDescription(jsonObject.getString("description"));
-        product.setPrice(jsonObject.getLong("price"));
-        product.setPerUnit(jsonObject.getInteger("perUnit"));
-        product.setWeight(jsonObject.getInteger("weight"));
-        product.setImageUrl(Strings.emptyToNull(jsonObject.getString("imageUrl")));
-
-        Category category = categoryService.findById(UUID.fromString(jsonObject.getString("category")));
-        product.setCategory(category);
-
-        productService.saveProduct(product);
+        productService.saveProduct(new JsonObject(jsonBody));
         return ResponseEntity.ok().build();
     }
 
     @PutMapping
-    public ResponseEntity<Object> updateProduct(@RequestBody Product product){
-        int nModified = productService.updateProduct(product);
-        if(nModified > 0) return ResponseEntity.ok().build();
-        return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
+    public ResponseEntity<Object> updateProduct(@RequestBody String jsonBody){
+        productService.updateProduct(new JsonObject(jsonBody));
+        return ResponseEntity.ok().build();
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Object> destroyProduct(@PathVariable UUID id){
-        int nModified = productService.destroyProduct(id);
-        if(nModified > 0) return ResponseEntity.ok().build();
-        return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
+        productService.destroyProduct(id);
+        return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/recommended")
+    public ResponseEntity<Object> recommended(){
+        List<Map<String, Object>> products = productService.recommended();
+        JsonObject result = new JsonObject();
+        result.put("data", products);
+        return ResponseEntity.ok(result.getMap());
+    }
+
+    @GetMapping("/top")
+    public ResponseEntity<Object> top(){
+        List<Map<String, Object>> products = productService.top();
+        JsonObject result = new JsonObject();
+        result.put("data", products);
+        return ResponseEntity.ok(result.getMap());
     }
 }
