@@ -3,6 +3,7 @@ package id.grocery.tunas.category;
 import com.google.common.base.Strings;
 import id.grocery.tunas.exception.ApiRequestException;
 import id.grocery.tunas.grpc.*;
+import id.grocery.tunas.utils.GrpcResponseUtil;
 import io.grpc.ManagedChannel;
 import io.vertx.core.json.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +19,6 @@ import java.util.stream.Collectors;
 public class CategoryService {
 
     private final CategoryServiceGrpc.CategoryServiceBlockingStub categoryServiceBlockingStub;
-    private final String STATUS_FAILED = "FAILED";
-    private final String STATUS_SUCCESS = "SUCCESS";
 
     @Autowired
     public CategoryService(ManagedChannel managedChannel){
@@ -30,9 +29,7 @@ public class CategoryService {
         CategoryId categoryId = CategoryId.newBuilder().setId(id.toString()).build();
         CategoryResponse response = categoryServiceBlockingStub.findById(categoryId);
 
-        if(STATUS_FAILED.equalsIgnoreCase(response.getStatus())){
-            throw new RuntimeException(response.getMessage());
-        }
+        GrpcResponseUtil.throwIfFailed(response.getStatus(), response.getMessage());
 
         id.grocery.tunas.grpc.Category category = response.getData();
         JsonObject data = new JsonObject();
@@ -45,9 +42,7 @@ public class CategoryService {
     public List<Map<String, Object>> findAllCategory(){
         MultipleCategoryResponse response = categoryServiceBlockingStub.findAll(EmptyCategory.newBuilder().build());
 
-        if(STATUS_FAILED.equalsIgnoreCase(response.getStatus())){
-            throw new RuntimeException(response.getMessage());
-        }
+        GrpcResponseUtil.throwIfFailed(response.getStatus(), response.getMessage());
 
         List<id.grocery.tunas.grpc.Category> categoryList = response.getDataList();
         List<Map<String, Object>> collect = categoryList.stream().map(category -> {
@@ -71,9 +66,7 @@ public class CategoryService {
                 .build();
 
         Response response = categoryServiceBlockingStub.save(categorySave);
-        if(STATUS_FAILED.equalsIgnoreCase(response.getStatus())){
-            throw new RuntimeException(response.getMessage());
-        }
+        GrpcResponseUtil.throwIfFailed(response.getStatus(), response.getMessage());
     }
 
     public void updateCategory(Category category){
@@ -86,16 +79,12 @@ public class CategoryService {
                 .setImageUrl(Strings.nullToEmpty(category.getImageUrl()))
                 .build();
         Response response = categoryServiceBlockingStub.update(categorySave);
-        if(STATUS_FAILED.equalsIgnoreCase(response.getStatus())){
-            throw new RuntimeException(response.getMessage());
-        }
+        GrpcResponseUtil.throwIfFailed(response.getStatus(), response.getMessage());
     }
 
     public void destroyCategory(UUID id){
         CategoryId categoryId = CategoryId.newBuilder().setId(id.toString()).build();
         Response response = categoryServiceBlockingStub.delete(categoryId);
-        if(STATUS_FAILED.equalsIgnoreCase(response.getStatus())){
-            throw new RuntimeException(response.getMessage());
-        }
+        GrpcResponseUtil.throwIfFailed(response.getStatus(), response.getMessage());
     }
 }

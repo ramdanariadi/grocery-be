@@ -5,6 +5,7 @@ import id.grocery.tunas.category.CategoryService;
 import id.grocery.tunas.exception.ApiRequestException;
 import id.grocery.tunas.grpc.*;
 import id.grocery.tunas.grpc.Product;
+import id.grocery.tunas.utils.GrpcResponseUtil;
 import io.grpc.ManagedChannel;
 import io.vertx.core.json.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,21 +22,17 @@ public class ProductService {
 
     private final ProductServiceGrpc.ProductServiceBlockingStub productServiceBlockingStub;
     private final CategoryService categoryService;
-    private final String STATUS_FAILED = "FAILED";
-    private final String STATUS_SUCCESS = "SUCCESS";
 
     @Autowired
     public ProductService(ManagedChannel managedChannel, CategoryService categoryService){
         this.categoryService = categoryService;
-        this.productServiceBlockingStub = id.grocery.tunas.grpc.ProductServiceGrpc.newBlockingStub(managedChannel);
+        this.productServiceBlockingStub = ProductServiceGrpc.newBlockingStub(managedChannel);
     }
 
     public List<Map<String, Object>> getAll(){
-        MultipleProductResponse response = productServiceBlockingStub.findAll(id.grocery.tunas.grpc.ProductEmpty.newBuilder().build());
+        MultipleProductResponse response = productServiceBlockingStub.findAll(ProductEmpty.newBuilder().build());
 
-        if(STATUS_FAILED.equalsIgnoreCase(response.getStatus())){
-            throw new RuntimeException(response.getMessage());
-        }
+        GrpcResponseUtil.throwIfFailed(response.getStatus(), response.getMessage());
 
         return response.getDataList().stream().map(product -> {
             Map<String, Object> data = new HashMap<>();
@@ -51,12 +48,10 @@ public class ProductService {
     }
 
     public JsonObject findProductById(UUID id){
-        id.grocery.tunas.grpc.ProductResponse response = productServiceBlockingStub.findById(ProductId.newBuilder()
+        ProductResponse response = productServiceBlockingStub.findById(ProductId.newBuilder()
                 .setId(id.toString()).build());
 
-        if(STATUS_FAILED.equalsIgnoreCase(response.getStatus())){
-            throw new RuntimeException(response.getMessage());
-        }
+        GrpcResponseUtil.throwIfFailed(response.getStatus(), response.getMessage());
 
         Product product = response.getData();
         JsonObject data = new JsonObject();
@@ -72,12 +67,9 @@ public class ProductService {
     }
 
     public List<Map<String, Object>> getAllByCategory(UUID categoryId){
-        id.grocery.tunas.grpc.MultipleProductResponse response = productServiceBlockingStub.findProductsByCategory(id.grocery.tunas.grpc.CategoryId.newBuilder()
+        MultipleProductResponse response = productServiceBlockingStub.findProductsByCategory(CategoryId.newBuilder()
                 .setId(categoryId.toString()).build());
-
-        if(STATUS_FAILED.equalsIgnoreCase(response.getStatus())){
-            throw new RuntimeException(response.getMessage());
-        }
+        GrpcResponseUtil.throwIfFailed(response.getStatus(), response.getMessage());
 
         return response.getDataList().stream().map(product -> {
             Map<String, Object> data = new HashMap<>();
@@ -118,9 +110,7 @@ public class ProductService {
                 .build();
         Response response = productServiceBlockingStub.save(productSave);
 
-        if(STATUS_FAILED.equalsIgnoreCase(response.getStatus())){
-            throw new RuntimeException(response.getMessage());
-        }
+        GrpcResponseUtil.throwIfFailed(response.getStatus(), response.getMessage());
     }
 
     public void updateProduct(JsonObject product){
@@ -149,28 +139,22 @@ public class ProductService {
                 .setImageUrl(Strings.nullToEmpty(product.getString("imageUrl")))
                 .setCategoryId(category.getString("id"))
                 .build();
-        Response response = productServiceBlockingStub.update(productSave);
 
-        if(STATUS_FAILED.equalsIgnoreCase(response.getStatus())){
-            throw new RuntimeException(response.getMessage());
-        }
+        Response response = productServiceBlockingStub.update(productSave);
+        GrpcResponseUtil.throwIfFailed(response.getStatus(), response.getMessage());
     }
 
     public void destroyProduct(UUID id){
         this.findProductById(id);
         Response response = productServiceBlockingStub.delete(
                 ProductId.newBuilder().setId(id.toString()).build());
-        if(STATUS_FAILED.equalsIgnoreCase(response.getStatus())){
-            throw new RuntimeException(response.getMessage());
-        }
+        GrpcResponseUtil.throwIfFailed(response.getStatus(), response.getMessage());
     }
 
     public List<Map<String, Object>> recommended(){
-        id.grocery.tunas.grpc.MultipleProductResponse response = productServiceBlockingStub.findRecommendedProduct(id.grocery.tunas.grpc.ProductEmpty.newBuilder().build());
+        MultipleProductResponse response = productServiceBlockingStub.findRecommendedProduct(ProductEmpty.newBuilder().build());
 
-        if(STATUS_FAILED.equalsIgnoreCase(response.getStatus())){
-            throw new RuntimeException(response.getMessage());
-        }
+        GrpcResponseUtil.throwIfFailed(response.getStatus(), response.getMessage());
 
         return response.getDataList().stream().map(product -> {
             Map<String, Object> data = new HashMap<>();
@@ -186,11 +170,9 @@ public class ProductService {
     }
 
     public List<Map<String, Object>> top(){
-        id.grocery.tunas.grpc.MultipleProductResponse response = productServiceBlockingStub.findRecommendedProduct(id.grocery.tunas.grpc.ProductEmpty.newBuilder().build());
+        MultipleProductResponse response = productServiceBlockingStub.findRecommendedProduct(ProductEmpty.newBuilder().build());
 
-        if(STATUS_FAILED.equalsIgnoreCase(response.getStatus())){
-            throw new RuntimeException(response.getMessage());
-        }
+        GrpcResponseUtil.throwIfFailed(response.getStatus(), response.getMessage());
 
         return response.getDataList().stream().map(product -> {
             Map<String, Object> data = new HashMap<>();

@@ -5,6 +5,7 @@ import id.grocery.tunas.grpc.*;
 import id.grocery.tunas.product.ProductService;
 import id.grocery.tunas.security.user.User;
 import id.grocery.tunas.security.user.UserService;
+import id.grocery.tunas.utils.GrpcResponseUtil;
 import io.grpc.ManagedChannel;
 import io.vertx.core.json.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +19,6 @@ public class LikedProductService {
     private final WishlistServiceGrpc.WishlistServiceBlockingStub wishlistServiceBlockingStub;
     private final ProductService productService;
     private final UserService userService;
-
-    private final String STATUS_FAILED = "FAILED";
-    private final String STATUS_SUCCESS = "SUCCESS";
 
     @Autowired
     public LikedProductService(ManagedChannel managedChannel, ProductService productService, UserService userService) {
@@ -41,9 +39,7 @@ public class LikedProductService {
                         .setUserId(userId.toString())
                         .setProductId(product.getString("id")).build());
 
-        if(STATUS_FAILED.equalsIgnoreCase(response.getStatus())){
-            throw new RuntimeException(response.getMessage());
-        }
+        GrpcResponseUtil.throwIfFailed(response.getStatus(), response.getMessage());
     }
 
     public void destroyWishlist(UUID userId, UUID wishlistId){
@@ -51,18 +47,14 @@ public class LikedProductService {
                         .setUserId(userId.toString())
                         .setWishlistId(wishlistId.toString()).build());
 
-        if(STATUS_FAILED.equalsIgnoreCase(response.getStatus())){
-            throw new RuntimeException(response.getMessage());
-        }
+        GrpcResponseUtil.throwIfFailed(response.getStatus(), response.getMessage());
     }
 
     public List<Map<String, Object>> getWishlist(UUID userId){
         MultipleWishlistResponse response = wishlistServiceBlockingStub.findByUserId(WishlistUserId.newBuilder()
                 .setId(userId.toString()).build());
 
-        if(STATUS_FAILED.equalsIgnoreCase(response.getStatus())){
-            return List.of();
-        }
+        GrpcResponseUtil.throwIfFailed(response.getStatus(), response.getMessage());
 
         return response.getDataList().stream().map(wishlistDetail -> {
             Map<String, Object> wishlist = new HashMap<>();

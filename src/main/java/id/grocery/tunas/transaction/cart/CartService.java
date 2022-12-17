@@ -1,11 +1,12 @@
 package id.grocery.tunas.transaction.cart;
 
 import id.grocery.tunas.exception.ApiRequestException;
-import id.grocery.tunas.grpc.*;
 import id.grocery.tunas.grpc.Cart;
+import id.grocery.tunas.grpc.*;
 import id.grocery.tunas.product.ProductService;
 import id.grocery.tunas.security.user.User;
 import id.grocery.tunas.security.user.UserService;
+import id.grocery.tunas.utils.GrpcResponseUtil;
 import io.grpc.ManagedChannel;
 import io.vertx.core.json.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,9 +20,6 @@ public class CartService {
     private final CartServiceGrpc.CartServiceBlockingStub cartServiceBlockingStub;
     private final UserService userService;
     private final ProductService productService;
-
-    private final String STATUS_FAILED = "FAILED";
-    private final String STATUS_SUCCESS = "SUCCESS";
 
     @Autowired
     public CartService(ManagedChannel managedChannel, UserService userService, ProductService productService) {
@@ -43,9 +41,7 @@ public class CartService {
                         .setProductId(product.getString("id"))
                         .setTotal(total).build());
 
-        if(STATUS_FAILED.equalsIgnoreCase(response.getStatus())){
-            throw new RuntimeException(response.getMessage());
-        }
+        GrpcResponseUtil.throwIfFailed(response.getStatus(), response.getMessage());
     }
 
     public List<Map<String , Object>> chartList(UUID userId){
@@ -56,9 +52,7 @@ public class CartService {
 
         MultipleCartResponse response = cartServiceBlockingStub.findByUserId(CartUserId.newBuilder().setId(userId.toString()).build());
 
-        if(STATUS_FAILED.equalsIgnoreCase(response.getStatus())){
-            return List.of();
-        }
+        GrpcResponseUtil.throwIfFailed(response.getStatus(), response.getMessage());
 
         return response.getDataList().stream().map(cartDetail -> {
             Map<String, Object> data = new HashMap<>();
@@ -85,8 +79,6 @@ public class CartService {
                         .setUserId(userId.toString())
                         .setId(cartId.toString()).build());
 
-        if(STATUS_FAILED.equalsIgnoreCase(response.getStatus())){
-            throw new RuntimeException(response.getMessage());
-        }
+        GrpcResponseUtil.throwIfFailed(response.getStatus(), response.getMessage());
     }
 }

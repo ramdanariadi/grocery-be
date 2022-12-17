@@ -5,6 +5,7 @@ import id.grocery.tunas.grpc.Transaction;
 import id.grocery.tunas.grpc.*;
 import id.grocery.tunas.security.user.User;
 import id.grocery.tunas.security.user.UserService;
+import id.grocery.tunas.utils.GrpcResponseUtil;
 import io.grpc.ManagedChannel;
 import io.vertx.core.json.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,8 +20,6 @@ public class TransactionService {
 
     private final UserService userService;
     private final TransactionServiceGrpc.TransactionServiceBlockingStub transactionServiceBlockingStub;
-    private final String STATUS_FAILED = "FAILED";
-    private final String STATUS_SUCCESS = "SUCCESS";
 
     @Autowired
     public TransactionService(UserService userService, ManagedChannel managedChannel) {
@@ -48,19 +47,13 @@ public class TransactionService {
                 .setUserId(reqBody.getString("userId")).build();
 
         Response response = transactionServiceBlockingStub.save(transactionBody);
-
-        if(STATUS_FAILED.equalsIgnoreCase(response.getStatus())){
-            throw new RuntimeException(response.getMessage());
-        }
+        GrpcResponseUtil.throwIfFailed(response.getStatus(), response.getMessage());
     }
 
     public Map<String, Object> getTransactionById(UUID id){
         TransactionResponse response = transactionServiceBlockingStub.findByTransactionId(TransactionId.newBuilder()
                         .setId(id.toString()).build());
-
-        if(STATUS_FAILED.equalsIgnoreCase(response.getStatus())){
-            throw new RuntimeException(response.getMessage());
-        }
+        GrpcResponseUtil.throwIfFailed(response.getStatus(), response.getMessage());
 
         return fetchTransactionToMap(response.getData());
     }
@@ -68,18 +61,13 @@ public class TransactionService {
     @Transactional(rollbackOn = ApiRequestException.class)
     public void destroyTransaction(UUID id){
         Response response = transactionServiceBlockingStub.delete(TransactionId.newBuilder().setId(id.toString()).build());
-
-        if(STATUS_FAILED.equalsIgnoreCase(response.getStatus())){
-            throw new RuntimeException(response.getMessage());
-        }
+        GrpcResponseUtil.throwIfFailed(response.getStatus(), response.getMessage());
     }
 
     public List<Map<String, Object>> getTransactionByUserId(UUID id){
         MultipleTransactionResponse response = transactionServiceBlockingStub.findByUserId(TransactionUserId.newBuilder().setId(id.toString()).build());
+        GrpcResponseUtil.throwIfFailed(response.getStatus(), response.getMessage());
 
-        if(STATUS_FAILED.equalsIgnoreCase(response.getStatus())){
-            throw new RuntimeException(response.getMessage());
-        }
         return response.getDataList().stream()
                 .map(this::fetchTransactionToMap).collect(Collectors.toList());
     }
