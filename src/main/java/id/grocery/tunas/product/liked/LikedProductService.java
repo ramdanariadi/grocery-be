@@ -1,11 +1,8 @@
 package id.grocery.tunas.product.liked;
 
 import id.grocery.tunas.exception.ApiRequestException;
+import id.grocery.tunas.grpc.*;
 import id.grocery.tunas.product.ProductService;
-import id.grocery.tunas.grpc.MultipleWishlistResponse;
-import id.grocery.tunas.grpc.Response;
-import id.grocery.tunas.grpc.WishlistServiceGrpc;
-import id.grocery.tunas.grpc.WishlistUserId;
 import id.grocery.tunas.security.user.User;
 import id.grocery.tunas.security.user.UserService;
 import io.grpc.ManagedChannel;
@@ -40,7 +37,7 @@ public class LikedProductService {
         }
 
         JsonObject product = productService.findProductById(productId);
-        Response response = wishlistServiceBlockingStub.save(id.grocery.tunas.grpc.Wishlist.newBuilder()
+        Response response = wishlistServiceBlockingStub.save(Wishlist.newBuilder()
                         .setUserId(userId.toString())
                         .setProductId(product.getString("id")).build());
 
@@ -50,7 +47,7 @@ public class LikedProductService {
     }
 
     public void destroyWishlist(UUID userId, UUID wishlistId){
-        Response response = wishlistServiceBlockingStub.delete(id.grocery.tunas.grpc.UserAndWishlistId.newBuilder()
+        Response response = wishlistServiceBlockingStub.delete(UserAndWishlistId.newBuilder()
                         .setUserId(userId.toString())
                         .setWishlistId(wishlistId.toString()).build());
 

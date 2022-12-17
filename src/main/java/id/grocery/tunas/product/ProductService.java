@@ -3,10 +3,8 @@ package id.grocery.tunas.product;
 import com.google.common.base.Strings;
 import id.grocery.tunas.category.CategoryService;
 import id.grocery.tunas.exception.ApiRequestException;
+import id.grocery.tunas.grpc.*;
 import id.grocery.tunas.grpc.Product;
-import id.grocery.tunas.grpc.ProductId;
-import id.grocery.tunas.grpc.ProductServiceGrpc;
-import id.grocery.tunas.grpc.Response;
 import io.grpc.ManagedChannel;
 import io.vertx.core.json.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +31,7 @@ public class ProductService {
     }
 
     public List<Map<String, Object>> getAll(){
-        id.grocery.tunas.grpc.MultipleProductResponse response = productServiceBlockingStub.findAll(id.grocery.tunas.grpc.ProductEmpty.newBuilder().build());
+        MultipleProductResponse response = productServiceBlockingStub.findAll(id.grocery.tunas.grpc.ProductEmpty.newBuilder().build());
 
         if(STATUS_FAILED.equalsIgnoreCase(response.getStatus())){
             throw new RuntimeException(response.getMessage());
@@ -60,7 +58,7 @@ public class ProductService {
             throw new RuntimeException(response.getMessage());
         }
 
-        id.grocery.tunas.grpc.Product product = response.getData();
+        Product product = response.getData();
         JsonObject data = new JsonObject();
         data.put("id", product.getId());
         data.put("name", product.getName());
@@ -109,7 +107,7 @@ public class ProductService {
 
         JsonObject category = categoryService.findById(UUID.fromString(product.getString("categoryId")));
 
-        Product productSave = id.grocery.tunas.grpc.Product.newBuilder()
+        Product productSave = Product.newBuilder()
                 .setName(product.getString("name"))
                 .setPrice(product.getLong("price"))
                 .setPerUnit(product.getLong("perUnit"))

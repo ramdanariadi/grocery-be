@@ -2,32 +2,33 @@ package id.grocery.tunas.category;
 
 import com.google.common.base.Strings;
 import id.grocery.tunas.exception.ApiRequestException;
-import id.grocery.tunas.grpc.CategoryId;
-import id.grocery.tunas.grpc.CategoryServiceGrpc.CategoryServiceBlockingStub;
-import id.grocery.tunas.grpc.Response;
+import id.grocery.tunas.grpc.*;
 import io.grpc.ManagedChannel;
 import io.vertx.core.json.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Service
 public class CategoryService {
 
-    private final CategoryServiceBlockingStub categoryServiceBlockingStub;
+    private final CategoryServiceGrpc.CategoryServiceBlockingStub categoryServiceBlockingStub;
     private final String STATUS_FAILED = "FAILED";
     private final String STATUS_SUCCESS = "SUCCESS";
 
     @Autowired
     public CategoryService(ManagedChannel managedChannel){
-        this.categoryServiceBlockingStub = id.grocery.tunas.grpc.CategoryServiceGrpc.newBlockingStub(managedChannel);
+        this.categoryServiceBlockingStub = CategoryServiceGrpc.newBlockingStub(managedChannel);
     }
 
     public JsonObject findById(UUID id){
         CategoryId categoryId = CategoryId.newBuilder().setId(id.toString()).build();
-        id.grocery.tunas.grpc.CategoryResponse response = categoryServiceBlockingStub.findById(categoryId);
+        CategoryResponse response = categoryServiceBlockingStub.findById(categoryId);
 
         if(STATUS_FAILED.equalsIgnoreCase(response.getStatus())){
             throw new RuntimeException(response.getMessage());
@@ -42,7 +43,7 @@ public class CategoryService {
     }
 
     public List<Map<String, Object>> findAllCategory(){
-        id.grocery.tunas.grpc.MultipleCategoryResponse response = categoryServiceBlockingStub.findAll(id.grocery.tunas.grpc.EmptyCategory.newBuilder().build());
+        MultipleCategoryResponse response = categoryServiceBlockingStub.findAll(EmptyCategory.newBuilder().build());
 
         if(STATUS_FAILED.equalsIgnoreCase(response.getStatus())){
             throw new RuntimeException(response.getMessage());
