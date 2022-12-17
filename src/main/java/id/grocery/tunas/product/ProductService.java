@@ -3,10 +3,10 @@ package id.grocery.tunas.product;
 import com.google.common.base.Strings;
 import id.grocery.tunas.category.CategoryService;
 import id.grocery.tunas.exception.ApiRequestException;
-import id.grocery.tunas.proto.Product;
-import id.grocery.tunas.proto.ProductId;
-import id.grocery.tunas.proto.ProductServiceGrpc;
-import id.grocery.tunas.proto.Response;
+import id.grocery.tunas.grpc.Product;
+import id.grocery.tunas.grpc.ProductId;
+import id.grocery.tunas.grpc.ProductServiceGrpc;
+import id.grocery.tunas.grpc.Response;
 import io.grpc.ManagedChannel;
 import io.vertx.core.json.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,11 +29,11 @@ public class ProductService {
     @Autowired
     public ProductService(ManagedChannel managedChannel, CategoryService categoryService){
         this.categoryService = categoryService;
-        this.productServiceBlockingStub = id.grocery.tunas.proto.ProductServiceGrpc.newBlockingStub(managedChannel);
+        this.productServiceBlockingStub = id.grocery.tunas.grpc.ProductServiceGrpc.newBlockingStub(managedChannel);
     }
 
     public List<Map<String, Object>> getAll(){
-        id.grocery.tunas.proto.MultipleProductResponse response = productServiceBlockingStub.findAll(id.grocery.tunas.proto.ProductEmpty.newBuilder().build());
+        id.grocery.tunas.grpc.MultipleProductResponse response = productServiceBlockingStub.findAll(id.grocery.tunas.grpc.ProductEmpty.newBuilder().build());
 
         if(STATUS_FAILED.equalsIgnoreCase(response.getStatus())){
             throw new RuntimeException(response.getMessage());
@@ -53,14 +53,14 @@ public class ProductService {
     }
 
     public JsonObject findProductById(UUID id){
-        id.grocery.tunas.proto.ProductResponse response = productServiceBlockingStub.findById(ProductId.newBuilder()
+        id.grocery.tunas.grpc.ProductResponse response = productServiceBlockingStub.findById(ProductId.newBuilder()
                 .setId(id.toString()).build());
 
         if(STATUS_FAILED.equalsIgnoreCase(response.getStatus())){
             throw new RuntimeException(response.getMessage());
         }
 
-        id.grocery.tunas.proto.Product product = response.getData();
+        id.grocery.tunas.grpc.Product product = response.getData();
         JsonObject data = new JsonObject();
         data.put("id", product.getId());
         data.put("name", product.getName());
@@ -74,7 +74,7 @@ public class ProductService {
     }
 
     public List<Map<String, Object>> getAllByCategory(UUID categoryId){
-        id.grocery.tunas.proto.MultipleProductResponse response = productServiceBlockingStub.findProductsByCategory(id.grocery.tunas.proto.CategoryId.newBuilder()
+        id.grocery.tunas.grpc.MultipleProductResponse response = productServiceBlockingStub.findProductsByCategory(id.grocery.tunas.grpc.CategoryId.newBuilder()
                 .setId(categoryId.toString()).build());
 
         if(STATUS_FAILED.equalsIgnoreCase(response.getStatus())){
@@ -109,7 +109,7 @@ public class ProductService {
 
         JsonObject category = categoryService.findById(UUID.fromString(product.getString("categoryId")));
 
-        Product productSave = id.grocery.tunas.proto.Product.newBuilder()
+        Product productSave = id.grocery.tunas.grpc.Product.newBuilder()
                 .setName(product.getString("name"))
                 .setPrice(product.getLong("price"))
                 .setPerUnit(product.getLong("perUnit"))
@@ -168,7 +168,7 @@ public class ProductService {
     }
 
     public List<Map<String, Object>> recommended(){
-        id.grocery.tunas.proto.MultipleProductResponse response = productServiceBlockingStub.findRecommendedProduct(id.grocery.tunas.proto.ProductEmpty.newBuilder().build());
+        id.grocery.tunas.grpc.MultipleProductResponse response = productServiceBlockingStub.findRecommendedProduct(id.grocery.tunas.grpc.ProductEmpty.newBuilder().build());
 
         if(STATUS_FAILED.equalsIgnoreCase(response.getStatus())){
             throw new RuntimeException(response.getMessage());
@@ -188,7 +188,7 @@ public class ProductService {
     }
 
     public List<Map<String, Object>> top(){
-        id.grocery.tunas.proto.MultipleProductResponse response = productServiceBlockingStub.findRecommendedProduct(id.grocery.tunas.proto.ProductEmpty.newBuilder().build());
+        id.grocery.tunas.grpc.MultipleProductResponse response = productServiceBlockingStub.findRecommendedProduct(id.grocery.tunas.grpc.ProductEmpty.newBuilder().build());
 
         if(STATUS_FAILED.equalsIgnoreCase(response.getStatus())){
             throw new RuntimeException(response.getMessage());

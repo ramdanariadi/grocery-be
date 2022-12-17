@@ -2,9 +2,9 @@ package id.grocery.tunas.category;
 
 import com.google.common.base.Strings;
 import id.grocery.tunas.exception.ApiRequestException;
-import id.grocery.tunas.proto.CategoryId;
-import id.grocery.tunas.proto.CategoryServiceGrpc.CategoryServiceBlockingStub;
-import id.grocery.tunas.proto.Response;
+import id.grocery.tunas.grpc.CategoryId;
+import id.grocery.tunas.grpc.CategoryServiceGrpc.CategoryServiceBlockingStub;
+import id.grocery.tunas.grpc.Response;
 import io.grpc.ManagedChannel;
 import io.vertx.core.json.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,18 +22,18 @@ public class CategoryService {
 
     @Autowired
     public CategoryService(ManagedChannel managedChannel){
-        this.categoryServiceBlockingStub = id.grocery.tunas.proto.CategoryServiceGrpc.newBlockingStub(managedChannel);
+        this.categoryServiceBlockingStub = id.grocery.tunas.grpc.CategoryServiceGrpc.newBlockingStub(managedChannel);
     }
 
     public JsonObject findById(UUID id){
         CategoryId categoryId = CategoryId.newBuilder().setId(id.toString()).build();
-        id.grocery.tunas.proto.CategoryResponse response = categoryServiceBlockingStub.findById(categoryId);
+        id.grocery.tunas.grpc.CategoryResponse response = categoryServiceBlockingStub.findById(categoryId);
 
         if(STATUS_FAILED.equalsIgnoreCase(response.getStatus())){
             throw new RuntimeException(response.getMessage());
         }
 
-        id.grocery.tunas.proto.Category category = response.getData();
+        id.grocery.tunas.grpc.Category category = response.getData();
         JsonObject data = new JsonObject();
         data.put("id", category.getId());
         data.put("category", category.getCategory());
@@ -42,13 +42,13 @@ public class CategoryService {
     }
 
     public List<Map<String, Object>> findAllCategory(){
-        id.grocery.tunas.proto.MultipleCategoryResponse response = categoryServiceBlockingStub.findAll(id.grocery.tunas.proto.EmptyCategory.newBuilder().build());
+        id.grocery.tunas.grpc.MultipleCategoryResponse response = categoryServiceBlockingStub.findAll(id.grocery.tunas.grpc.EmptyCategory.newBuilder().build());
 
         if(STATUS_FAILED.equalsIgnoreCase(response.getStatus())){
             throw new RuntimeException(response.getMessage());
         }
 
-        List<id.grocery.tunas.proto.Category> categoryList = response.getDataList();
+        List<id.grocery.tunas.grpc.Category> categoryList = response.getDataList();
         List<Map<String, Object>> collect = categoryList.stream().map(category -> {
             Map<String, Object> data = new HashMap<>();
             data.put("id", category.getId());
@@ -64,7 +64,7 @@ public class CategoryService {
         if(Strings.isNullOrEmpty(category.getCategory())){
             throw new ApiRequestException("CATEGORY_CANNOT_EMPTY");
         }
-        id.grocery.tunas.proto.Category categorySave = id.grocery.tunas.proto.Category.newBuilder()
+        id.grocery.tunas.grpc.Category categorySave = id.grocery.tunas.grpc.Category.newBuilder()
                 .setCategory(category.getCategory())
                 .setImageUrl(category.getImageUrl())
                 .build();
@@ -79,7 +79,7 @@ public class CategoryService {
         if(null == category.getId()){
             throw new ApiRequestException("category id is empty");
         }
-        id.grocery.tunas.proto.Category categorySave = id.grocery.tunas.proto.Category.newBuilder()
+        id.grocery.tunas.grpc.Category categorySave = id.grocery.tunas.grpc.Category.newBuilder()
                 .setCategory(category.getCategory())
                 .setId(category.getId().toString())
                 .setImageUrl(Strings.nullToEmpty(category.getImageUrl()))

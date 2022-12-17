@@ -2,11 +2,11 @@ package id.grocery.tunas.transaction.cart;
 
 import id.grocery.tunas.exception.ApiRequestException;
 import id.grocery.tunas.product.ProductService;
-import id.grocery.tunas.proto.Cart;
-import id.grocery.tunas.proto.CartServiceGrpc;
-import id.grocery.tunas.proto.CartUserId;
-import id.grocery.tunas.proto.MultipleCartResponse;
-import id.grocery.tunas.proto.Response;
+import id.grocery.tunas.grpc.Cart;
+import id.grocery.tunas.grpc.CartServiceGrpc;
+import id.grocery.tunas.grpc.CartUserId;
+import id.grocery.tunas.grpc.MultipleCartResponse;
+import id.grocery.tunas.grpc.Response;
 import id.grocery.tunas.security.user.User;
 import id.grocery.tunas.security.user.UserService;
 import io.grpc.ManagedChannel;
@@ -84,7 +84,7 @@ public class CartService {
             throw new ApiRequestException("INVALID_USER");
         }
 
-        Response response = cartServiceBlockingStub.delete(id.grocery.tunas.proto.CartAndUserId.newBuilder()
+        Response response = cartServiceBlockingStub.delete(id.grocery.tunas.grpc.CartAndUserId.newBuilder()
                         .setUserId(userId.toString())
                         .setId(cartId.toString()).build());
 
