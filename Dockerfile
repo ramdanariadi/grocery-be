@@ -1,7 +1,8 @@
-FROM maven:3.8.3-jdk-11-slim as build
-COPY src /home/app/src
-COPY pom.xml /home/app
-RUN mvn -f /home/app/pom.xml clean package -DskipTests=true
+FROM maven:3.8.6-openjdk-11-slim as build
+WORKDIR /home/app
+COPY src ./src
+COPY pom.xml ./
+RUN mvn clean package -DskipTests=true
 
 FROM openjdk:11
 RUN groupadd grocerry && useradd grocerry -g grocerry
