@@ -1,4 +1,4 @@
-package id.grocery.tunas.product.liked;
+package id.grocery.tunas.liked;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.repository.Modifying;

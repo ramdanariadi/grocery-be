@@ -1,4 +1,4 @@
-package id.grocery.tunas.product.liked;
+package id.grocery.tunas.liked;
 
 import com.fasterxml.uuid.Generators;
 import lombok.AllArgsConstructor;

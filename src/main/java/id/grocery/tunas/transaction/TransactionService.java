@@ -21,7 +21,7 @@ import id.grocery.tunas.product.ProductRepository;
 import id.grocery.tunas.security.user.User;
 import id.grocery.tunas.security.user.UserService;
 import id.grocery.tunas.transaction.TransactionRepository.ITransactionData;
-import id.grocery.tunas.transaction.cart.CartRepository;
+import id.grocery.tunas.cart.CartRepository;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 

@@ -1,4 +1,4 @@
-package id.grocery.tunas.transaction.cart;
+package id.grocery.tunas.cart;
 
 import io.vertx.core.json.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;

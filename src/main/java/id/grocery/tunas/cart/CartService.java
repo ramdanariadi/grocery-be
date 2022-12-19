@@ -1,4 +1,4 @@
-package id.grocery.tunas.transaction.cart;
+package id.grocery.tunas.cart;
 
 import com.fasterxml.uuid.Generators;
 import id.grocery.tunas.product.Product;

@@ -1,4 +1,4 @@
-package id.grocery.tunas.transaction.cart;
+package id.grocery.tunas.cart;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.jpa.repository.Modifying;
