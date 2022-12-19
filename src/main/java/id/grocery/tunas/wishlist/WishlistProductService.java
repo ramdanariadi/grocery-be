@@ -1,4 +1,4 @@
-package id.grocery.tunas.product.liked;
+package id.grocery.tunas.wishlist;
 
 import id.grocery.tunas.exception.ApiRequestException;
 import id.grocery.tunas.grpc.*;
@@ -15,13 +15,13 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class LikedProductService {
+public class WishlistProductService {
     private final WishlistServiceGrpc.WishlistServiceBlockingStub wishlistServiceBlockingStub;
     private final ProductService productService;
     private final UserService userService;
 
     @Autowired
-    public LikedProductService(ManagedChannel managedChannel, ProductService productService, UserService userService) {
+    public WishlistProductService(ManagedChannel managedChannel, ProductService productService, UserService userService) {
         this.wishlistServiceBlockingStub = WishlistServiceGrpc.newBlockingStub(managedChannel);
         this.productService = productService;
         this.userService = userService;

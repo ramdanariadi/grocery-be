@@ -1,4 +1,4 @@
-package id.grocery.tunas.transaction.cart;
+package id.grocery.tunas.cart;
 
 import id.grocery.tunas.exception.ApiRequestException;
 import id.grocery.tunas.grpc.Cart;
