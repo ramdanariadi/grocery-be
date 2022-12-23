@@ -43,6 +43,7 @@ public class ProductService {
             data.put("description", product.getDescription());
             data.put("weight", product.getWeight());
             data.put("imageUrl", product.getImageUrl());
+            data.put("category", product.getCategory());
             return data;
         }).collect(Collectors.toList());
     }
@@ -62,6 +63,7 @@ public class ProductService {
         data.put("description", product.getDescription());
         data.put("weight", product.getWeight());
         data.put("imageUrl", product.getImageUrl());
+        data.put("category", product.getCategory());
 
         return data;
     }
@@ -69,7 +71,6 @@ public class ProductService {
     public List<Map<String, Object>> getAllByCategory(UUID categoryId){
         MultipleProductResponse response = productServiceBlockingStub.findProductsByCategory(CategoryId.newBuilder()
                 .setId(categoryId.toString()).build());
-        GrpcResponseUtil.throwIfFailed(response.getStatus(), response.getMessage());
 
         return response.getDataList().stream().map(product -> {
             Map<String, Object> data = new HashMap<>();
@@ -80,6 +81,7 @@ public class ProductService {
             data.put("description", product.getDescription());
             data.put("weight", product.getWeight());
             data.put("imageUrl", product.getImageUrl());
+            data.put("category", product.getCategory());
             return data;
         }).collect(Collectors.toList());
     }
@@ -165,12 +167,13 @@ public class ProductService {
             data.put("description", product.getDescription());
             data.put("weight", product.getWeight());
             data.put("imageUrl", product.getImageUrl());
+            data.put("category", product.getCategory());
             return data;
         }).collect(Collectors.toList());
     }
 
     public List<Map<String, Object>> top(){
-        MultipleProductResponse response = productServiceBlockingStub.findRecommendedProduct(ProductEmpty.newBuilder().build());
+        MultipleProductResponse response = productServiceBlockingStub.findTopProducts(ProductEmpty.newBuilder().build());
 
         GrpcResponseUtil.throwIfFailed(response.getStatus(), response.getMessage());
 
@@ -183,6 +186,7 @@ public class ProductService {
             data.put("description", product.getDescription());
             data.put("weight", product.getWeight());
             data.put("imageUrl", product.getImageUrl());
+            data.put("category", product.getCategory());
             return data;
         }).collect(Collectors.toList());
     }
