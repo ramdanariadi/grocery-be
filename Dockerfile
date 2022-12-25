@@ -5,8 +5,8 @@ COPY pom.xml ./
 RUN mvn clean package -DskipTests=true
 
 FROM openjdk:11
-RUN groupadd grocerry && useradd grocerry -g grocerry
-USER grocerry:grocerry
+RUN groupadd grocery && useradd grocery -g grocery
+USER grocery:grocery
 ARG JAR_FILE=/home/app/target/*.jar
 COPY --from=build ${JAR_FILE} app.jar
 EXPOSE 8080
