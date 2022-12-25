@@ -28,7 +28,7 @@ public class CartService {
         this.productService = productService;
     }
 
-    public void storeToChart(UUID userId,UUID productId,Integer total){
+    public void storeToCart(UUID userId, UUID productId, Integer total){
         Optional<User> user = userService.findById(userId.toString());
 
         if(user.isEmpty()){
@@ -44,16 +44,14 @@ public class CartService {
         GrpcResponseUtil.throwIfFailed(response.getStatus(), response.getMessage());
     }
 
-    public List<Map<String , Object>> chartList(UUID userId){
+    public List<Map<String , Object>> userCartList(UUID userId){
         Optional<User> user = userService.findById(userId.toString());
         if(user.isEmpty()){
             throw new ApiRequestException("INVALID_USER");
         }
 
         MultipleCartResponse response = cartServiceBlockingStub.findByUserId(CartUserId.newBuilder().setId(userId.toString()).build());
-
-        GrpcResponseUtil.throwIfFailed(response.getStatus(), response.getMessage());
-
+        
         return response.getDataList().stream().map(cartDetail -> {
             Map<String, Object> data = new HashMap<>();
             data.put("id", cartDetail.getId());
@@ -69,7 +67,7 @@ public class CartService {
         }).collect(Collectors.toList());
     }
 
-    public void removeFromChart(UUID userId, UUID cartId) {
+    public void removeFromCart(UUID userId, UUID cartId) {
         Optional<User> user = userService.findById(userId.toString());
         if(user.isEmpty()){
             throw new ApiRequestException("INVALID_USER");
