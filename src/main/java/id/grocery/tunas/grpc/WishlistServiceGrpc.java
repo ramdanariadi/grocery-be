@@ -63,6 +63,18 @@ public final class WishlistServiceGrpc {
           .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
               id.grocery.tunas.grpc.MultipleWishlistResponse.getDefaultInstance()))
           .build();
+  @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
+  public static final io.grpc.MethodDescriptor<id.grocery.tunas.grpc.UserAndProductId,
+      id.grocery.tunas.grpc.WishlistResponse> METHOD_FIND_WISHLIST_BY_PRODUCT_ID =
+      io.grpc.MethodDescriptor.<id.grocery.tunas.grpc.UserAndProductId, id.grocery.tunas.grpc.WishlistResponse>newBuilder()
+          .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
+          .setFullMethodName(generateFullMethodName(
+              "proto.WishlistService", "FindWishlistByProductId"))
+          .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              id.grocery.tunas.grpc.UserAndProductId.getDefaultInstance()))
+          .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
+              id.grocery.tunas.grpc.WishlistResponse.getDefaultInstance()))
+          .build();
 
   /**
    * Creates a new async stub that supports all call types for the service
@@ -112,6 +124,13 @@ public final class WishlistServiceGrpc {
       asyncUnimplementedUnaryCall(METHOD_FIND_BY_USER_ID, responseObserver);
     }
 
+    /**
+     */
+    public void findWishlistByProductId(id.grocery.tunas.grpc.UserAndProductId request,
+        io.grpc.stub.StreamObserver<id.grocery.tunas.grpc.WishlistResponse> responseObserver) {
+      asyncUnimplementedUnaryCall(METHOD_FIND_WISHLIST_BY_PRODUCT_ID, responseObserver);
+    }
+
     @java.lang.Override public final io.grpc.ServerServiceDefinition bindService() {
       return io.grpc.ServerServiceDefinition.builder(getServiceDescriptor())
           .addMethod(
@@ -135,6 +154,13 @@ public final class WishlistServiceGrpc {
                 id.grocery.tunas.grpc.WishlistUserId,
                 id.grocery.tunas.grpc.MultipleWishlistResponse>(
                   this, METHODID_FIND_BY_USER_ID)))
+          .addMethod(
+            METHOD_FIND_WISHLIST_BY_PRODUCT_ID,
+            asyncUnaryCall(
+              new MethodHandlers<
+                id.grocery.tunas.grpc.UserAndProductId,
+                id.grocery.tunas.grpc.WishlistResponse>(
+                  this, METHODID_FIND_WISHLIST_BY_PRODUCT_ID)))
           .build();
     }
   }
@@ -180,6 +206,14 @@ public final class WishlistServiceGrpc {
       asyncUnaryCall(
           getChannel().newCall(METHOD_FIND_BY_USER_ID, getCallOptions()), request, responseObserver);
     }
+
+    /**
+     */
+    public void findWishlistByProductId(id.grocery.tunas.grpc.UserAndProductId request,
+        io.grpc.stub.StreamObserver<id.grocery.tunas.grpc.WishlistResponse> responseObserver) {
+      asyncUnaryCall(
+          getChannel().newCall(METHOD_FIND_WISHLIST_BY_PRODUCT_ID, getCallOptions()), request, responseObserver);
+    }
   }
 
   /**
@@ -219,6 +253,13 @@ public final class WishlistServiceGrpc {
     public id.grocery.tunas.grpc.MultipleWishlistResponse findByUserId(id.grocery.tunas.grpc.WishlistUserId request) {
       return blockingUnaryCall(
           getChannel(), METHOD_FIND_BY_USER_ID, getCallOptions(), request);
+    }
+
+    /**
+     */
+    public id.grocery.tunas.grpc.WishlistResponse findWishlistByProductId(id.grocery.tunas.grpc.UserAndProductId request) {
+      return blockingUnaryCall(
+          getChannel(), METHOD_FIND_WISHLIST_BY_PRODUCT_ID, getCallOptions(), request);
     }
   }
 
@@ -263,11 +304,20 @@ public final class WishlistServiceGrpc {
       return futureUnaryCall(
           getChannel().newCall(METHOD_FIND_BY_USER_ID, getCallOptions()), request);
     }
+
+    /**
+     */
+    public com.google.common.util.concurrent.ListenableFuture<id.grocery.tunas.grpc.WishlistResponse> findWishlistByProductId(
+        id.grocery.tunas.grpc.UserAndProductId request) {
+      return futureUnaryCall(
+          getChannel().newCall(METHOD_FIND_WISHLIST_BY_PRODUCT_ID, getCallOptions()), request);
+    }
   }
 
   private static final int METHODID_SAVE = 0;
   private static final int METHODID_DELETE = 1;
   private static final int METHODID_FIND_BY_USER_ID = 2;
+  private static final int METHODID_FIND_WISHLIST_BY_PRODUCT_ID = 3;
 
   private static final class MethodHandlers<Req, Resp> implements
       io.grpc.stub.ServerCalls.UnaryMethod<Req, Resp>,
@@ -297,6 +347,10 @@ public final class WishlistServiceGrpc {
         case METHODID_FIND_BY_USER_ID:
           serviceImpl.findByUserId((id.grocery.tunas.grpc.WishlistUserId) request,
               (io.grpc.stub.StreamObserver<id.grocery.tunas.grpc.MultipleWishlistResponse>) responseObserver);
+          break;
+        case METHODID_FIND_WISHLIST_BY_PRODUCT_ID:
+          serviceImpl.findWishlistByProductId((id.grocery.tunas.grpc.UserAndProductId) request,
+              (io.grpc.stub.StreamObserver<id.grocery.tunas.grpc.WishlistResponse>) responseObserver);
           break;
         default:
           throw new AssertionError();
@@ -334,6 +388,7 @@ public final class WishlistServiceGrpc {
               .addMethod(METHOD_SAVE)
               .addMethod(METHOD_DELETE)
               .addMethod(METHOD_FIND_BY_USER_ID)
+              .addMethod(METHOD_FIND_WISHLIST_BY_PRODUCT_ID)
               .build();
         }
       }

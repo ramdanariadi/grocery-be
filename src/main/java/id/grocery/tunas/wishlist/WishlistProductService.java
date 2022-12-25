@@ -42,19 +42,15 @@ public class WishlistProductService {
         GrpcResponseUtil.throwIfFailed(response.getStatus(), response.getMessage());
     }
 
-    public void destroyWishlist(UUID userId, UUID wishlistId){
-        Response response = wishlistServiceBlockingStub.delete(UserAndWishlistId.newBuilder()
-                        .setUserId(userId.toString())
-                        .setWishlistId(wishlistId.toString()).build());
-
-        GrpcResponseUtil.throwIfFailed(response.getStatus(), response.getMessage());
-    }
-
     public List<Map<String, Object>> getWishlist(UUID userId){
+        Optional<User> user = userService.findById(userId.toString());
+
+        if(user.isEmpty()){
+            throw new ApiRequestException("INVALID_USER");
+        }
+
         MultipleWishlistResponse response = wishlistServiceBlockingStub.findByUserId(WishlistUserId.newBuilder()
                 .setId(userId.toString()).build());
-
-        GrpcResponseUtil.throwIfFailed(response.getStatus(), response.getMessage());
 
         return response.getDataList().stream().map(wishlistDetail -> {
             Map<String, Object> wishlist = new HashMap<>();
@@ -67,5 +63,39 @@ public class WishlistProductService {
             wishlist.put("imageUrl", wishlistDetail.getImageUrl());
             return wishlist;
         }).collect(Collectors.toList());
+    }
+
+    public Map<String, Object> getWishlistByUserAndProductId(UUID userId, UUID productId){
+        Optional<User> user = userService.findById(userId.toString());
+
+        if(user.isEmpty()){
+            throw new ApiRequestException("INVALID_USER");
+        }
+
+        WishlistResponse response = wishlistServiceBlockingStub.findWishlistByProductId(UserAndProductId.newBuilder()
+                .setUserId(userId.toString())
+                .setProductId(productId.toString())
+                .build());
+
+        GrpcResponseUtil.throwIfFailed(response.getStatus(), response.getMessage());
+
+        WishlistDetail wishlistDetail = response.getData();
+        Map<String, Object> wishlist = new HashMap<>();
+        wishlist.put("id", wishlistDetail.getId());
+        wishlist.put("productId", wishlistDetail.getProductId());
+        wishlist.put("name", wishlistDetail.getName());
+        wishlist.put("category", wishlistDetail.getCategory());
+        wishlist.put("price", wishlistDetail.getPrice());
+        wishlist.put("perUnit", wishlistDetail.getPerUnit());
+        wishlist.put("imageUrl", wishlistDetail.getImageUrl());
+        return wishlist;
+    }
+
+    public void destroyWishlist(UUID userId, UUID wishlistId){
+        Response response = wishlistServiceBlockingStub.delete(UserAndWishlistId.newBuilder()
+                .setUserId(userId.toString())
+                .setWishlistId(wishlistId.toString()).build());
+
+        GrpcResponseUtil.throwIfFailed(response.getStatus(), response.getMessage());
     }
 }

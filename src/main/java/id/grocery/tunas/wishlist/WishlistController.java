@@ -22,12 +22,6 @@ public class WishlistController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{userId}/{likedId}")
-    public ResponseEntity<Object> destroyFromWishlist(@PathVariable UUID userId,@PathVariable UUID likedId){
-        wishlistProductService.destroyWishlist(userId, likedId);
-        return ResponseEntity.ok().build();
-    }
-
     @GetMapping("/{userId}")
     public ResponseEntity<Object> getWishlist(@PathVariable UUID userId){
         List<Map<String, Object>> likedProductList = wishlistProductService.getWishlist(userId);
@@ -35,4 +29,21 @@ public class WishlistController {
         result.put("data", likedProductList);
         return ResponseEntity.ok(result.getMap());
     }
+
+
+    @GetMapping("/{userId}/{productId}")
+    public ResponseEntity<Object> getCartByUserAndProductId(@PathVariable UUID userId, @PathVariable UUID productId){
+        Map<String, Object> liked = wishlistProductService.getWishlistByUserAndProductId(userId, productId);
+        JsonObject result = new JsonObject();
+        result.put("data", liked);
+        return ResponseEntity.ok(result.getMap());
+    }
+
+
+    @DeleteMapping("/{userId}/{likedId}")
+    public ResponseEntity<Object> destroyFromWishlist(@PathVariable UUID userId,@PathVariable UUID likedId){
+        wishlistProductService.destroyWishlist(userId, likedId);
+        return ResponseEntity.ok().build();
+    }
+
 }

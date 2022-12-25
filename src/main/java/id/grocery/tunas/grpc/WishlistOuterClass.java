@@ -30,10 +30,20 @@ public final class WishlistOuterClass {
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_proto_UserAndWishlistId_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_proto_UserAndProductId_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_proto_UserAndProductId_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
     internal_static_proto_WishlistUserId_descriptor;
   static final 
     com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
       internal_static_proto_WishlistUserId_fieldAccessorTable;
+  static final com.google.protobuf.Descriptors.Descriptor
+    internal_static_proto_WishlistResponse_descriptor;
+  static final 
+    com.google.protobuf.GeneratedMessageV3.FieldAccessorTable
+      internal_static_proto_WishlistResponse_fieldAccessorTable;
   static final com.google.protobuf.Descriptors.Descriptor
     internal_static_proto_MultipleWishlistResponse_descriptor;
   static final 
@@ -56,16 +66,21 @@ public final class WishlistOuterClass {
       "\006weight\030\006 \001(\r\022\020\n\010category\030\007 \001(\t\022\020\n\010per_u" +
       "nit\030\010 \001(\004\022\021\n\timage_url\030\t \001(\t\"9\n\021UserAndW" +
       "ishlistId\022\023\n\013wishlist_id\030\001 \001(\t\022\017\n\007user_i" +
-      "d\030\002 \001(\t\"\034\n\016WishlistUserId\022\n\n\002id\030\001 \001(\t\"`\n" +
-      "\030MultipleWishlistResponse\022\016\n\006status\030\001 \001(",
-      "\t\022\017\n\007message\030\002 \001(\t\022#\n\004data\030\003 \003(\0132\025.proto" +
-      ".WishlistDetail2\270\001\n\017WishlistService\022(\n\004S" +
-      "ave\022\017.proto.Wishlist\032\017.proto.Response\0223\n" +
-      "\006Delete\022\030.proto.UserAndWishlistId\032\017.prot" +
-      "o.Response\022F\n\014FindByUserId\022\025.proto.Wishl" +
-      "istUserId\032\037.proto.MultipleWishlistRespon" +
-      "seB,\n\025id.grocery.tunas.grpcP\001Z\021/service/" +
-      "wishlistb\006proto3"
+      "d\030\002 \001(\t\"7\n\020UserAndProductId\022\022\n\nproduct_i" +
+      "d\030\001 \001(\t\022\017\n\007user_id\030\002 \001(\t\"\034\n\016WishlistUser",
+      "Id\022\n\n\002id\030\001 \001(\t\"X\n\020WishlistResponse\022\016\n\006st" +
+      "atus\030\001 \001(\t\022\017\n\007message\030\002 \001(\t\022#\n\004data\030\003 \001(" +
+      "\0132\025.proto.WishlistDetail\"`\n\030MultipleWish" +
+      "listResponse\022\016\n\006status\030\001 \001(\t\022\017\n\007message\030" +
+      "\002 \001(\t\022#\n\004data\030\003 \003(\0132\025.proto.WishlistDeta" +
+      "il2\205\002\n\017WishlistService\022(\n\004Save\022\017.proto.W" +
+      "ishlist\032\017.proto.Response\0223\n\006Delete\022\030.pro" +
+      "to.UserAndWishlistId\032\017.proto.Response\022F\n" +
+      "\014FindByUserId\022\025.proto.WishlistUserId\032\037.p" +
+      "roto.MultipleWishlistResponse\022K\n\027FindWis",
+      "hlistByProductId\022\027.proto.UserAndProductI" +
+      "d\032\027.proto.WishlistResponseB)\n\025id.grocery" +
+      ".tunas.grpcP\001Z\016/main/wishlistb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {
@@ -98,14 +113,26 @@ public final class WishlistOuterClass {
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_proto_UserAndWishlistId_descriptor,
         new java.lang.String[] { "WishlistId", "UserId", });
-    internal_static_proto_WishlistUserId_descriptor =
+    internal_static_proto_UserAndProductId_descriptor =
       getDescriptor().getMessageTypes().get(3);
+    internal_static_proto_UserAndProductId_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_proto_UserAndProductId_descriptor,
+        new java.lang.String[] { "ProductId", "UserId", });
+    internal_static_proto_WishlistUserId_descriptor =
+      getDescriptor().getMessageTypes().get(4);
     internal_static_proto_WishlistUserId_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_proto_WishlistUserId_descriptor,
         new java.lang.String[] { "Id", });
+    internal_static_proto_WishlistResponse_descriptor =
+      getDescriptor().getMessageTypes().get(5);
+    internal_static_proto_WishlistResponse_fieldAccessorTable = new
+      com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
+        internal_static_proto_WishlistResponse_descriptor,
+        new java.lang.String[] { "Status", "Message", "Data", });
     internal_static_proto_MultipleWishlistResponse_descriptor =
-      getDescriptor().getMessageTypes().get(4);
+      getDescriptor().getMessageTypes().get(6);
     internal_static_proto_MultipleWishlistResponse_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_proto_MultipleWishlistResponse_descriptor,
