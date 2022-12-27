@@ -40,9 +40,9 @@ public class WishlistController {
     }
 
 
-    @DeleteMapping("/{userId}/{likedId}")
-    public ResponseEntity<Object> destroyFromWishlist(@PathVariable UUID userId,@PathVariable UUID likedId){
-        wishlistProductService.destroyWishlist(userId, likedId);
+    @DeleteMapping("/{userId}/{productId}")
+    public ResponseEntity<Object> destroyFromWishlist(@PathVariable UUID userId,@PathVariable UUID productId){
+        wishlistProductService.destroyWishlist(userId, productId);
         return ResponseEntity.ok().build();
     }
 

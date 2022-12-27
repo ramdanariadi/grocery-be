@@ -40,14 +40,14 @@ public final class WishlistServiceGrpc {
               id.grocery.tunas.grpc.Response.getDefaultInstance()))
           .build();
   @io.grpc.ExperimentalApi("https://github.com/grpc/grpc-java/issues/1901")
-  public static final io.grpc.MethodDescriptor<id.grocery.tunas.grpc.UserAndWishlistId,
+  public static final io.grpc.MethodDescriptor<id.grocery.tunas.grpc.UserAndProductId,
       id.grocery.tunas.grpc.Response> METHOD_DELETE =
-      io.grpc.MethodDescriptor.<id.grocery.tunas.grpc.UserAndWishlistId, id.grocery.tunas.grpc.Response>newBuilder()
+      io.grpc.MethodDescriptor.<id.grocery.tunas.grpc.UserAndProductId, id.grocery.tunas.grpc.Response>newBuilder()
           .setType(io.grpc.MethodDescriptor.MethodType.UNARY)
           .setFullMethodName(generateFullMethodName(
               "proto.WishlistService", "Delete"))
           .setRequestMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
-              id.grocery.tunas.grpc.UserAndWishlistId.getDefaultInstance()))
+              id.grocery.tunas.grpc.UserAndProductId.getDefaultInstance()))
           .setResponseMarshaller(io.grpc.protobuf.ProtoUtils.marshaller(
               id.grocery.tunas.grpc.Response.getDefaultInstance()))
           .build();
@@ -112,7 +112,7 @@ public final class WishlistServiceGrpc {
 
     /**
      */
-    public void delete(id.grocery.tunas.grpc.UserAndWishlistId request,
+    public void delete(id.grocery.tunas.grpc.UserAndProductId request,
         io.grpc.stub.StreamObserver<id.grocery.tunas.grpc.Response> responseObserver) {
       asyncUnimplementedUnaryCall(METHOD_DELETE, responseObserver);
     }
@@ -144,7 +144,7 @@ public final class WishlistServiceGrpc {
             METHOD_DELETE,
             asyncUnaryCall(
               new MethodHandlers<
-                id.grocery.tunas.grpc.UserAndWishlistId,
+                id.grocery.tunas.grpc.UserAndProductId,
                 id.grocery.tunas.grpc.Response>(
                   this, METHODID_DELETE)))
           .addMethod(
@@ -193,7 +193,7 @@ public final class WishlistServiceGrpc {
 
     /**
      */
-    public void delete(id.grocery.tunas.grpc.UserAndWishlistId request,
+    public void delete(id.grocery.tunas.grpc.UserAndProductId request,
         io.grpc.stub.StreamObserver<id.grocery.tunas.grpc.Response> responseObserver) {
       asyncUnaryCall(
           getChannel().newCall(METHOD_DELETE, getCallOptions()), request, responseObserver);
@@ -243,7 +243,7 @@ public final class WishlistServiceGrpc {
 
     /**
      */
-    public id.grocery.tunas.grpc.Response delete(id.grocery.tunas.grpc.UserAndWishlistId request) {
+    public id.grocery.tunas.grpc.Response delete(id.grocery.tunas.grpc.UserAndProductId request) {
       return blockingUnaryCall(
           getChannel(), METHOD_DELETE, getCallOptions(), request);
     }
@@ -292,7 +292,7 @@ public final class WishlistServiceGrpc {
     /**
      */
     public com.google.common.util.concurrent.ListenableFuture<id.grocery.tunas.grpc.Response> delete(
-        id.grocery.tunas.grpc.UserAndWishlistId request) {
+        id.grocery.tunas.grpc.UserAndProductId request) {
       return futureUnaryCall(
           getChannel().newCall(METHOD_DELETE, getCallOptions()), request);
     }
@@ -341,7 +341,7 @@ public final class WishlistServiceGrpc {
               (io.grpc.stub.StreamObserver<id.grocery.tunas.grpc.Response>) responseObserver);
           break;
         case METHODID_DELETE:
-          serviceImpl.delete((id.grocery.tunas.grpc.UserAndWishlistId) request,
+          serviceImpl.delete((id.grocery.tunas.grpc.UserAndProductId) request,
               (io.grpc.stub.StreamObserver<id.grocery.tunas.grpc.Response>) responseObserver);
           break;
         case METHODID_FIND_BY_USER_ID:

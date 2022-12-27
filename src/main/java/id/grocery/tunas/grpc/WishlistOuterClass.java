@@ -73,14 +73,14 @@ public final class WishlistOuterClass {
       "\0132\025.proto.WishlistDetail\"`\n\030MultipleWish" +
       "listResponse\022\016\n\006status\030\001 \001(\t\022\017\n\007message\030" +
       "\002 \001(\t\022#\n\004data\030\003 \003(\0132\025.proto.WishlistDeta" +
-      "il2\205\002\n\017WishlistService\022(\n\004Save\022\017.proto.W" +
-      "ishlist\032\017.proto.Response\0223\n\006Delete\022\030.pro" +
-      "to.UserAndWishlistId\032\017.proto.Response\022F\n" +
-      "\014FindByUserId\022\025.proto.WishlistUserId\032\037.p" +
-      "roto.MultipleWishlistResponse\022K\n\027FindWis",
-      "hlistByProductId\022\027.proto.UserAndProductI" +
-      "d\032\027.proto.WishlistResponseB)\n\025id.grocery" +
-      ".tunas.grpcP\001Z\016/main/wishlistb\006proto3"
+      "il2\204\002\n\017WishlistService\022(\n\004Save\022\017.proto.W" +
+      "ishlist\032\017.proto.Response\0222\n\006Delete\022\027.pro" +
+      "to.UserAndProductId\032\017.proto.Response\022F\n\014" +
+      "FindByUserId\022\025.proto.WishlistUserId\032\037.pr" +
+      "oto.MultipleWishlistResponse\022K\n\027FindWish",
+      "listByProductId\022\027.proto.UserAndProductId" +
+      "\032\027.proto.WishlistResponseB)\n\025id.grocery." +
+      "tunas.grpcP\001Z\016/main/wishlistb\006proto3"
     };
     com.google.protobuf.Descriptors.FileDescriptor.InternalDescriptorAssigner assigner =
         new com.google.protobuf.Descriptors.FileDescriptor.    InternalDescriptorAssigner() {

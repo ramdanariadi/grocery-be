@@ -36,3 +36,4 @@ build/
 run.sh
 application-dev.properties
 Makefile
+.DS_Store

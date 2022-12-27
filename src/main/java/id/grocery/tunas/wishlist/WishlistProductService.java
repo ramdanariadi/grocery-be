@@ -91,10 +91,10 @@ public class WishlistProductService {
         return wishlist;
     }
 
-    public void destroyWishlist(UUID userId, UUID wishlistId){
-        Response response = wishlistServiceBlockingStub.delete(UserAndWishlistId.newBuilder()
+    public void destroyWishlist(UUID userId, UUID productId){
+        Response response = wishlistServiceBlockingStub.delete(UserAndProductId.newBuilder()
                 .setUserId(userId.toString())
-                .setWishlistId(wishlistId.toString()).build());
+                .setProductId(productId.toString()).build());
 
         GrpcResponseUtil.throwIfFailed(response.getStatus(), response.getMessage());
     }
