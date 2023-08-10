@@ -4,9 +4,9 @@ import java.util.List;
 
 public class TransactionData {
     private TransactionRepository.ITransactionData transaction;
-    private List<DetailTransactionRepository.IDetailTransactions> detailTransaction;
+    private List<TransactionDetailRepository.IDetailTransactions> detailTransaction;
 
-    public TransactionData(TransactionRepository.ITransactionData transaction, List<DetailTransactionRepository.IDetailTransactions> detailTransaction) {
+    public TransactionData(TransactionRepository.ITransactionData transaction, List<TransactionDetailRepository.IDetailTransactions> detailTransaction) {
         this.transaction = transaction;
         this.detailTransaction = detailTransaction;
     }
@@ -22,11 +22,11 @@ public class TransactionData {
         this.transaction = transaction;
     }
 
-    public List<DetailTransactionRepository.IDetailTransactions> getDetailTransaction() {
+    public List<TransactionDetailRepository.IDetailTransactions> getDetailTransaction() {
         return detailTransaction;
     }
 
-    public void setDetailTransaction(List<DetailTransactionRepository.IDetailTransactions> detailTransaction) {
+    public void setDetailTransaction(List<TransactionDetailRepository.IDetailTransactions> detailTransaction) {
         this.detailTransaction = detailTransaction;
     }
 }

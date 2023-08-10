@@ -9,15 +9,10 @@ import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
+@Table(name = "carts")
 @Data
 public class Cart extends BaseModel {
-    private String name;
-    private String imageUrl;
-    private Long price;
-    private Integer perUnit;
-    private Integer weight;
     private Integer total;
-    private String category;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id",nullable = false)
@@ -28,11 +23,5 @@ public class Cart extends BaseModel {
 
     public void setProduct(Product product) {
         this.product = product;
-        this.setName(product.getName());
-        this.setPrice(product.getPrice());
-        this.setWeight(product.getWeight());
-        this.setPerUnit(product.getPerUnit());
-        this.setImageUrl(product.getImageUrl());
-        this.setCategory(product.getCategory().getCategory());
     }
 }

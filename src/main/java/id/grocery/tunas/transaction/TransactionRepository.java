@@ -36,6 +36,6 @@ public interface TransactionRepository extends CrudRepository<Transaction, UUID>
 
     @Transactional
     @Modifying
-    @Query("delete from DetailTransaction t where t.transaction.id = :id")
+    @Query("delete from TransactionDetail t where t.transaction.id = :id")
     int destroyTransactionDetail(@Param("id") UUID id);
 }

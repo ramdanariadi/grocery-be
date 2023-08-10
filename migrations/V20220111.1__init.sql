@@ -67,7 +67,7 @@ create table cart
 alter table cart
     owner to postgres;
 
-create table liked
+create table wishlist
 (
     id          uuid not null
         primary key,
@@ -85,7 +85,7 @@ create table liked
             references products
 );
 
-alter table liked
+alter table wishlist
     owner to postgres;
 
 create table recommendation_products

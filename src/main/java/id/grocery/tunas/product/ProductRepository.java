@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -40,7 +41,7 @@ public interface ProductRepository extends CrudRepository<Product, UUID> {
     @Query("update Product p set p.name = :name, p.price = :price, p.imageUrl = :imageUrl where p.id = :id")
     int updateProduct(@Param("id") UUID id,
                       @Param("name") String name,
-                      @Param("price") Long price,
+                      @Param("price") BigDecimal price,
                       @Param("imageUrl") String imageUrl);
 
     @Modifying

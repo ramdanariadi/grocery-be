@@ -10,19 +10,19 @@ import java.util.List;
 import java.util.UUID;
 
 @Component
-public interface DetailTransactionRepository extends CrudRepository<DetailTransaction, UUID> {
+public interface TransactionDetailRepository extends CrudRepository<TransactionDetail, UUID> {
 
     @Query("select d.id as id, d.name as name, d.price as price, d.weight as weight, " +
             "d.imageUrl as imageUrl, d.product as product, d.transaction as transaction, " +
             "d.perUnit as perUnit, d.total as total "+
-            "from DetailTransaction d " +
+            "from TransactionDetail d " +
             "where d.transaction.id = :id")
     List<IDetailTransactions> getDetailTransactionsByTransactionId(@Param("id") UUID id);
 
     @Query("select d.id as id, d.name as name, d.price as price, d.weight as weight, " +
             "d.imageUrl as imageUrl, d.product as product, d.transaction as transaction, " +
             "d.perUnit as perUnit, d.total as total "+
-            "from DetailTransaction d " +
+            "from TransactionDetail d " +
             "where d.transaction.user.id = :id")
     List<IDetailTransactions> getDetailTransactionsByUserId(@Param("id") UUID id);
 

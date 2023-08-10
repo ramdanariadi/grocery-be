@@ -1,5 +1,6 @@
 package id.grocery.tunas.transaction;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -31,15 +32,15 @@ public class TransactionService {
     private final UserService userService;
     private final TransactionRepository transactionRepository;
     private final ProductRepository productRepository;
-    private final DetailTransactionRepository detailTransactionRepository;
+    private final TransactionDetailRepository transactionDetailRepository;
     private final CartRepository cartRepository;
 
     @Autowired
-    public TransactionService(UserService userService, TransactionRepository transactionRepository, ProductRepository productRepository, DetailTransactionRepository detailTransactionRepository, CartRepository cartRepository) {
+    public TransactionService(UserService userService, TransactionRepository transactionRepository, ProductRepository productRepository, TransactionDetailRepository transactionDetailRepository, CartRepository cartRepository) {
         this.userService = userService;
         this.transactionRepository = transactionRepository;
         this.productRepository = productRepository;
-        this.detailTransactionRepository = detailTransactionRepository;
+        this.transactionDetailRepository = transactionDetailRepository;
         this.cartRepository = cartRepository;
     }
 
@@ -53,22 +54,25 @@ public class TransactionService {
         transaction.setUser(user.get());
 
         JsonArray products = reqBody.getJsonArray("products");
-        List<DetailTransaction> detailTransactions = products.stream().map(o -> {
+        List<TransactionDetail> transactionDetails = products.stream().map(o -> {
             JsonObject product = (JsonObject) o;
-            DetailTransaction detailTransaction = new DetailTransaction();
-            detailTransaction.setId(UUID.fromString(product.getString("id")));
-            detailTransaction.setImageUrl(Strings.emptyToNull(product.getString("imageUrl")));
-            detailTransaction.setName(product.getString("name"));
-            detailTransaction.setPerUnit(product.getInteger("perUnit"));
-            detailTransaction.setWeight(product.getInteger("weight"));
-            detailTransaction.setPrice(product.getLong("price"));
-            detailTransaction.setTotal(product.getInteger("total"));
-            return detailTransaction;
+            TransactionDetail transactionDetail = new TransactionDetail();
+            transactionDetail.setId(UUID.fromString(product.getString("id")));
+            transactionDetail.setImageUrl(Strings.emptyToNull(product.getString("imageUrl")));
+            transactionDetail.setName(product.getString("name"));
+            transactionDetail.setPerUnit(product.getInteger("perUnit"));
+            transactionDetail.setWeight(product.getInteger("weight"));
+            transactionDetail.setPrice(BigDecimal.valueOf(product.getLong("price")));
+            transactionDetail.setTotal(product.getInteger("total"));
+            return transactionDetail;
         }).collect(Collectors.toList());
 
-        Long totalPrice = 0L;
-        for (DetailTransaction d: detailTransactions){
-            totalPrice += ((d.getWeight() * d.getTotal()) / d.getPerUnit()) * d.getPrice();
+        BigDecimal totalPrice = BigDecimal.ZERO;
+        for (TransactionDetail d: transactionDetails){
+            BigDecimal weight = BigDecimal.valueOf(d.getWeight());
+            BigDecimal total = BigDecimal.valueOf(d.getTotal());
+            BigDecimal perUnit = BigDecimal.valueOf(d.getPerUnit());
+            totalPrice = totalPrice.add(((weight.multiply(total)).divide(perUnit)).multiply(d.getPrice()));
             Product product = productRepository.findProductById(d.getId());
             d.setProduct(product);
             d.setId(Generators.timeBasedGenerator().generate());
@@ -76,17 +80,17 @@ public class TransactionService {
         }
         transaction.setTotalPrice(totalPrice);
         transactionRepository.save(transaction);
-        detailTransactionRepository.saveAll(detailTransactions);
+        transactionDetailRepository.saveAll(transactionDetails);
         cartRepository.destroyUserCart(user.get().getId());
         ITransactionData savedTransaction = transactionRepository.getTransactionById(transaction.getId());
-        List<DetailTransactionRepository.IDetailTransactions> savedDetailTransaction = detailTransactionRepository.
+        List<TransactionDetailRepository.IDetailTransactions> savedDetailTransaction = transactionDetailRepository.
                 getDetailTransactionsByTransactionId(transaction.getId());
         return new TransactionData(savedTransaction,savedDetailTransaction);
     }
 
     TransactionData getTransactionById(UUID id){
         ITransactionData savedTransaction = transactionRepository.getTransactionById(id);
-        List<DetailTransactionRepository.IDetailTransactions> savedDetailTransaction = detailTransactionRepository.
+        List<TransactionDetailRepository.IDetailTransactions> savedDetailTransaction = transactionDetailRepository.
                 getDetailTransactionsByTransactionId(id);
         return new TransactionData(savedTransaction,savedDetailTransaction);
     }
@@ -103,7 +107,7 @@ public class TransactionService {
 
     public List<TransactionData> getTransactionByCustomerId(UUID id){
         List<ITransactionData> iTransactionResponses = transactionRepository.getTransactionsByUserId(id);
-        List<DetailTransactionRepository.IDetailTransactions> iDetailTransactions = detailTransactionRepository.getDetailTransactionsByUserId(id);
+        List<TransactionDetailRepository.IDetailTransactions> iDetailTransactions = transactionDetailRepository.getDetailTransactionsByUserId(id);
         List<TransactionData> transactionResponseList = iTransactionResponses.stream().map((t) -> {
             TransactionData transactionResponse = new TransactionData();
             transactionResponse.setTransaction(t);

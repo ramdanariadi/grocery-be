@@ -4,6 +4,8 @@ import com.google.common.base.Strings;
 import id.grocery.tunas.exception.ApiRequestException;
 import org.springframework.stereotype.Service;
 import lombok.AllArgsConstructor;
+
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -29,7 +31,7 @@ public class ProductService {
         if(null == product.getCategory()){
             throw new ApiRequestException("CATEGORY_NOT_FOUND");
         }
-        if(null == product.getPrice() || product.getPrice() < 1L)
+        if(null == product.getPrice() || product.getPrice().compareTo(BigDecimal.ONE) <= 0)
             throw new ApiRequestException("PRICE_CANNOT_LOWER_THAN_0");
         productRepository.save(product);
     }

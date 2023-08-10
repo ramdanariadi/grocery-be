@@ -2,14 +2,12 @@ package id.grocery.tunas.product;
 
 import id.grocery.tunas.base.BaseModel;
 import id.grocery.tunas.category.Category;
+import id.grocery.tunas.shop.Shop;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
-import javax.persistence.Index;
+import javax.persistence.*;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "products", indexes = {
@@ -19,16 +17,35 @@ import javax.persistence.Index;
 @Data
 @NoArgsConstructor
 public class Product extends BaseModel {
+    @Column(name = "name", length = 100, nullable = false)
     private String name;
-    private Long price; // per unit
+
+    @Column(name = "price", nullable = false, columnDefinition = "numeric(19,2) default 0")
+    private BigDecimal price; // per unit
+
+    @Column(name = "per_unit", nullable = false)
     private Integer perUnit; // gram
+
+    @Column(name = "description", length = 200)
     private String description;
+
+    @Column(name = "weight", nullable = false)
     private Integer weight; // on gram
+
+    @Column(name = "image_url")
     private String imageUrl;
 
+    @Column(name = "is_top")
     private Boolean isTop = false;
+
+    @Column(name = "is_recommended")
     private Boolean isRecommended = false;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
     Category category;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "shop_id")
+    Shop shop;
 }

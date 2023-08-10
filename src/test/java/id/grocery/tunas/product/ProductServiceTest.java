@@ -4,6 +4,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.Mockito.verify;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -49,7 +50,7 @@ class ProductServiceTest {
         // given
         Product product = new Product();
         product.setId(UUID.fromString("0b589615-f910-11eb-936c-41a335bdee2c"));
-        product.setPrice(1000L);
+        product.setPrice(BigDecimal.valueOf(1000L));
         product.setName("tes");
 
         // when
@@ -66,7 +67,7 @@ class ProductServiceTest {
     void willThrowWhenPriceIsLessThanOne(){
         // given
         Product product = new Product();
-        product.setPrice(0L);
+        product.setPrice(BigDecimal.ZERO);
         product.setId(UUID.fromString("0b589615-f910-11eb-936c-41a335bdee2c"));
 
         // when

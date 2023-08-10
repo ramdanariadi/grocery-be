@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Component;
 
 import javax.transaction.Transactional;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -15,16 +16,21 @@ import java.util.UUID;
 @Component
 public interface CartRepository extends CrudRepository<Cart, UUID> {
 
-    @Query("select c.id as id, c.name as name, c.price as price, c.weight as weight, c.category as category, " +
-            "c.perUnit as perUnit, c.imageUrl as imageUrl, c.total as total, c.product as product " +
+    @Query("select c.id as id, c.product.name as name, c.product.price as price, c.product.weight as weight, c.product.category as category, " +
+            "c.product.perUnit as perUnit, c.product.imageUrl as imageUrl, c.total as total, c.product as product " +
             "from Cart c where c.user.id = :id")
     List<ICharts> findChartsByUserId(@Param("id") String id);
 
     interface ICharts{
+        @Value("#{target.product.imageUrl}")
         String getImageUrl();
+        @Value("#{target.product.weight}")
         Integer getWeight();
+        @Value("#{target.product.name}")
         String getName();
-        Long getPrice();
+        @Value("#{target.product.price}")
+        BigDecimal getPrice();
+        @Value("#{target.product.perUnit}")
         Integer getPerUnit();
         Integer getTotal();
         @Value("#{target.product.id}")

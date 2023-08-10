@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import id.grocery.tunas.category.Category;
 import id.grocery.tunas.category.CategoryService;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -55,7 +56,7 @@ public class ProductController {
         product.setId(Generators.timeBasedGenerator().generate());
         product.setName(jsonObject.getString("name"));
         product.setDescription(jsonObject.getString("description"));
-        product.setPrice(jsonObject.getLong("price"));
+        product.setPrice(BigDecimal.valueOf(jsonObject.getLong("price")));
         product.setPerUnit(jsonObject.getInteger("perUnit"));
         product.setWeight(jsonObject.getInteger("weight"));
         product.setImageUrl(Strings.emptyToNull(jsonObject.getString("imageUrl")));

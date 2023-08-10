@@ -2,6 +2,7 @@ package id.grocery.tunas.category;
 
 import com.fasterxml.uuid.Generators;
 import com.google.common.base.Strings;
+import id.grocery.tunas.category.dto.CategoryDTO;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import id.grocery.tunas.exception.ApiRequestException;
@@ -23,19 +24,18 @@ public class CategoryService {
         return categoryRepository.findAllCategories();
     }
 
-    public void addCategory(Category category){
-        if(Strings.isNullOrEmpty(category.getCategory())){
-            throw new ApiRequestException("CATEGORY_CANNOT_EMPTY");
+    public void addCategory(CategoryDTO categoryDto){
+        if(Strings.isNullOrEmpty(categoryDto.getCategory())){
+            throw new ApiRequestException("BAD_REQUEST");
         }
+        Category category = new Category();
+        category.setImageUrl(categoryDto.getImageUrl());
         category.setId(Generators.timeBasedGenerator().generate());
         categoryRepository.save(category);
     }
 
-    public int updateCategory(Category category){
-        if(null == category.getId()){
-            throw new ApiRequestException("category id is empty");
-        }
-        return categoryRepository.updateCategory(category.getId(), category.getCategory(), category.getImageUrl());
+    public int updateCategory(UUID id, CategoryDTO category){
+        return categoryRepository.updateCategory(id, category.getCategory(), category.getImageUrl());
     }
 
     public int destroyCategory(UUID id){

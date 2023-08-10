@@ -1,5 +1,6 @@
 package id.grocery.tunas.category;
 
+import id.grocery.tunas.category.dto.CategoryDTO;
 import io.vertx.core.json.JsonObject;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -27,7 +28,7 @@ public class CategoryController {
     }
 
     @GetMapping(path = "/{id}")
-    public ResponseEntity<Object> categoryById(@PathVariable UUID id){
+    public ResponseEntity<Object> categoryById(@PathVariable("id") UUID id){
         Category category = categoryService.findById(id);
         JsonObject result = new JsonObject();
         result.put("data", category);
@@ -35,21 +36,21 @@ public class CategoryController {
     }
 
     @DeleteMapping(path = "/{id}")
-    public ResponseEntity<Object> destroyCategory(@PathVariable UUID id){
+    public ResponseEntity<Object> destroyCategory(@PathVariable("id") UUID id){
         int nModified = categoryService.destroyCategory(id);
         if(nModified > 0) return ResponseEntity.ok().build();
         return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
     }
 
-    @PutMapping
-    public ResponseEntity<Object> updateCategory(@RequestBody Category category){
-        int nModified = categoryService.updateCategory(category);
+    @PutMapping("/{id}")
+    public ResponseEntity<Object> updateCategory(@PathVariable("id") UUID id,@RequestBody CategoryDTO category){
+        int nModified = categoryService.updateCategory(id, category);
         if(nModified > 0) return ResponseEntity.ok().build();
         return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
     }
 
     @PostMapping
-    public ResponseEntity<Object> addCategory(@RequestBody Category category){
+    public ResponseEntity<Object> addCategory(@RequestBody CategoryDTO category){
         categoryService.addCategory(category);
         return ResponseEntity.ok().build();
     }

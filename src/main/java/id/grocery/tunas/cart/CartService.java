@@ -1,13 +1,16 @@
 package id.grocery.tunas.cart;
 
 import com.fasterxml.uuid.Generators;
+import id.grocery.tunas.exception.ApiRequestException;
 import id.grocery.tunas.product.Product;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import id.grocery.tunas.product.ProductRepository;
 import id.grocery.tunas.security.user.User;
 import id.grocery.tunas.security.user.UserRepository;
 
+import javax.xml.bind.ValidationException;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -25,19 +28,24 @@ public class CartService {
         this.cartRepository = cartRepository;
     }
 
-    public boolean storeToChart(String userId,UUID productId,Integer total){
+    public void storeToChart(String userId,UUID productId,Integer total){
         Optional<Cart> optionalChart = cartRepository.findChartByUserIdAndProductId(userId,productId);
         if(optionalChart.isPresent()){
-            return cartRepository.incrementProductTotalInChart(userId,productId) > 0;
+            cartRepository.incrementProductTotalInChart(userId,productId);
+            return;
         }
         Product product = productRepository.findProductById(productId);
         Optional<User> user = userRepository.findById(userId);
+
+        if(user.isEmpty()){
+            throw new ApiRequestException("UNAUTHORIZED", HttpStatus.UNAUTHORIZED);
+        }
+
         Cart cart = new Cart();
         cart.setId(Generators.timeBasedGenerator().generate());
         cart.setTotal(total);
         cart.setProduct(product);
         cart.setUser(user.get());
-        return cartRepository.save(cart) != null;
     }
 
     public List<CartRepository.ICharts> chartList(String userId){

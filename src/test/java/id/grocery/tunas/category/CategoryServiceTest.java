@@ -1,5 +1,6 @@
 package id.grocery.tunas.category;
 
+import id.grocery.tunas.category.dto.CategoryDTO;
 import id.grocery.tunas.exception.ApiRequestException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -54,9 +55,7 @@ class CategoryServiceTest {
     @Test
     void addCategory() {
         // given
-        Category category = new Category();
-        category.setId(UUID.fromString("0b589615-f910-11eb-936c-41a335bdee2c"));
-        category.setCategory("Fruits");
+        CategoryDTO category = new CategoryDTO("Fruits", "");
 
         // when
         categoryService.addCategory(category);
@@ -69,7 +68,7 @@ class CategoryServiceTest {
     @Test
     void addCategoryShouldThrownError(){
         // given
-        Category category = new Category();
+        CategoryDTO category = new CategoryDTO();
 
         // when
         // then
@@ -82,13 +81,10 @@ class CategoryServiceTest {
     void updateCategory(){
         // given
         UUID id = UUID.randomUUID();
-        Category category = new Category();
-        category.setId(id);
-        category.setCategory("Fruits");
-        category.setImageUrl("notFound.png");
+        CategoryDTO category = new CategoryDTO("Fruits", "");
 
         //when
-        categoryService.updateCategory(category);
+        categoryService.updateCategory(id, category);
 
         //then
         ArgumentCaptor<UUID> acId = ArgumentCaptor.forClass(UUID.class);
@@ -96,7 +92,7 @@ class CategoryServiceTest {
         ArgumentCaptor<String> acImUrl = ArgumentCaptor.forClass(String.class);
         verify(categoryRepository).updateCategory(acId.capture(),acCg.capture(),acImUrl.capture());
 
-        assert(category.getId()).equals(acId.getValue());
+        assert(id).equals(acId.getValue());
         assert(category.getCategory()).equals(acCg.getValue());
         assert(category.getImageUrl()).equals(acImUrl.getValue());
     }
@@ -104,11 +100,11 @@ class CategoryServiceTest {
     @Test
     void updateCategoryShouldThrownError(){
         // given
-        Category category = new Category();
+        CategoryDTO category = new CategoryDTO();
 
         //when
         //then
-        assertThatThrownBy(() -> categoryService.updateCategory(category))
+        assertThatThrownBy(() -> categoryService.updateCategory(UUID.randomUUID(), category))
                 .isInstanceOf(ApiRequestException.class)
                 .hasMessage("category id is empty");
     }
