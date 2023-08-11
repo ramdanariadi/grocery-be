@@ -1,6 +1,7 @@
 package id.grocery.tunas.category;
 
 import id.grocery.tunas.category.dto.CategoryDTO;
+import id.grocery.tunas.category.dto.FindAllCategoryDTO;
 import io.vertx.core.json.JsonObject;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,11 +21,9 @@ public class CategoryController {
     private final CategoryService categoryService;
 
     @GetMapping
-    public ResponseEntity<Object> allCategories(){
-        List<Category> categories = categoryService.findAllCategory();
-        JsonObject result = new JsonObject();
-        result.put("data", categories);
-        return ResponseEntity.ok(result.getMap());
+    public ResponseEntity<Object> allCategories(FindAllCategoryDTO.Request requestParam){
+        FindAllCategoryDTO.Response allCategory = categoryService.findAllCategory(requestParam);
+        return ResponseEntity.ok(allCategory);
     }
 
     @GetMapping(path = "/{id}")

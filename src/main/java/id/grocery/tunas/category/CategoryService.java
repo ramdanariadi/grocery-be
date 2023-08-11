@@ -3,25 +3,50 @@ package id.grocery.tunas.category;
 import com.fasterxml.uuid.Generators;
 import com.google.common.base.Strings;
 import id.grocery.tunas.category.dto.CategoryDTO;
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
+import id.grocery.tunas.category.dto.FindAllCategoryDTO;
 import id.grocery.tunas.exception.ApiRequestException;
+import lombok.AllArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
 
+import javax.persistence.Query;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
 public class CategoryService {
 
+    private final Logger LOGGER = LoggerFactory.getLogger(CategoryService.class);
+
     private final CategoryRepository categoryRepository;
+    private final CategoryDAO categoryDAO;
 
     public Category findById(UUID id){
         return categoryRepository.findCategoryById(id);
     }
 
-    public List<Category> findAllCategory(){
-        return categoryRepository.findAllCategories();
+    public FindAllCategoryDTO.Response findAllCategory(FindAllCategoryDTO.Request request){
+        LOGGER.info("pageSize : {}", request.getPageSize());
+        Query allCategoriesCount = categoryDAO.getAllCategories(true);
+        Query allCategoriesData = categoryDAO.getAllCategories(false);
+        List<Object[]> resultList = allCategoriesData.getResultList();
+        allCategoriesData.setFirstResult(request.getPageIndex() * request.getPageSize()).setMaxResults(request.getPageSize());
+        List<FindAllCategoryDTO.SimpleCategoryDTO> collect = resultList.stream().map(objects -> {
+            FindAllCategoryDTO.SimpleCategoryDTO simpleCategoryDTO = new FindAllCategoryDTO.SimpleCategoryDTO();
+            simpleCategoryDTO.setId(UUID.fromString((String) objects[0]));
+            simpleCategoryDTO.setCategory((String) objects[1]);
+            simpleCategoryDTO.setImageUrl((String) objects[2]);
+            return simpleCategoryDTO;
+        }).collect(Collectors.toList());
+        FindAllCategoryDTO.Response response = new FindAllCategoryDTO.Response();
+        response.setData(collect);
+        response.setTotalData(allCategoriesCount.getResultList().size());
+        response.setPageSize(request.getPageSize());
+        response.setPageIndex(request.getPageIndex());
+        return response;
     }
 
     public void addCategory(CategoryDTO categoryDto){
@@ -29,6 +54,7 @@ public class CategoryService {
             throw new ApiRequestException("BAD_REQUEST");
         }
         Category category = new Category();
+        category.setCategory(categoryDto.getCategory());
         category.setImageUrl(categoryDto.getImageUrl());
         category.setId(Generators.timeBasedGenerator().generate());
         categoryRepository.save(category);
