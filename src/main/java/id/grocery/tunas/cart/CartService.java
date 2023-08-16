@@ -45,7 +45,7 @@ public class CartService {
         cart.setId(Generators.timeBasedGenerator().generate());
         cart.setTotal(total);
         cart.setProduct(product);
-        cart.setUser(user.get());
+        cart.setUserId(UUID.fromString(user.get().getId()));
     }
 
     public List<CartRepository.ICharts> chartList(String userId){

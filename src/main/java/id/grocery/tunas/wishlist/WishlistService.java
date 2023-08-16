@@ -1,4 +1,4 @@
-package id.grocery.tunas.wishlists;
+package id.grocery.tunas.wishlist;
 
 import com.fasterxml.uuid.Generators;
 import lombok.AllArgsConstructor;
@@ -33,7 +33,7 @@ public class WishlistService {
         Wishlist wishlist = new Wishlist();
         wishlist.setId(Generators.timeBasedGenerator().generate());
         wishlist.setProduct(productOptional.get());
-        wishlist.setUser(user.get());
+        wishlist.setUserId(UUID.fromString(user.get().getId()));
         return wishlistRepository.save(wishlist);
     }
 

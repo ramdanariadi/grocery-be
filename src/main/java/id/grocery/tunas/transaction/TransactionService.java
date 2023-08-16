@@ -51,7 +51,7 @@ public class TransactionService {
         Transaction transaction = new Transaction();
         transaction.setId(Generators.timeBasedGenerator().generate());
         transaction.setCreatedAt(new DateTime().toDate());
-        transaction.setUser(user.get());
+        transaction.setUserId(UUID.fromString(user.get().getId()));
 
         JsonArray products = reqBody.getJsonArray("products");
         List<TransactionDetail> transactionDetails = products.stream().map(o -> {

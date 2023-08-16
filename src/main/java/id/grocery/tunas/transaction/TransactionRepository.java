@@ -20,7 +20,7 @@ public interface TransactionRepository extends CrudRepository<Transaction, UUID>
     ITransactionData getTransactionById(@Param("id") UUID id);
 
     @Query("select t.id as id, t.totalPrice as totalPrice, t.createdAt as transactionDate " +
-            "from Transaction t where t.user.id = :id")
+            "from Transaction t where t.userId = :id")
     List<ITransactionData> getTransactionsByUserId(@Param("id") UUID id);
 
     interface ITransactionData{

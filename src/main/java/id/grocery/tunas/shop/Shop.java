@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.UUID;
 
 @Entity
 @Table(name = "shops")
@@ -21,7 +22,6 @@ public class Shop extends BaseModel {
     @Column(name = "image_url")
     private String imageUrl;
 
-    @OneToOne
-    @JoinColumn(name = "user_id", nullable = false)
-    User user;
+    @Column(name = "user_id", nullable = false)
+    private UUID userId;
 }

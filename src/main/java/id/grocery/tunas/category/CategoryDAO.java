@@ -1,20 +1,22 @@
 package id.grocery.tunas.category;
 
-import id.grocery.tunas.category.dto.FindAllCategoryDTO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.Query;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Repository
 public class CategoryDAO {
 
-    @PersistenceContext
     private EntityManager em;
+
+    @Autowired
+    public CategoryDAO(@Qualifier("groceryEntityManager") EntityManagerFactory emf) {
+        this.em = emf.createEntityManager();
+    }
 
     public Query getAllCategories(boolean isCount){
         StringBuilder query = new StringBuilder("SELECT ");

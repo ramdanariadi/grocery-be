@@ -6,6 +6,7 @@ import lombok.Getter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import javax.persistence.Column;
 import javax.persistence.Id;
 import javax.persistence.MappedSuperclass;
 import java.util.Date;
@@ -19,13 +20,16 @@ public class BaseModel {
     protected UUID id;
     @CreationTimestamp
     @Getter(AccessLevel.PUBLIC)
+    @Column(name = "created_at")
     protected Date createdAt;
 
     @UpdateTimestamp
     @Getter(AccessLevel.PUBLIC)
+    @Column(name = "updated_at")
     protected Date updatedAt;
 
     @Getter(AccessLevel.PUBLIC)
+    @Column(name = "deleted_at")
     protected Date deletedAt;
 
 }

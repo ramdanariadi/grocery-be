@@ -1,4 +1,4 @@
-package id.grocery.tunas.wishlists;
+package id.grocery.tunas.wishlist;
 
 import io.vertx.core.json.JsonObject;
 import lombok.AllArgsConstructor;
