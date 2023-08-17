@@ -24,4 +24,7 @@ public class ApiRequestException extends RuntimeException{
     public HttpStatus getHttpStatus() {
         return httpStatus;
     }
+
+    public static String UNAUTHORIZED = "UNAUTHORIZED";
+    public static String BAD_REQUEST = "BAD_REQUEST";
 }

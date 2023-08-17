@@ -23,7 +23,7 @@ public interface TransactionDetailRepository extends CrudRepository<TransactionD
             "d.imageUrl as imageUrl, d.product as product, d.transaction as transaction, " +
             "d.perUnit as perUnit, d.total as total "+
             "from TransactionDetail d " +
-            "where d.transaction.userId = :id")
+            "where d.transaction.user.id = :id")
     List<IDetailTransactions> getDetailTransactionsByUserId(@Param("id") UUID id);
 
     interface IDetailTransactions{

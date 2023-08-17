@@ -14,8 +14,9 @@ import java.util.UUID;
 public class Cart extends BaseModel {
     private Integer total;
 
-    @Column(name = "user_id", nullable = false)
-    private UUID userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id",nullable = false)
+    User user;
 
     @OneToOne
     Product product;

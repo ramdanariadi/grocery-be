@@ -38,14 +38,14 @@ public class CartService {
         Optional<User> user = userRepository.findById(userId);
 
         if(user.isEmpty()){
-            throw new ApiRequestException("UNAUTHORIZED", HttpStatus.UNAUTHORIZED);
+            throw new ApiRequestException(ApiRequestException.UNAUTHORIZED, HttpStatus.UNAUTHORIZED);
         }
 
         Cart cart = new Cart();
         cart.setId(Generators.timeBasedGenerator().generate());
         cart.setTotal(total);
         cart.setProduct(product);
-        cart.setUserId(UUID.fromString(user.get().getId()));
+        cart.setUser(user.get());
     }
 
     public List<CartRepository.ICharts> chartList(String userId){

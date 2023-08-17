@@ -16,7 +16,7 @@ public interface WishlistRepository extends CrudRepository<Wishlist, UUID> {
 
     @Query("select w.id as id, w.product.name as name, w.product.price as price, w.product.weight as weight, w.product.category as category, " +
             "w.product.perUnit as perUnit, w.product.imageUrl as imageUrl, w.product as product " +
-            "from Wishlist w where w.userId = :id")
+            "from Wishlist w where w.user.id = :id")
     List<IWishProduct> findWishListByuserId(@Param("id") UUID id);
 
     interface IWishProduct {
@@ -51,6 +51,6 @@ public interface WishlistRepository extends CrudRepository<Wishlist, UUID> {
 
     @Modifying
     @Transactional
-    @Query("delete from Wishlist w where w.userId = :userId and w.product.id = :productId")
+    @Query("delete from Wishlist w where w.user.id = :userId and w.product.id = :productId")
     int removeWishlist(@Param("userId") UUID userId, @Param("productId") UUID productId);
 }

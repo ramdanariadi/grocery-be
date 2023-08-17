@@ -29,7 +29,6 @@ public class CategoryService {
     }
 
     public FindAllCategoryDTO.Response findAllCategory(FindAllCategoryDTO.Request request){
-        LOGGER.info("pageSize : {}", request.getPageSize());
         Query allCategoriesCount = categoryDAO.getAllCategories(true);
         Query allCategoriesData = categoryDAO.getAllCategories(false);
         List<Object[]> resultList = allCategoriesData.getResultList();

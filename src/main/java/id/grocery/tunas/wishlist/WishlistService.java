@@ -28,12 +28,12 @@ public class WishlistService {
         }
         Optional<User> user = userRepository.findById(userId);
         if(user.isEmpty()){
-            throw new ApiRequestException("UNAUTHORIZED", HttpStatus.UNAUTHORIZED);
+            throw new ApiRequestException(ApiRequestException.UNAUTHORIZED, HttpStatus.UNAUTHORIZED);
         }
         Wishlist wishlist = new Wishlist();
         wishlist.setId(Generators.timeBasedGenerator().generate());
         wishlist.setProduct(productOptional.get());
-        wishlist.setUserId(UUID.fromString(user.get().getId()));
+        wishlist.setUser(user.get());
         return wishlistRepository.save(wishlist);
     }
 

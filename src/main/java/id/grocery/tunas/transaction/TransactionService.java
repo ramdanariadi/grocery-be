@@ -48,10 +48,15 @@ public class TransactionService {
     public TransactionData makeTransaction(String jsonObject){
         JsonObject reqBody = new JsonObject(jsonObject);
         Optional<User> user = userService.findById(reqBody.getString("userId"));
+
+        if(user.isEmpty()){
+            throw new ApiRequestException(ApiRequestException.BAD_REQUEST,HttpStatus.UNAUTHORIZED);
+        }
+
         Transaction transaction = new Transaction();
         transaction.setId(Generators.timeBasedGenerator().generate());
         transaction.setCreatedAt(new DateTime().toDate());
-        transaction.setUserId(UUID.fromString(user.get().getId()));
+        transaction.setUser(user.get());
 
         JsonArray products = reqBody.getJsonArray("products");
         List<TransactionDetail> transactionDetails = products.stream().map(o -> {

@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
-import java.util.UUID;
 
 @Entity
 @Data
@@ -18,6 +17,7 @@ public class Transaction extends BaseModel {
     @Column(name = "price_total", nullable = false, columnDefinition = "numeric(19,2) default 0")
     private BigDecimal totalPrice;
 
-    @Column(name = "user_id", nullable = false)
-    private UUID userId;
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 }
