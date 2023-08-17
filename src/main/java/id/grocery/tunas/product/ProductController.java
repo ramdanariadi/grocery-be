@@ -2,18 +2,15 @@ package id.grocery.tunas.product;
 
 import com.fasterxml.uuid.Generators;
 import com.google.common.base.Strings;
-import id.grocery.tunas.trybean.Address;
-import id.grocery.tunas.trybean.Company;
-import io.vertx.core.impl.AddressResolver;
+import id.grocery.tunas.category.Category;
+import id.grocery.tunas.category.CategoryService;
+import id.grocery.tunas.category.dto.FindAllCategoryDTO;
+import id.grocery.tunas.product.dto.FindAllProductDTO;
 import io.vertx.core.json.JsonObject;
 import lombok.AllArgsConstructor;
-import org.checkerframework.checker.units.qual.A;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import id.grocery.tunas.category.Category;
-import id.grocery.tunas.category.CategoryService;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -29,11 +26,9 @@ public class ProductController {
 
     @GetMapping
     @ResponseBody
-    public ResponseEntity<Object> getProducts(){
-        List<ProductRepository.ICustomSelect> products = productService.getAll();
-        JsonObject result = new JsonObject();
-        result.put("data", products);
-        return ResponseEntity.ok(result.getMap());
+    public ResponseEntity<Object> getProducts(FindAllProductDTO.Request request){
+        FindAllProductDTO.Response products = productService.getAll(request);
+        return ResponseEntity.ok(products);
     }
 
     @GetMapping("/{id}")
@@ -87,13 +82,4 @@ public class ProductController {
         return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
     }
 
-    @Autowired
-    private Company company;
-
-    @GetMapping("/tesCompany")
-    public ResponseEntity<Object> testCompany(){
-        company.getAddress().setAddress("new new new");
-//        company.setAddress(new Address("new address"));
-        return ResponseEntity.ok().body(company);
-    }
 }
