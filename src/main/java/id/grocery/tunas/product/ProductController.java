@@ -4,7 +4,7 @@ import com.fasterxml.uuid.Generators;
 import com.google.common.base.Strings;
 import id.grocery.tunas.category.Category;
 import id.grocery.tunas.category.CategoryService;
-import id.grocery.tunas.category.dto.FindAllCategoryDTO;
+import id.grocery.tunas.product.dto.AddProductDTO;
 import id.grocery.tunas.product.dto.FindAllProductDTO;
 import io.vertx.core.json.JsonObject;
 import lombok.AllArgsConstructor;
@@ -12,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
@@ -22,7 +23,6 @@ import java.util.UUID;
 public class ProductController {
 
     private final ProductService productService;
-    private final CategoryService categoryService;
 
     @GetMapping
     @ResponseBody
@@ -50,21 +50,9 @@ public class ProductController {
     }
 
     @PostMapping
-    public ResponseEntity<Object> addProduct(@RequestBody String jsonBody){
-        JsonObject jsonObject = new JsonObject(jsonBody);
-        Product product = new Product();
-        product.setId(Generators.timeBasedGenerator().generate());
-        product.setName(jsonObject.getString("name"));
-        product.setDescription(jsonObject.getString("description"));
-        product.setPrice(BigDecimal.valueOf(jsonObject.getLong("price")));
-        product.setPerUnit(jsonObject.getInteger("perUnit"));
-        product.setWeight(jsonObject.getInteger("weight"));
-        product.setImageUrl(Strings.emptyToNull(jsonObject.getString("imageUrl")));
-
-        Category category = categoryService.findById(UUID.fromString(jsonObject.getString("category")));
-        product.setCategory(category);
-
-        productService.saveProduct(product);
+    public ResponseEntity<Object> addProduct(HttpServletRequest request, @RequestBody AddProductDTO requestBody){
+        JsonObject userCustomId = new JsonObject(request.getHeader("x-custom-id"));
+        productService.saveProduct(UUID.fromString(userCustomId.getString("userId")), requestBody);
         return ResponseEntity.ok().build();
     }
 

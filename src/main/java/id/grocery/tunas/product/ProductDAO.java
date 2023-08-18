@@ -27,7 +27,8 @@ public class ProductDAO {
         query.append(String.format("FROM %s.products p " +
                 "LEFT JOIN %s.shops s ON s.id = p.shop_id AND s.deleted_at IS NULL " +
                 "JOIN %s.categories c ON c.id = p.category_id AND c.deleted_at IS NULL " +
-                "WHERE p.deleted_at IS NULL", schema.orElse("public"),schema.orElse("public"),schema.orElse("public")));
+                "WHERE p.deleted_at IS NULL " +
+                "GROUP BY p.id, s.id, c.id ", schema.orElse("public"),schema.orElse("public"),schema.orElse("public")));
         Query nativeQuery = em.createNativeQuery(query.toString());
         return nativeQuery;
     }

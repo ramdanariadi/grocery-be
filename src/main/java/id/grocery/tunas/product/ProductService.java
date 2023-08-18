@@ -1,14 +1,22 @@
 package id.grocery.tunas.product;
 
+import com.fasterxml.uuid.Generators;
 import com.google.common.base.Strings;
+import id.grocery.tunas.category.Category;
+import id.grocery.tunas.category.CategoryRepository;
 import id.grocery.tunas.exception.ApiRequestException;
+import id.grocery.tunas.product.dto.AddProductDTO;
 import id.grocery.tunas.product.dto.FindAllProductDTO;
+import id.grocery.tunas.shop.Shop;
+import id.grocery.tunas.shop.ShopRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import lombok.AllArgsConstructor;
 
 import javax.persistence.Query;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -18,6 +26,8 @@ public class ProductService {
 
     private final ProductRepository productRepository;
     private final ProductDAO productDAO;
+    private final CategoryRepository categoryRepository;
+    private final ShopRepository shopRepository;
 
     public FindAllProductDTO.Response getAll(FindAllProductDTO.Request request){
         Query allProductsCount = productDAO.getAllProducts(true);
@@ -30,7 +40,6 @@ public class ProductService {
         response.setPageSize(request.getPageSize());
         response.setData(resultList.stream().map(objects -> {
             FindAllProductDTO.SimpleProductDTO simpleProductDTO = new FindAllProductDTO.SimpleProductDTO();
-//            id\:\:text, shop_id, shop_name, price, weight, category, perUnit, description, imageUrl, name
             simpleProductDTO.setId(UUID.fromString((String) objects[0]));
             simpleProductDTO.setShopId(null == objects[1] ? null : UUID.fromString((String) objects[1]));
             simpleProductDTO.setShopName(null == objects[2] ? null : (String) objects[2]);
@@ -54,12 +63,38 @@ public class ProductService {
         return productRepository.findProductsByCategory(categoryId);
     }
 
-    public void saveProduct(Product product){
-        if(null == product.getCategory()){
-            throw new ApiRequestException("CATEGORY_NOT_FOUND");
+    public void saveProduct(UUID userId, AddProductDTO requestBody){
+        if(requestBody.getWeight() <= 0 ||
+            requestBody.getPerUnit() <= 0 ||
+            null == requestBody.getPrice() || requestBody.getPrice().compareTo(BigDecimal.ONE) <= 0 ||
+            Strings.isNullOrEmpty(requestBody.getCategoryId()) ||
+            Strings.isNullOrEmpty(requestBody.getName()))
+        {
+            throw new ApiRequestException(ApiRequestException.BAD_REQUEST, HttpStatus.BAD_REQUEST);
         }
-        if(null == product.getPrice() || product.getPrice().compareTo(BigDecimal.ONE) <= 0)
-            throw new ApiRequestException("PRICE_CANNOT_LOWER_THAN_0");
+
+        Shop shopByUserId = shopRepository.findShopByUserId(userId);
+
+        if(null == shopByUserId){
+            throw new ApiRequestException("USER_SHOP_DOES_NOT_EXIST", HttpStatus.BAD_REQUEST);
+        }
+
+        Optional<Category> category = categoryRepository.findById(UUID.fromString(requestBody.getCategoryId()));
+        if(category.isEmpty()){
+            throw new ApiRequestException(ApiRequestException.BAD_REQUEST, HttpStatus.BAD_REQUEST);
+        }
+
+        Product product = new Product();
+        product.setId(Generators.timeBasedGenerator().generate());
+        product.setName(requestBody.getName());
+        product.setDescription(requestBody.getDescription());
+        product.setPrice(requestBody.getPrice());
+        product.setPerUnit(requestBody.getPerUnit());
+        product.setWeight(requestBody.getWeight());
+        product.setImageUrl(requestBody.getImageUrl());
+        product.setShop(shopByUserId);
+
+        product.setCategory(category.get());
         productRepository.save(product);
     }
 
