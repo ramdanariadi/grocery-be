@@ -1,12 +1,12 @@
 package id.grocery.tunas.cart;
 
+import id.grocery.tunas.cart.dto.FindUserCartDTO;
 import io.vertx.core.json.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import java.util.UUID;
 
 @RestController
@@ -20,24 +20,24 @@ public class CartController {
         this.cartService = cartService;
     }
 
-    @PostMapping("/{userId}/{productId}/{total}")
-    public ResponseEntity<Object> addToChart(@PathVariable String userId, @PathVariable UUID productId, @PathVariable Integer total){
-        cartService.storeToChart(userId,productId,total);
+    @PostMapping("/{productId}/{total}")
+    public ResponseEntity<Object> addToChart(HttpServletRequest request, @PathVariable UUID productId, @PathVariable Integer total){
+        JsonObject result = new JsonObject(request.getHeader("x-custom-id"));
+        cartService.storeToChart(result.getString("userId"),productId,total);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{userId}/{cartId}")
-    public ResponseEntity<Object> removeFromChart(@PathVariable String userId,@PathVariable UUID cartId){
-        Integer nModified = cartService.removeFromChart(userId, cartId);
-        if(nModified > 0) return ResponseEntity.ok().build();
-        return ResponseEntity.status(HttpStatus.NOT_MODIFIED).build();
+    @DeleteMapping("/{cartId}")
+    public ResponseEntity<Object> removeFromChart(HttpServletRequest request, @PathVariable UUID cartId){
+        JsonObject result = new JsonObject(request.getHeader("x-custom-id"));
+        cartService.removeFromChart(result.getString("userId"), cartId);
+        return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/{userId}")
-    public ResponseEntity<Object> customerChart(@PathVariable String userId){
-        List<CartRepository.ICharts> charts = cartService.chartList(userId);
-        JsonObject result = new JsonObject();
-        result.put("data", charts);
-        return ResponseEntity.ok(result.getMap());
+    @GetMapping
+    public ResponseEntity<Object> customerChart(HttpServletRequest request, FindUserCartDTO.Request requestParam){
+        JsonObject result = new JsonObject(request.getHeader("x-custom-id"));
+        FindUserCartDTO.Response response = cartService.chartList(result.getString("userId"), requestParam);
+        return ResponseEntity.ok(response);
     }
 }
