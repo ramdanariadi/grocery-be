@@ -1,24 +1,18 @@
 package id.grocery.tunas.security.user;
 
+import id.grocery.tunas.base.BaseModel;
 import id.grocery.tunas.security.role.Role;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-
-import org.hibernate.annotations.GenericGenerator;
-
 import java.util.Collection;
 
 @Entity
 @Table(name = "users")
 @NoArgsConstructor
 @Data
-public class User {
-    @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
-    private String id;
+public class User extends BaseModel {
     @Column(unique = true)
     private String username;
     private String password;

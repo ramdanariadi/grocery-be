@@ -47,7 +47,7 @@ public class UserService implements UserDetailsService{
         userRepository.save(userContext);
     }
 
-    public void grantRole(String userId, UUID roleId){
+    public void grantRole(UUID userId, UUID roleId){
         Map<String, Object> entities = this.validateUserAndRole(userId, roleId);
         User user = (User) entities.get("user");
         Role role = (Role) entities.get("role");
@@ -55,7 +55,7 @@ public class UserService implements UserDetailsService{
         userRepository.save(user);
     }
 
-    public void revokeRole(String userId, UUID roleId){
+    public void revokeRole(UUID userId, UUID roleId){
         Map<String, Object> entities = this.validateUserAndRole(userId, roleId);
         User user = (User) entities.get("user");
         Role role = (Role) entities.get("role");
@@ -63,7 +63,7 @@ public class UserService implements UserDetailsService{
         userRepository.save(user);
     }
 
-    private Map<String, Object> validateUserAndRole(String userId, UUID roleId){
+    private Map<String, Object> validateUserAndRole(UUID userId, UUID roleId){
         Optional<User> userContext = userRepository.findById(userId);
         if(userContext.isEmpty()){
             throw new ApiRequestException("USER_NOT_FOUND");
@@ -101,7 +101,7 @@ public class UserService implements UserDetailsService{
         return userRepository.saveAll(iterable);
     }
 
-    public Optional<User> findById(String id) {
+    public Optional<User> findById(UUID id) {
         Optional<User> user = userRepository.findById(id);
         if(user.isEmpty()){
             throw new ApiRequestException("BAD_REQUEST");
@@ -109,7 +109,7 @@ public class UserService implements UserDetailsService{
         return user;
     }
 
-    public boolean existsById(String id) {
+    public boolean existsById(UUID id) {
         return userRepository.existsById(id);
     }
 
@@ -117,7 +117,7 @@ public class UserService implements UserDetailsService{
         return userRepository.findAll();
     }
 
-    public Iterable<User> findAllById(Iterable<String> iterable) {
+    public Iterable<User> findAllById(Iterable<UUID> iterable) {
         return userRepository.findAllById(iterable);
     }
 
@@ -125,7 +125,7 @@ public class UserService implements UserDetailsService{
         return userRepository.count();
     }
 
-    public void deleteById(String id) {
+    public void deleteById(UUID id) {
         userRepository.deleteById(id);
     }
 

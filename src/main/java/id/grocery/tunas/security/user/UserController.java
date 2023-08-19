@@ -46,21 +46,21 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Object> getUserById(@PathVariable String id){
+    public ResponseEntity<Object> getUserById(@PathVariable("id") UUID id){
         JsonObject result = new JsonObject();
         Optional<User> user = userService.findById(id);
         user.ifPresent(value -> result.put("data", value));
         return ResponseEntity.ok(result.getMap());
     }
 
-    @PostMapping("/role/{userid}/{roleid}")
-    public ResponseEntity<Object> grantRole(@PathVariable("userid") String userId, @PathVariable("roleid") UUID roleId){
+    @PostMapping("/role/{userId}/{roleId}")
+    public ResponseEntity<Object> grantRole(@PathVariable("userId") UUID userId, @PathVariable("roleId") UUID roleId){
         userService.grantRole(userId, roleId);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/role/{userid}/{roleid}")
-    public ResponseEntity<Object> revokeRole(@PathVariable("userid") String userId, @PathVariable("roleid") UUID roleId){
+    @DeleteMapping("/role/{userId}/{roleId}")
+    public ResponseEntity<Object> revokeRole(@PathVariable("userId") UUID userId, @PathVariable("roleId") UUID roleId){
         userService.revokeRole(userId, roleId);
         return ResponseEntity.ok().build();
     }
