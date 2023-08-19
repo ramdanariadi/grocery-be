@@ -27,7 +27,7 @@ public class CartService {
     private final CartRepository cartRepository;
     private final CartDAO cartDAO;
 
-    public void storeToChart(String userId,UUID productId,Integer total){
+    public void storeToChart(UUID userId,UUID productId,Integer total){
         Optional<Cart> optionalChart = cartRepository.findChartByUserIdAndProductId(userId,productId);
         if(optionalChart.isPresent()){
             cartRepository.incrementProductTotalInChart(userId,productId);
@@ -41,7 +41,6 @@ public class CartService {
         }
 
         Cart cart = new Cart();
-        cart.setId(Generators.timeBasedGenerator().generate());
         cart.setTotal(total);
         cart.setProduct(product);
         cart.setUser(user.get());

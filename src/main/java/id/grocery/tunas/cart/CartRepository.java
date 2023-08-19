@@ -40,7 +40,7 @@ public interface CartRepository extends CrudRepository<Cart, UUID> {
         UUID getId();
     }
 
-    Optional<Cart> findChartByUserIdAndProductId(@Param("userId") String userId, @Param("productId") UUID productId);
+    Optional<Cart> findChartByUserIdAndProductId(@Param("userId") UUID userId, @Param("productId") UUID productId);
 
     @Transactional
     @Modifying
@@ -50,10 +50,10 @@ public interface CartRepository extends CrudRepository<Cart, UUID> {
     @Transactional
     @Modifying
     @Query("update Cart c set c.total = (c.total + 1) where c.user.id = :userId and c.product.id = :productId")
-    int incrementProductTotalInChart(@Param("userId") String userId, @Param("productId") UUID productId);
+    int incrementProductTotalInChart(@Param("userId") UUID userId, @Param("productId") UUID productId);
 
     @Transactional
     @Modifying
     @Query("delete from Cart c where c.user.id = :userId")
-    int destroyUserCart(@Param("userId") String userId);
+    int destroyUserCart(@Param("userId") UUID userId);
 }

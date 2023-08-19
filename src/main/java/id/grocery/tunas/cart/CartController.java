@@ -23,7 +23,7 @@ public class CartController {
     @PostMapping("/{productId}/{total}")
     public ResponseEntity<Object> addToChart(HttpServletRequest request, @PathVariable UUID productId, @PathVariable Integer total){
         JsonObject result = new JsonObject(request.getHeader("x-custom-id"));
-        cartService.storeToChart(result.getString("userId"),productId,total);
+        cartService.storeToChart(UUID.fromString(result.getString("userId")),productId,total);
         return ResponseEntity.ok().build();
     }
 
