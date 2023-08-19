@@ -21,7 +21,7 @@ public class WishlistService {
     private final UserRepository userRepository;
     private final WishlistRepository wishlistRepository;
 
-    public Wishlist storeToWishlist(String userId, UUID productId){
+    public Wishlist storeToWishlist(UUID userId, UUID productId){
         Optional<Product> productOptional = productRepository.findById(productId);
         if(productOptional.isEmpty()){
             throw new ApiRequestException("BAD_REQUEST", HttpStatus.BAD_REQUEST);
