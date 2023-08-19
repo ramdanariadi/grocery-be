@@ -1,4 +1,4 @@
-package id.grocery.tunas.transaction;
+package id.grocery.tunas.order;
 
 import id.grocery.tunas.base.BaseModel;
 import id.grocery.tunas.category.Category;
@@ -12,9 +12,9 @@ import java.util.UUID;
 
 @Entity
 @Data
-@Table(name = "transaction_details")
+@Table(name = "order_items")
 @NoArgsConstructor
-public class TransactionDetail extends BaseModel {
+public class OrderItem extends BaseModel {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "product_id", nullable = false)
     private Product product;
@@ -48,7 +48,7 @@ public class TransactionDetail extends BaseModel {
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "transaction_id", nullable = false)
-    Transaction transaction;
+    Order order;
 
     public void setProduct(Product product) {
         this.product = product;
