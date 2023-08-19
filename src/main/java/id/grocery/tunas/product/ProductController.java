@@ -1,9 +1,5 @@
 package id.grocery.tunas.product;
 
-import com.fasterxml.uuid.Generators;
-import com.google.common.base.Strings;
-import id.grocery.tunas.category.Category;
-import id.grocery.tunas.category.CategoryService;
 import id.grocery.tunas.product.dto.AddProductDTO;
 import id.grocery.tunas.product.dto.FindAllProductDTO;
 import io.vertx.core.json.JsonObject;
@@ -13,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 

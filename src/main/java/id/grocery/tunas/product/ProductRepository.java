@@ -15,6 +15,9 @@ import java.util.UUID;
 @Component
 public interface ProductRepository extends CrudRepository<Product, UUID> {
 
+    @Query("SELECT p FROM Product p WHERE p.id IN :ids AND p.deletedAt IS NULL")
+    List<Product> findProductsByIds(@Param("ids") UUID[] ids);
+
     @Query("select p.id as id, p.name as name, p.price as price, p.weight as weight, p.imageUrl as imageUrl, p.category as category from Product p where p.deletedAt is null")
     List<ICustomSelect> findCustomColumn();
 
