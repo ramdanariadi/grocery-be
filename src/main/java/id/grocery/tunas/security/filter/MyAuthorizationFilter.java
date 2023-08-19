@@ -54,6 +54,7 @@ public class MyAuthorizationFilter extends OncePerRequestFilter {
                     HttpServletRequestWrapper httpServletRequestWrapper = new HttpServletRequestWrapper(httpServletRequest){
                         @Override
                         public String getHeader(String name) {
+                            LOGGER.info("this-name {}",name);
                             if("X-CUSTOM-ID".equalsIgnoreCase(name)){
                                 JsonObject customId = new JsonObject(decodedJWT.getClaim("x-custom-id").asMap());
                                 return customId.encode();
