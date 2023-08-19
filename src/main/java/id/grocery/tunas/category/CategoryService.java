@@ -55,7 +55,6 @@ public class CategoryService {
         Category category = new Category();
         category.setCategory(categoryDto.getCategory());
         category.setImageUrl(categoryDto.getImageUrl());
-        category.setId(Generators.timeBasedGenerator().generate());
         categoryRepository.save(category);
     }
 
