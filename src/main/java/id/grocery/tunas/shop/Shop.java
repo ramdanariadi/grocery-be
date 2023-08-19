@@ -22,6 +22,7 @@ public class Shop extends BaseModel {
     @Column(name = "image_url")
     private String imageUrl;
 
-    @Column(name = "user_id", nullable = false)
-    private UUID userId;
+    @OneToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 }

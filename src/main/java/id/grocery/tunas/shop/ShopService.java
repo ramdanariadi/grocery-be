@@ -2,6 +2,8 @@ package id.grocery.tunas.shop;
 
 import com.google.common.base.Strings;
 import id.grocery.tunas.exception.ApiRequestException;
+import id.grocery.tunas.security.user.User;
+import id.grocery.tunas.security.user.UserRepository;
 import id.grocery.tunas.shop.dto.GetShopDTO;
 import id.grocery.tunas.shop.dto.ShopDTO;
 import lombok.AllArgsConstructor;
@@ -16,10 +18,16 @@ import java.util.UUID;
 public class ShopService {
 
     private final ShopRepository shopRepository;
+    private final UserRepository userRepository;
 
     public void saveShop(UUID userId, ShopDTO shopDTO){
         if(Strings.isNullOrEmpty(shopDTO.getName())){
             throw new ApiRequestException(ApiRequestException.BAD_REQUEST, HttpStatus.BAD_REQUEST);
+        }
+
+        Optional<User> userOptional = userRepository.findById(userId);
+        if(userOptional.isEmpty()){
+            throw new ApiRequestException(ApiRequestException.UNAUTHORIZED, HttpStatus.UNAUTHORIZED);
         }
 
         Shop shopByUserId = shopRepository.findShopByUserId(userId);
@@ -28,6 +36,7 @@ public class ShopService {
         }
 
         Shop shop = new Shop();
+        shop.setUser(userOptional.get());
         shop.setName(shopDTO.getName());
         shop.setImageUrl(shopDTO.getImageUrl());
         shop.setAddress(shopDTO.getAddress());

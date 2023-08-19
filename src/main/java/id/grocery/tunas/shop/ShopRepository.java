@@ -16,7 +16,7 @@ public interface ShopRepository extends CrudRepository<Shop, UUID> {
     @Query("SELECT s FROM Shop s WHERE s.id = :id AND s.deletedAt IS NULL")
     public Shop findShopById(@Param("id") UUID id);
 
-    @Query("SELECT s FROM Shop s WHERE s.userId = :userId AND s.deletedAt IS NULL")
+    @Query("SELECT s FROM Shop s WHERE s.user.id = :userId AND s.deletedAt IS NULL")
     public Shop findShopByUserId(@Param("userId") UUID userID);
 
     @Modifying
@@ -26,6 +26,6 @@ public interface ShopRepository extends CrudRepository<Shop, UUID> {
 
     @Modifying
     @Transactional
-    @Query("UPDATE FROM Shop s set s.deletedAt = NOW() WHERE s.id = :id AND s.userId = :userId")
+    @Query("UPDATE FROM Shop s set s.deletedAt = NOW() WHERE s.id = :id AND s.user.id = :userId")
     public void deleteById(@Param("id") UUID id, @Param("userId") UUID userId);
 }

@@ -9,7 +9,7 @@ import java.util.UUID;
 public class GetShopDTO {
 
     @AllArgsConstructor
-    @NoArgsConstructor
+    @Data
     public static class Response{
         public ShopDTO data;
     }
