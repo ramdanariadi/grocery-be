@@ -1,6 +1,6 @@
 package id.grocery.tunas.export;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -12,17 +12,19 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("api/v1/export")
-public class ExportRequest {
+@AllArgsConstructor
+public class ExportRequestController {
 
     @Value("${messaging.outgoing.export-report-request.topic}")
     private Optional<String> exportReportRequestTopic;
 
-    @Autowired
     private KafkaTemplate<String, String> kafkaTemplate;
+    private ExportRequestService exportRequestService;
 
     @GetMapping
     public ResponseEntity<Object> sendRequest(){
         kafkaTemplate.send(exportReportRequestTopic.orElse("export-request-topic"), "foo","{foo:bar}");
+        exportRequestService.testUpload();
         return ResponseEntity.ok().build();
     }
 }
