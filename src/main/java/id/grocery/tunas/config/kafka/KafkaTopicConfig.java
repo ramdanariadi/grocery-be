@@ -30,4 +30,9 @@ public class KafkaTopicConfig {
 //        return new NewTopic(exportReportRequestTopic.orElse("export-report-request-topic"), null, null);
         return new NewTopic(exportReportRequestTopic.orElse("core-service-order-completed"), 1, (short) 1);
     }
+
+    @Bean
+    public NewTopic resultExportTopic(@Value("${messaging.outgoing.export-report-result.topic}") Optional<String> exportReportResultTopic){
+        return new NewTopic(exportReportResultTopic.orElse("core-service-order-completed"), 1, (short) 1);
+    }
 }
