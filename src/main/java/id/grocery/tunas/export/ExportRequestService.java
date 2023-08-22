@@ -4,7 +4,10 @@ import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import id.grocery.tunas.exception.ApiRequestException;
-import id.grocery.tunas.export.dto.ExportRequestDTO;
+import id.grocery.tunas.export.dto.CreateExportRequestDTO;
+import id.grocery.tunas.export.dto.GetListRequestExportDTO;
+import id.grocery.tunas.export.repository.ExportRequestPagingAndSortingRepository;
+import id.grocery.tunas.export.repository.ExportRequestRepository;
 import id.grocery.tunas.product.ProductDAO;
 import id.grocery.tunas.security.user.User;
 import id.grocery.tunas.security.user.UserRepository;
@@ -14,6 +17,8 @@ import lombok.AllArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -24,6 +29,7 @@ import java.io.ByteArrayInputStream;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -34,6 +40,7 @@ public class ExportRequestService {
     private KafkaTemplate kafkaTemplate;
     private UserRepository userRepository;
     private ExportRequestRepository exportRequestRepository;
+    private ExportRequestPagingAndSortingRepository exportRequestPagingAndSortingRepository;
 
     @Value("${aws.s3.bucket.name}")
     private Optional<String> s3Bucket;
@@ -59,7 +66,7 @@ public class ExportRequestService {
         String sheetName = "Sheet1";
         byte[] bytes = ExportUtil.exportExel(filename, sheetName, header, resultList.toArray(Object[][]::new));
 
-        ExportRequestDTO.Result result = new ExportRequestDTO.Result();
+        CreateExportRequestDTO.Result result = new CreateExportRequestDTO.Result();
         result.setRequestId(request.getString("requestId"));
         try{
             ObjectMetadata objectMetadata = new ObjectMetadata();
@@ -85,13 +92,14 @@ public class ExportRequestService {
         Optional<ExportRequest> requestExportOptional = exportRequestRepository.findById(UUID.fromString(result.getString("requestId")));
         if(requestExportOptional.isPresent()){
             ExportRequest exportRequest = requestExportOptional.get();
+            exportRequest.setFileName(result.getString("filename"));
             exportRequest.setStatus(result.getString("status"));
             exportRequestRepository.save(exportRequest);
         }
     }
 
-    public void exportProduct(UUID userId, ExportRequestDTO.Request request){
-        Optional<User> byId = userRepository.findById(userId);
+    public void exportProduct(CreateExportRequestDTO.Request request){
+        Optional<User> byId = userRepository.findById(UUID.fromString(request.getUserId()));
         if(byId.isEmpty()){
             throw new ApiRequestException(ApiRequestException.UNAUTHORIZED, HttpStatus.UNAUTHORIZED);
         }
@@ -102,7 +110,22 @@ public class ExportRequestService {
         exportRequestRepository.save(exportRequest);
 
         request.setRequestId(exportRequest.getId().toString());
-        request.setUserId(userId.toString());
+        request.setUserId(request.getUserId());
         kafkaTemplate.send(requestExportTopicName.orElse(""), JsonObject.mapFrom(request).encode());
+    }
+
+    public GetListRequestExportDTO.Response getListRequestExport(GetListRequestExportDTO.Request request){
+        PageRequest pageRequest = PageRequest.of(request.getPageIndex() * request.getPageSize(), request.getPageSize());
+        List<ExportRequest> allByUser = exportRequestPagingAndSortingRepository.findAllByUserId(UUID.fromString(request.getUserId()), pageRequest);
+        List<GetListRequestExportDTO.SimpleRequestExport> data = allByUser
+                .stream()
+                .map(exportRequest -> new GetListRequestExportDTO.SimpleRequestExport(exportRequest.getId(), exportRequest.getCreatedAt().toString(), exportRequest.getFileName(), exportRequest.getStatus()))
+                .collect(Collectors.toList());
+        GetListRequestExportDTO.Response response = new GetListRequestExportDTO.Response();
+        response.setData(data);
+        response.setTotalData(exportRequestPagingAndSortingRepository.findAllByUserId(UUID.fromString(request.getUserId()), Pageable.unpaged()).size());
+        response.setPageSize(request.getPageSize());
+        request.setPageIndex(request.getPageIndex());
+        return response;
     }
 }

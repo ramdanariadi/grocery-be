@@ -1,16 +1,12 @@
 package id.grocery.tunas.export.dto;
 
-import io.vertx.core.json.JsonObject;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.io.Serializable;
-import java.util.UUID;
-
-public class ExportRequestDTO {
+public class CreateExportRequestDTO {
     @NoArgsConstructor
     @Data
-    public static class Request implements Serializable {
+    public static class Request{
         private String userId;
         private String requestId;
         private int pageSize;
@@ -19,7 +15,7 @@ public class ExportRequestDTO {
 
     @NoArgsConstructor
     @Data
-    public static class Result implements Serializable {
+    public static class Result{
         private String requestId;
         private String filename;
         private String status;
