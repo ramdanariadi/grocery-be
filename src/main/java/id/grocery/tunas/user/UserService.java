@@ -1,7 +1,7 @@
-package id.grocery.tunas.security.user;
+package id.grocery.tunas.user;
 
-import id.grocery.tunas.security.role.Role;
-import id.grocery.tunas.security.role.RoleRepository;
+import id.grocery.tunas.role.Role;
+import id.grocery.tunas.role.RoleRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;

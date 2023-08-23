@@ -1,7 +1,7 @@
 package id.grocery.tunas.order;
 
 import id.grocery.tunas.base.BaseModel;
-import id.grocery.tunas.security.user.User;
+import id.grocery.tunas.user.User;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

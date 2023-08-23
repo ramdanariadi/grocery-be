@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 import id.grocery.tunas.exception.ApiRequestException;
 import id.grocery.tunas.product.Product;
 import id.grocery.tunas.product.ProductRepository;
-import id.grocery.tunas.security.user.User;
-import id.grocery.tunas.security.user.UserRepository;
+import id.grocery.tunas.user.User;
+import id.grocery.tunas.user.UserRepository;
 
 import java.util.List;
 import java.util.Optional;

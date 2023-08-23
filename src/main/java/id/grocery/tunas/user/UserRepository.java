@@ -1,4 +1,4 @@
-package id.grocery.tunas.security.user;
+package id.grocery.tunas.user;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;

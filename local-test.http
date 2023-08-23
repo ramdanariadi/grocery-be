@@ -139,7 +139,7 @@ Content-Type: application/json
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbXSwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2FwaS92MS9sb2dpbiIsImV4cCI6MTY1Njg0MjczOX0.Mi7tlgJmUZxVrQ7DANwZMg0ViphUJVRX-gSRrSEKDqo
 
 ###
-POST http://localhost:8080/api/v1/transaction
+POST http://localhost:8080/api/v1/order
 Content-Type: application/json
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbXSwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2FwaS92MS9sb2dpbiIsImV4cCI6MTY3MDg1Mjk3NH0.AzhwQtC1f80tIPbKvFQGo9d78xe4PdJw1C8YPgrNP2k
 
@@ -159,17 +159,17 @@ Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsI
 }
 
 ### GET TRANSACTION BY ID
-GET http://localhost:8080/api/v1/transaction/f438b52e-996b-11ec-a3ab-173cd0023be6
+GET http://localhost:8080/api/v1/order/f438b52e-996b-11ec-a3ab-173cd0023be6
 Content-Type: application/json
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbXSwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2FwaS92MS9sb2dpbiIsImV4cCI6MTY1Njg0MjczOX0.Mi7tlgJmUZxVrQ7DANwZMg0ViphUJVRX-gSRrSEKDqo
 
 ### GET TRANSACTION BY CUSTOMER ID
-GET http://localhost:8080/api/v1/transaction/user/fc81ccd7-98aa-11ec-ba07-b78370c9a109
+GET http://localhost:8080/api/v1/order/user/fc81ccd7-98aa-11ec-ba07-b78370c9a109
 Content-Type: application/json
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbXSwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2FwaS92MS9sb2dpbiIsImV4cCI6MTY1Njg0MjczOX0.Mi7tlgJmUZxVrQ7DANwZMg0ViphUJVRX-gSRrSEKDqo
 
 ### DESTROY TRANSACTION BY ID
-DELETE http://localhost:8080/api/v1/transaction/55ebaa11-3354-11ec-9a99-53d16206a526
+DELETE http://localhost:8080/api/v1/order/55ebaa11-3354-11ec-9a99-53d16206a526
 Content-Type: application/json
 Authorization: Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsInJvbGVzIjpbXSwiaXNzIjoiaHR0cDovL2xvY2FsaG9zdDo4MDgwL2FwaS92MS9sb2dpbiIsImV4cCI6MTY1Njg0MjczOX0.Mi7tlgJmUZxVrQ7DANwZMg0ViphUJVRX-gSRrSEKDqo
 

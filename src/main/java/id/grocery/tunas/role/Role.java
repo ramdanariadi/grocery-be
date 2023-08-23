@@ -1,4 +1,4 @@
-package id.grocery.tunas.security.role;
+package id.grocery.tunas.role;
 
 import id.grocery.tunas.base.BaseModel;
 import lombok.Data;

@@ -1,14 +1,12 @@
 package id.grocery.tunas.cart;
 
-import com.fasterxml.uuid.Generators;
 import id.grocery.tunas.cart.dto.FindUserCartDTO;
 import id.grocery.tunas.exception.ApiRequestException;
 import id.grocery.tunas.product.Product;
 import id.grocery.tunas.product.ProductRepository;
-import id.grocery.tunas.security.user.User;
-import id.grocery.tunas.security.user.UserRepository;
+import id.grocery.tunas.user.User;
+import id.grocery.tunas.user.UserRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 

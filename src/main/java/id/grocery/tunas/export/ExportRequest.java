@@ -1,7 +1,7 @@
 package id.grocery.tunas.export;
 
 import id.grocery.tunas.base.BaseModel;
-import id.grocery.tunas.security.user.User;
+import id.grocery.tunas.user.User;
 import lombok.Data;
 
 import javax.persistence.*;

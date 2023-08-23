@@ -1,7 +1,7 @@
-package id.grocery.tunas.security.user;
+package id.grocery.tunas.user;
 
 import id.grocery.tunas.base.BaseModel;
-import id.grocery.tunas.security.role.Role;
+import id.grocery.tunas.role.Role;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

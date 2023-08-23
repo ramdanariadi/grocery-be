@@ -1,4 +1,4 @@
-package id.grocery.tunas.security.filter;
+package id.grocery.tunas.config.security.filter;
 
 import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
@@ -28,7 +28,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import id.grocery.tunas.security.user.UserService;
+import id.grocery.tunas.user.UserService;
 import io.vertx.core.json.JsonObject;
 
 public class MyCustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
@@ -65,7 +65,7 @@ public class MyCustomAuthenticationFilter extends UsernamePasswordAuthentication
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
         User user = (User) authentication.getPrincipal();
         Algorithm algorithm = TokenGenerationAlgorithm.algorithm;
-        id.grocery.tunas.security.user.User rawUser = userService.getUserByUsername(user.getUsername());
+        id.grocery.tunas.user.User rawUser = userService.getUserByUsername(user.getUsername());
 
         String access_token = JWT.create()
                 .withSubject(user.getUsername())

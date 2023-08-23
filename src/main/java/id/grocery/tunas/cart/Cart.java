@@ -2,11 +2,10 @@ package id.grocery.tunas.cart;
 
 import id.grocery.tunas.base.BaseModel;
 import id.grocery.tunas.product.Product;
-import id.grocery.tunas.security.user.User;
+import id.grocery.tunas.user.User;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.util.UUID;
 
 @Entity
 @Table(name = "carts")

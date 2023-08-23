@@ -1,4 +1,4 @@
-package id.grocery.tunas.security.filter;
+package id.grocery.tunas.config.security.filter;
 
 import com.auth0.jwt.algorithms.Algorithm;
 

@@ -2,8 +2,8 @@ package id.grocery.tunas.shop;
 
 import com.google.common.base.Strings;
 import id.grocery.tunas.exception.ApiRequestException;
-import id.grocery.tunas.security.user.User;
-import id.grocery.tunas.security.user.UserRepository;
+import id.grocery.tunas.user.User;
+import id.grocery.tunas.user.UserRepository;
 import id.grocery.tunas.shop.dto.GetShopDTO;
 import id.grocery.tunas.shop.dto.ShopDTO;
 import lombok.AllArgsConstructor;

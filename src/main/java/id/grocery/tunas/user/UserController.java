@@ -1,4 +1,4 @@
-package id.grocery.tunas.security.user;
+package id.grocery.tunas.user;
 
 import java.util.Optional;
 import java.util.UUID;
