@@ -16,7 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import id.grocery.tunas.model.UserModel;
-import id.grocery.tunas.service.AuthService;
+import id.grocery.tunas.service.UserService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -35,9 +35,9 @@ import io.vertx.core.json.JsonObject;
 public class MyCustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
-    private AuthService.UserService userService;
+    private UserService.UserService userService;
 
-    public MyCustomAuthenticationFilter(AuthenticationManager authenticationManager, AuthService.UserService userService) {
+    public MyCustomAuthenticationFilter(AuthenticationManager authenticationManager, UserService.UserService userService) {
         this.authenticationManager = authenticationManager;
         this.userService = userService;
     }

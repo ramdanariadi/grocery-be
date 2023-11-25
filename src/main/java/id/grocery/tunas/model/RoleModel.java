@@ -1,6 +1,5 @@
-package id.grocery.tunas.role;
+package id.grocery.tunas.model;
 
-import id.grocery.tunas.model.BaseModel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
@@ -9,6 +8,6 @@ import javax.persistence.*;
 @Table(name = "roles")
 @NoArgsConstructor
 @Data
-public class Role extends BaseModel {
+public class RoleModel extends BaseModel {
     private String name;
 }

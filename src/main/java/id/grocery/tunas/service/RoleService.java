@@ -1,6 +1,8 @@
-package id.grocery.tunas.role;
+package id.grocery.tunas.service;
 
 import com.fasterxml.uuid.Generators;
+import id.grocery.tunas.model.RoleModel;
+import id.grocery.tunas.repository.RoleRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -15,21 +17,21 @@ public class RoleService{
 
     private final RoleRepository roleRepository;
 
-    public void saveRole(Role role){
-        role.setId(Generators.timeBasedGenerator().generate());
-        roleRepository.save(role);
+    public void saveRole(RoleModel roleModel){
+        roleModel.setId(Generators.timeBasedGenerator().generate());
+        roleRepository.save(roleModel);
     }
 
-    public Role save(Role s) {
+    public RoleModel save(RoleModel s) {
         return roleRepository.save(s);
     }
 
-    public Iterable<Role> saveAll(Iterable<Role> iterable) {
+    public Iterable<RoleModel> saveAll(Iterable<RoleModel> iterable) {
         return null;
     }
 
-    public Role findById(UUID aLong) {
-        Optional<Role> role = roleRepository.findById(aLong);
+    public RoleModel findById(UUID aLong) {
+        Optional<RoleModel> role = roleRepository.findById(aLong);
         if(role.isEmpty()){
             throw new ApiRequestException("BAD_REQUEST", HttpStatus.NO_CONTENT);
         }
@@ -40,11 +42,11 @@ public class RoleService{
         return roleRepository.existsById(aLong);
     }
 
-    public Iterable<Role> findAll() {
+    public Iterable<RoleModel> findAll() {
         return roleRepository.findAll();
     }
 
-    public Iterable<Role> findAllById(Iterable<UUID> iterable) {
+    public Iterable<RoleModel> findAllById(Iterable<UUID> iterable) {
         return roleRepository.findAllById(iterable);
     }
 
@@ -56,7 +58,7 @@ public class RoleService{
         roleRepository.deleteById(aLong);
     }
 
-    public void delete(Role role) {
-        roleRepository.delete(role);
+    public void delete(RoleModel roleModel) {
+        roleRepository.delete(roleModel);
     }
 }

@@ -6,9 +6,9 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import id.grocery.tunas.exception.ApiRequestException;
 import id.grocery.tunas.config.security.filter.TokenGenerationAlgorithm;
+import id.grocery.tunas.model.RoleModel;
 import id.grocery.tunas.model.UserModel;
-import id.grocery.tunas.role.Role;
-import id.grocery.tunas.role.RoleRepository;
+import id.grocery.tunas.repository.RoleRepository;
 import id.grocery.tunas.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,12 +24,12 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
-public class AuthService {
+public class UserService {
 
     UserService userService;
 
     @Autowired
-    public AuthService(UserService userService){
+    public UserService(UserService userService){
         this.userService = userService;
     }
 
@@ -46,7 +46,7 @@ public class AuthService {
             UserModel userModel = userService.getUserByUsername(username);
             String access_token = JWT.create()
                     .withSubject(username)
-                    .withClaim("roles", userModel.getRoles().stream().map(Role::getName).collect(Collectors.toList()))
+                    .withClaim("roles", userModel.getRoleModels().stream().map(RoleModel::getName).collect(Collectors.toList()))
                     .withExpiresAt(new Date(System.currentTimeMillis() + 1440 * 60 * 1000))
                     .sign(algorithm);
             Map<String, Object> tokens = new HashMap<>();
@@ -94,16 +94,16 @@ public class AuthService {
         public void grantRole(UUID userId, UUID roleId){
             Map<String, Object> entities = this.validateUserAndRole(userId, roleId);
             UserModel userModel = (UserModel) entities.get("userModel");
-            Role role = (Role) entities.get("role");
-            userModel.getRoles().add(role);
+            RoleModel roleModel = (RoleModel) entities.get("roleModel");
+            userModel.getRoleModels().add(roleModel);
             userRepository.save(userModel);
         }
 
         public void revokeRole(UUID userId, UUID roleId){
             Map<String, Object> entities = this.validateUserAndRole(userId, roleId);
             UserModel userModel = (UserModel) entities.get("userModel");
-            Role role = (Role) entities.get("role");
-            userModel.setRoles(userModel.getRoles().stream().filter(roleItem -> !roleItem.getName().equals(role.getName())).collect(Collectors.toList()));
+            RoleModel roleModel = (RoleModel) entities.get("roleModel");
+            userModel.setRoleModels(userModel.getRoleModels().stream().filter(roleItem -> !roleItem.getName().equals(roleModel.getName())).collect(Collectors.toList()));
             userRepository.save(userModel);
         }
 
@@ -112,15 +112,15 @@ public class AuthService {
             if(userContext.isEmpty()){
                 throw new ApiRequestException("USER_NOT_FOUND");
             }
-            Optional<Role> roleContext = roleRepository.findById(roleId);
+            Optional<RoleModel> roleContext = roleRepository.findById(roleId);
             if(roleContext.isEmpty()){
                 throw new ApiRequestException("ROLE_NOT_FOUND");
             }
             UserModel userModel = userContext.get();
-            Role role = roleContext.get();
+            RoleModel roleModel = roleContext.get();
             Map<String, Object> entities = new HashMap<>();
             entities.put("user", userModel);
-            entities.put("role", role);
+            entities.put("role", roleModel);
             return entities;
         }
 
@@ -135,7 +135,7 @@ public class AuthService {
                 throw new UsernameNotFoundException("USER_NOT_FOUND");
             }
             Collection<SimpleGrantedAuthority> authorities = new ArrayList<>();
-            userModel.getRoles().forEach(role -> {
+            userModel.getRoleModels().forEach(role -> {
                 authorities.add(new SimpleGrantedAuthority(role.getName()));
             });
             return new org.springframework.security.core.userdetails.User(userModel.getUsername(), userModel.getPassword(),authorities);

@@ -1,7 +1,9 @@
-package id.grocery.tunas.role;
+package id.grocery.tunas.controller;
 
 import java.util.UUID;
 
+import id.grocery.tunas.model.RoleModel;
+import id.grocery.tunas.service.RoleService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,8 +22,8 @@ public class RoleController {
     private final RoleService roleService;
 
     @PostMapping
-    public ResponseEntity<Object> saveRole(@RequestBody Role role){
-        roleService.saveRole(role);
+    public ResponseEntity<Object> saveRole(@RequestBody RoleModel roleModel){
+        roleService.saveRole(roleModel);
         return ResponseEntity.ok().build();
     }
 
@@ -34,9 +36,9 @@ public class RoleController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Object> getRoleById(@PathVariable("id") UUID id){
-        Role role = roleService.findById(id);
+        RoleModel roleModel = roleService.findById(id);
         JsonObject result = new JsonObject();
-        result.put("data", role);
+        result.put("data", roleModel);
         return ResponseEntity.ok(result.getMap());
     }
 }

@@ -4,7 +4,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 import id.grocery.tunas.model.UserModel;
-import id.grocery.tunas.service.AuthService;
+import id.grocery.tunas.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -21,10 +21,10 @@ import io.vertx.core.json.JsonObject;
 @RestController
 @RequestMapping("/api/v1/user")
 public class UserController {
-    private final AuthService.UserService userService;
+    private final UserService.UserService userService;
 
     @Autowired
-    public UserController(AuthService.UserService userService) {
+    public UserController(UserService.UserService userService) {
         this.userService = userService;
     }
 

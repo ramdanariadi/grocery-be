@@ -1,6 +1,6 @@
 package id.grocery.tunas.controller;
 
-import id.grocery.tunas.service.AuthService;
+import id.grocery.tunas.service.UserService;
 import io.vertx.core.json.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -16,16 +16,16 @@ import java.util.Map;
 @RequestMapping("/api/v1")
 public class AuthController {
 
-    AuthService authService;
+    UserService userService;
 
     @Autowired
-    public AuthController(AuthService authService){
-        this.authService = authService;
+    public AuthController(UserService userService){
+        this.userService = userService;
     }
 
     @GetMapping(path = "/token")
     public ResponseEntity<Object> token(@RequestHeader(HttpHeaders.AUTHORIZATION) String authorization){
-        Map<String, Object> token = authService.token(authorization);
+        Map<String, Object> token = userService.token(authorization);
         JsonObject result = new JsonObject();
         result.put("data", token);
         return ResponseEntity.ok(result.getMap());
