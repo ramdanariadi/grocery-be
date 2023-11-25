@@ -1,6 +1,5 @@
-package id.grocery.tunas.user;
+package id.grocery.tunas.model;
 
-import id.grocery.tunas.base.BaseModel;
 import id.grocery.tunas.role.Role;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,7 +11,7 @@ import java.util.Collection;
 @Table(name = "users")
 @NoArgsConstructor
 @Data
-public class User extends BaseModel {
+public class UserModel extends BaseModel {
     @Column(unique = true)
     private String username;
     private String password;

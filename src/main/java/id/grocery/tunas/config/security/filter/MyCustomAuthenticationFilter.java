@@ -15,6 +15,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import id.grocery.tunas.model.UserModel;
+import id.grocery.tunas.service.AuthService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -28,15 +30,14 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import id.grocery.tunas.user.UserService;
 import io.vertx.core.json.JsonObject;
 
 public class MyCustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
-    private UserService userService;
+    private AuthService.UserService userService;
 
-    public MyCustomAuthenticationFilter(AuthenticationManager authenticationManager, UserService userService) {
+    public MyCustomAuthenticationFilter(AuthenticationManager authenticationManager, AuthService.UserService userService) {
         this.authenticationManager = authenticationManager;
         this.userService = userService;
     }
@@ -65,14 +66,14 @@ public class MyCustomAuthenticationFilter extends UsernamePasswordAuthentication
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
         User user = (User) authentication.getPrincipal();
         Algorithm algorithm = TokenGenerationAlgorithm.algorithm;
-        id.grocery.tunas.user.User rawUser = userService.getUserByUsername(user.getUsername());
+        UserModel rawUserModel = userService.getUserByUsername(user.getUsername());
 
         String access_token = JWT.create()
                 .withSubject(user.getUsername())
                 .withExpiresAt(new Date(System.currentTimeMillis() + 1440 * 60 * 1000))
                 .withIssuer(request.getRequestURL().toString())
                 .withClaim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
-                .withClaim("x-custom-id", Map.of("userId", rawUser.getId().toString()))
+                .withClaim("x-custom-id", Map.of("userId", rawUserModel.getId().toString()))
                 .sign(algorithm);
         String refresh_token = JWT.create()
                 .withSubject(user.getUsername())

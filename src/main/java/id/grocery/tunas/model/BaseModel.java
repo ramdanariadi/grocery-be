@@ -1,4 +1,4 @@
-package id.grocery.tunas.base;
+package id.grocery.tunas.model;
 
 import lombok.AccessLevel;
 import lombok.Data;

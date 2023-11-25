@@ -1,8 +1,10 @@
-package id.grocery.tunas.user;
+package id.grocery.tunas.controller;
 
 import java.util.Optional;
 import java.util.UUID;
 
+import id.grocery.tunas.model.UserModel;
+import id.grocery.tunas.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,22 +21,22 @@ import io.vertx.core.json.JsonObject;
 @RestController
 @RequestMapping("/api/v1/user")
 public class UserController {
-    private final UserService userService;
+    private final AuthService.UserService userService;
 
     @Autowired
-    public UserController(UserService userService) {
+    public UserController(AuthService.UserService userService) {
         this.userService = userService;
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Object> register(@RequestBody User user){
-        userService.saveUser(user);
+    public ResponseEntity<Object> register(@RequestBody UserModel userModel){
+        userService.saveUser(userModel);
         return ResponseEntity.ok().build();
     }
 
     @PutMapping()
-    public ResponseEntity<Object> update(@RequestBody User user){
-        userService.updateUser(user);
+    public ResponseEntity<Object> update(@RequestBody UserModel userModel){
+        userService.updateUser(userModel);
         return ResponseEntity.ok().build();
     }
 
@@ -48,7 +50,7 @@ public class UserController {
     @GetMapping("/{id}")
     public ResponseEntity<Object> getUserById(@PathVariable("id") UUID id){
         JsonObject result = new JsonObject();
-        Optional<User> user = userService.findById(id);
+        Optional<UserModel> user = userService.findById(id);
         user.ifPresent(value -> result.put("data", value));
         return ResponseEntity.ok(result.getMap());
     }

@@ -1,5 +1,6 @@
 package id.grocery.tunas.config.security;
 
+import id.grocery.tunas.service.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,7 +16,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import id.grocery.tunas.config.security.filter.MyAuthorizationFilter;
 import id.grocery.tunas.config.security.filter.MyCustomAuthenticationFilter;
-import id.grocery.tunas.user.UserService;
 
 @Configuration
 @EnableWebSecurity
@@ -24,7 +24,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    private UserService userService;
+    private AuthService.UserService userService;
 
     @Autowired
     public SecurityConfig(UserDetailsService userDetailsService, BCryptPasswordEncoder bCryptPasswordEncoder) {

@@ -1,10 +1,9 @@
 package id.grocery.tunas.role;
 
-import id.grocery.tunas.base.BaseModel;
+import id.grocery.tunas.model.BaseModel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import javax.persistence.*;
-import java.util.UUID;
 
 @Entity
 @Table(name = "roles")

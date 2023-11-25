@@ -1,5 +1,6 @@
-package id.grocery.tunas.auth;
+package id.grocery.tunas.controller;
 
+import id.grocery.tunas.service.AuthService;
 import io.vertx.core.json.JsonObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
