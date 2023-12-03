@@ -35,11 +35,11 @@ import io.vertx.core.json.JsonObject;
 public class MyCustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
     private final AuthenticationManager authenticationManager;
-    private UserService.UserService userService;
+    private UserService.UserDetailService userDetailService;
 
-    public MyCustomAuthenticationFilter(AuthenticationManager authenticationManager, UserService.UserService userService) {
+    public MyCustomAuthenticationFilter(AuthenticationManager authenticationManager, UserService.UserDetailService userDetailService) {
         this.authenticationManager = authenticationManager;
-        this.userService = userService;
+        this.userDetailService = userDetailService;
     }
 
     @Override
@@ -66,7 +66,7 @@ public class MyCustomAuthenticationFilter extends UsernamePasswordAuthentication
     protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authentication) throws IOException, ServletException {
         User user = (User) authentication.getPrincipal();
         Algorithm algorithm = TokenGenerationAlgorithm.algorithm;
-        UserModel rawUserModel = userService.getUserByUsername(user.getUsername());
+        UserModel rawUserModel = userDetailService.getUserByUsername(user.getUsername());
 
         String access_token = JWT.create()
                 .withSubject(user.getUsername())

@@ -26,11 +26,11 @@ import java.util.stream.Collectors;
 @Service
 public class UserService {
 
-    UserService userService;
+    UserDetailService userDetailService;
 
     @Autowired
-    public UserService(UserService userService){
-        this.userService = userService;
+    public UserService(UserDetailService userDetailService){
+        this.userDetailService = userDetailService;
     }
 
     public Map<String, Object> token(String authorization){
@@ -43,7 +43,7 @@ public class UserService {
             JWTVerifier jwtVerifier = JWT.require(algorithm).build();
             DecodedJWT decodedJWT = jwtVerifier.verify(refresh_token);
             String username = decodedJWT.getSubject();
-            UserModel userModel = userService.getUserByUsername(username);
+            UserModel userModel = userDetailService.getUserByUsername(username);
             String access_token = JWT.create()
                     .withSubject(username)
                     .withClaim("roles", userModel.getRoleModels().stream().map(RoleModel::getName).collect(Collectors.toList()))
@@ -60,7 +60,7 @@ public class UserService {
 
     @Service
     @AllArgsConstructor
-    public static class UserService implements UserDetailsService {
+    public static class UserDetailService implements UserDetailsService {
         private final UserRepository userRepository;
         private final RoleRepository roleRepository;
         private final PasswordEncoder passwordEncoder;

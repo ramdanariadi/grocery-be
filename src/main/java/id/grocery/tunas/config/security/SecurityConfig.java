@@ -24,7 +24,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
     @Autowired
-    private UserService.UserService userService;
+    private UserService.UserDetailService userDetailService;
 
     @Autowired
     public SecurityConfig(UserDetailsService userDetailsService, BCryptPasswordEncoder bCryptPasswordEncoder) {
@@ -39,7 +39,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        MyCustomAuthenticationFilter customAuthenticationFilter = new MyCustomAuthenticationFilter(authenticationManagerBean(), userService);
+        MyCustomAuthenticationFilter customAuthenticationFilter = new MyCustomAuthenticationFilter(authenticationManagerBean(), userDetailService);
         customAuthenticationFilter.setFilterProcessesUrl("/api/v1/login");
         http.csrf().disable();
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
