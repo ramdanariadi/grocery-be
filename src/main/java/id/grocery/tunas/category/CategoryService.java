@@ -1,6 +1,5 @@
 package id.grocery.tunas.category;
 
-import com.fasterxml.uuid.Generators;
 import com.google.common.base.Strings;
 import id.grocery.tunas.category.dto.CategoryDTO;
 import id.grocery.tunas.category.dto.FindAllCategoryDTO;
@@ -31,8 +30,8 @@ public class CategoryService {
     public FindAllCategoryDTO.Response findAllCategory(FindAllCategoryDTO.Request request){
         Query allCategoriesCount = categoryDAO.getAllCategories(true);
         Query allCategoriesData = categoryDAO.getAllCategories(false);
-        List<Object[]> resultList = allCategoriesData.getResultList();
         allCategoriesData.setFirstResult(request.getPageIndex() * request.getPageSize()).setMaxResults(request.getPageSize());
+        List<Object[]> resultList = allCategoriesData.getResultList();
         List<FindAllCategoryDTO.SimpleCategoryDTO> collect = resultList.stream().map(objects -> {
             FindAllCategoryDTO.SimpleCategoryDTO simpleCategoryDTO = new FindAllCategoryDTO.SimpleCategoryDTO();
             simpleCategoryDTO.setId(UUID.fromString((String) objects[0]));
@@ -59,6 +58,9 @@ public class CategoryService {
     }
 
     public int updateCategory(UUID id, CategoryDTO category){
+        if(Strings.isNullOrEmpty(category.getCategory())){
+            throw new ApiRequestException("BAD_REQUEST");
+        }
         return categoryRepository.updateCategory(id, category.getCategory(), category.getImageUrl());
     }
 
