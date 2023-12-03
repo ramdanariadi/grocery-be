@@ -19,7 +19,7 @@ public class ExceptionHandler {
     public ResponseEntity<Object> handleCustomException(ApiRequestException ex){
         JsonObject body = new JsonObject();
         body.put("message", ex.getMessage());
-        if(null != ex.getHttpStatus()) ResponseEntity.status(ex.getHttpStatus()).body(body);
+        if(null != ex.getHttpStatus()) return ResponseEntity.status(ex.getHttpStatus()).body(body);
         return ResponseEntity.badRequest().body(body.getMap());
     }
 
